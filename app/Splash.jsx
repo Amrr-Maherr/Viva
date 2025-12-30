@@ -6,14 +6,14 @@ export default function Splash() {
   return (
     <>
       <View style={style.container}>
-        <Image style={{position:"absolute",top:100}} source={require("../assets/images/Vector (1).png")}/>
-        <Image style={{position:"absolute",top:150}} source={require("../assets/images/Vector (1).png")}/>
-        <Image style={{position:"absolute",top:200}} source={require("../assets/images/Vector (1).png")}/>
-        <Image style={{position:"absolute",top:250}} source={require("../assets/images/Vector (1).png")}/>
+        <Image style={{position:"absolute",top:100}} source={require("../assets/images/logo-background.png")}/>
+        <Image style={{position:"absolute",top:150}} source={require("../assets/images/logo-background.png")}/>
+        <Image style={{position:"absolute",top:200}} source={require("../assets/images/logo-background.png")}/>
+        <Image style={{position:"absolute",top:250}} source={require("../assets/images/logo-background.png")}/>
         <View style={style.logo}>
           <Image
             style={{ width: "100%", height: "100%" }}
-            source={require("../assets/images/Vector.png")}
+            source={require("../assets/images/logo.png")}
           />
         </View>
         <View style={style.loaderContainer}>
