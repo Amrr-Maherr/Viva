@@ -1,8 +1,15 @@
+import { useEffect } from "react";
 import { Image } from "react-native";
 import { View } from "react-native";
 import { StyleSheet, ActivityIndicator } from "react-native";
-
+import { router } from "expo-router";
 export default function Splash() {
+  useEffect(() => {
+    const NavigationTimer = setTimeout(() => {
+      router.push("/Onboarding");
+    }, 3000);
+    return ()=> clearTimeout(NavigationTimer)
+  },[])
   return (
     <>
       <View style={style.container}>
