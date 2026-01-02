@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import Toast from 'react-native-toast-message';
 import { useAddToCartMutation } from '@/api/cart';
 import { useAddToWishlistMutation, useRemoveFromWishlistMutation } from '@/api/wishlist';
 
@@ -27,9 +28,15 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     const handleAddToCart = async () => {
         try {
             await addToCartMutation.mutateAsync(product._id);
-            Alert.alert("Success", "Added to cart!");
+            Toast.show({
+                type: 'success',
+                text1: 'Added to cart!',
+            });
         } catch (error: any) {
-            Alert.alert("Error", error?.response?.data?.message || "Failed to add to cart");
+            Toast.show({
+                type: 'error',
+                text1: error?.response?.data?.message || "Failed to add to cart",
+            });
         }
     };
 
@@ -37,14 +44,23 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         try {
             if (isFavorite) {
                 await removeFromWishlistMutation.mutateAsync(product._id);
-                Alert.alert("Removed", "Removed from wishlist");
+                Toast.show({
+                    type: 'success',
+                    text1: 'Removed from wishlist',
+                });
             } else {
                 await addToWishlistMutation.mutateAsync(product._id);
-                Alert.alert("Added", "Added to wishlist");
+                Toast.show({
+                    type: 'success',
+                    text1: 'Added to wishlist',
+                });
             }
             setIsFavorite(!isFavorite);
         } catch (error: any) {
-            Alert.alert("Error", error?.response?.data?.message || "Failed to update wishlist");
+            Toast.show({
+                type: 'error',
+                text1: error?.response?.data?.message || "Failed to update wishlist",
+            });
         }
     };
 

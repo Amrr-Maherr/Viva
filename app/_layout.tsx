@@ -5,6 +5,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from 'react';
 import 'react-native-reanimated';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Toast from 'react-native-toast-message';
 
 import { useColorScheme } from '@/components/useColorScheme';
 import Provider from '@/provider/Provider';
@@ -63,6 +64,7 @@ function RootLayoutNav() {
 
   return (
     <Provider>
+      <Toast />
       <Stack initialRouteName={initialRoute} screenOptions={{ headerShown: false }}>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="Splash" options={{ headerShown: false }} />
