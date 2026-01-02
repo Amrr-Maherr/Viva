@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
-import { Text, View } from '@/components/Themed';
+import { Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 export default function HelpCenterScreen() {

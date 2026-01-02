@@ -1,7 +1,7 @@
 import React from 'react';
-import { StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
-import { Text, View } from '@/components/Themed';
+import { StyleSheet, ScrollView, TouchableOpacity, Alert, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
 
 export default function ProfileScreen() {
   return (
@@ -26,7 +26,7 @@ export default function ProfileScreen() {
           <Text style={styles.menuText}>Change Password</Text>
           <Ionicons name="chevron-forward" size={24} color="#ccc" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem} onPress={() => Alert.alert('Notifications')}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/notifications')}>
           <Ionicons name="notifications-outline" size={24} color="#1A1A1A" />
           <Text style={styles.menuText}>Notifications</Text>
           <Ionicons name="chevron-forward" size={24} color="#ccc" />
