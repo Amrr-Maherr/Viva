@@ -34,7 +34,7 @@ export default function HomeScreen() {
           <TouchableOpacity style={styles.linkButton} onPress={() => (router.push as any)('/brands')}>
             <Text style={styles.linkText}>Brands</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.linkButton} onPress={() => (router.push as any)('/orders')}>
+          <TouchableOpacity style={styles.linkButton} onPress={() => (router.push as any)('/my-orders')}>
             <Text style={styles.linkText}>Orders</Text>
           </TouchableOpacity>
         </View>
