@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import useFetchProduct from '@/hooks/useFetchProduct';
 import useFetchBrands from '@/hooks/useFetchBrands';
 import { addToCart } from '@/api/cart';
+import { addToWishlist, removeFromWishlist } from '@/api/wishlist';
 import ProductImageGallery from '@/components/ProductImageGallery';
 import Loader from '@/components/Loader';
 import ErrorView from '@/components/ErrorView';
@@ -359,7 +360,20 @@ export default function ProductDetailsScreen() {
                         <TouchableOpacity style={styles.overlayButton} onPress={() => router.back()}>
                             <Ionicons name="chevron-back" size={24} color="#fff" />
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.overlayButton} onPress={() => setIsFavorite(!isFavorite)}>
+                        <TouchableOpacity style={styles.overlayButton} onPress={async () => {
+                            try {
+                                if (isFavorite) {
+                                    await removeFromWishlist(product._id);
+                                    Alert.alert("Removed", "Removed from wishlist");
+                                } else {
+                                    await addToWishlist(product._id);
+                                    Alert.alert("Added", "Added to wishlist");
+                                }
+                                setIsFavorite(!isFavorite);
+                            } catch (error: any) {
+                                Alert.alert("Error", error.response?.data?.message || "Failed to update wishlist");
+                            }
+                        }}>
                             <Ionicons name={isFavorite ? "heart" : "heart-outline"} size={24} color={isFavorite ? "#ff3b30" : "#fff"} />
                         </TouchableOpacity>
                     </View>
