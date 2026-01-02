@@ -3,12 +3,14 @@ import { StyleSheet, ScrollView, TouchableOpacity, Alert, Text, View, Image } fr
 import { Ionicons } from '@expo/vector-icons';
 import useFetchWishlist from '@/hooks/useFetchWishlist';
 import { useRemoveFromWishlistMutation } from '@/api/wishlist';
+import { useAddToCartMutation } from '@/api/cart';
 import Loader from '@/components/Loader';
 import ErrorView from '@/components/ErrorView';
 
 export default function FavoritesScreen() {
   const { data, isLoading, isError, refetch } = useFetchWishlist();
   const removeFromWishlistMutation = useRemoveFromWishlistMutation();
+  const addToCartMutation = useAddToCartMutation();
 
   if (isLoading) {
     return <Loader />;
@@ -29,6 +31,15 @@ export default function FavoritesScreen() {
     }
   };
 
+  const handleAddToCart = async (productId: string) => {
+    try {
+      await addToCartMutation.mutateAsync(productId);
+      Alert.alert("Added", "Added to cart");
+    } catch (error: any) {
+      Alert.alert("Error", error?.response?.data?.message || "Failed to add to cart");
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -45,7 +56,7 @@ export default function FavoritesScreen() {
               <Text style={styles.itemPrice}>${item.price}</Text>
             </View>
             <View style={styles.itemActions}>
-              <TouchableOpacity style={styles.actionButton} onPress={() => Alert.alert('Add to Cart')}>
+              <TouchableOpacity style={styles.actionButton} onPress={() => handleAddToCart(item._id)}>
                 <Ionicons name="bag-add-outline" size={20} color="#1A1A1A" />
               </TouchableOpacity>
               <TouchableOpacity style={styles.actionButton} onPress={() => handleRemoveFromFavorites(item._id)}>

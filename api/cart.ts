@@ -34,10 +34,35 @@ export const getCart = async () => {
     }
 };
 
+export const removeFromCart = async (productId: string) => {
+    try {
+        const token = await AsyncStorage.getItem('token');
+        const response = await axios.delete(`https://ecommerce.routemisr.com/api/v1/cart/${productId}`, {
+            headers: {
+                token
+            }
+        });
+        return response?.data;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+};
+
 export const useAddToCartMutation = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: addToCart,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['cart'] });
+        },
+    });
+};
+
+export const useRemoveFromCartMutation = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: removeFromCart,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['cart'] });
         },

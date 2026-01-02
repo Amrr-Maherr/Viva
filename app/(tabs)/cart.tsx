@@ -2,11 +2,13 @@ import React from 'react';
 import { StyleSheet, ScrollView, TouchableOpacity, Alert, Text, View, Image, FlatList } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import useFetchCart from '@/hooks/useFetchCart';
+import { useRemoveFromCartMutation } from '@/api/cart';
 import Loader from '@/components/Loader';
 import ErrorView from '@/components/ErrorView';
 
 export default function CartScreen() {
   const { data, isLoading, isError, refetch } = useFetchCart();
+  const removeFromCartMutation = useRemoveFromCartMutation();
 
   if (isLoading) {
     return <Loader />;
@@ -18,6 +20,15 @@ export default function CartScreen() {
 
   const cartItems = data?.data?.products || [];
   const total = data?.data?.totalCartPrice || 0;
+
+  const handleRemoveFromCart = async (productId: string) => {
+    try {
+      await removeFromCartMutation.mutateAsync(productId);
+      Alert.alert("Removed", "Removed from cart");
+    } catch (error: any) {
+      Alert.alert("Error", error?.response?.data?.message || "Failed to remove from cart");
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -43,7 +54,7 @@ export default function CartScreen() {
                 </TouchableOpacity>
               </View>
             </View>
-            <TouchableOpacity style={styles.removeButton}>
+            <TouchableOpacity style={styles.removeButton} onPress={() => handleRemoveFromCart(item.product._id)}>
               <Ionicons name="trash-outline" size={20} color="#FF3B30" />
             </TouchableOpacity>
           </View>
