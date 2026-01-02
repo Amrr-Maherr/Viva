@@ -30,7 +30,7 @@ export default function Onboarding() {
       }),
     ]).start(() => {
       // Navigate after animation
-      // router.push("/(tabs)");
+      router.push("/login");
     });
   };
 
