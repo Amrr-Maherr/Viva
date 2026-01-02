@@ -27,18 +27,18 @@ export default function HomeScreen() {
   return (
     <>
       <View style={{flex:1,paddingHorizontal:20,backgroundColor:"#fff"}}>
-        <View style={{flexDirection: 'row', justifyContent: 'space-around', marginBottom: 16}}>
-          <TouchableOpacity style={styles.linkButton} onPress={() => (router.push as any)('/categories')}>
-            <Text style={styles.linkText}>Categories</Text>
+        <SearchInput />
+        <View style={styles.navigationRow}>
+          <TouchableOpacity style={styles.navButton} onPress={() => (router.push as any)('/categories')}>
+            <Text style={styles.navText}>Categories</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.linkButton} onPress={() => (router.push as any)('/brands')}>
-            <Text style={styles.linkText}>Brands</Text>
+          <TouchableOpacity style={styles.navButton} onPress={() => (router.push as any)('/brands')}>
+            <Text style={styles.navText}>Brands</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.linkButton} onPress={() => (router.push as any)('/my-orders')}>
-            <Text style={styles.linkText}>Orders</Text>
+          <TouchableOpacity style={styles.navButton} onPress={() => (router.push as any)('/my-orders')}>
+            <Text style={styles.navText}>Orders</Text>
           </TouchableOpacity>
         </View>
-        <SearchInput />
         <CategoryButtons onCategorySelect={setSelectedCategoryId} />
         <ProductsList products={data?.data} />
       </View>
@@ -47,13 +47,21 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  linkButton: {
+  navigationRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginBottom: 16,
+  },
+  navButton: {
+    flex: 1,
+    marginHorizontal: 4,
     paddingHorizontal: 16,
-    paddingVertical: 8,
+    paddingVertical: 12,
     backgroundColor: '#f0f0f0',
     borderRadius: 8,
+    alignItems: 'center',
   },
-  linkText: {
+  navText: {
     fontSize: 16,
     fontWeight: '600',
     color: '#007aff',
