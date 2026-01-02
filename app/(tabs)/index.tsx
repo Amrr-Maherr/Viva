@@ -12,7 +12,6 @@ import ErrorView from "@/components/ErrorView";
 
 export default function HomeScreen() {
   const { category } = useLocalSearchParams();
-  const router = useRouter();
   const [selectedCategoryId, setSelectedCategoryId] = useState(category as string || "all");
   const { data, isLoading, isError, refetch } = useFetchProducts(selectedCategoryId);
 
@@ -28,17 +27,6 @@ export default function HomeScreen() {
     <>
       <View style={{flex:1,paddingHorizontal:20,backgroundColor:"#fff"}}>
         <SearchInput />
-        <View style={styles.navigationRow}>
-          <TouchableOpacity style={styles.navButton} onPress={() => (router.push as any)('/categories')}>
-            <Text style={styles.navText}>Categories</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.navButton} onPress={() => (router.push as any)('/brands')}>
-            <Text style={styles.navText}>Brands</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.navButton} onPress={() => (router.push as any)('/my-orders')}>
-            <Text style={styles.navText}>Orders</Text>
-          </TouchableOpacity>
-        </View>
         <CategoryButtons onCategorySelect={setSelectedCategoryId} />
         <ProductsList products={data?.data} />
       </View>

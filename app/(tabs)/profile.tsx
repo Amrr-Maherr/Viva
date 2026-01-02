@@ -46,6 +46,16 @@ export default function ProfileScreen() {
           <Text style={styles.menuText}>Notifications</Text>
           <Ionicons name="chevron-forward" size={24} color="#ccc" />
         </TouchableOpacity>
+        <TouchableOpacity style={styles.menuItem} onPress={() => (router.push as any)('/categories')}>
+          <Ionicons name="grid-outline" size={24} color="#1A1A1A" />
+          <Text style={styles.menuText}>Categories</Text>
+          <Ionicons name="chevron-forward" size={24} color="#ccc" />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.menuItem} onPress={() => (router.push as any)('/brands')}>
+          <Ionicons name="pricetag-outline" size={24} color="#1A1A1A" />
+          <Text style={styles.menuText}>Brands</Text>
+          <Ionicons name="chevron-forward" size={24} color="#ccc" />
+        </TouchableOpacity>
       </View>
 
       <View style={styles.section}>
