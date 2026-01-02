@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 
 interface Product {
@@ -15,8 +16,10 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+    const router = useRouter();
+
     return (
-        <TouchableOpacity style={styles.card}>
+        <TouchableOpacity style={styles.card} onPress={() => router.push({ pathname: '/product/[id]', params: { id: product._id } })}>
             <View style={styles.imageContainer}>
                 <Image source={{ uri: product.imageCover }} style={styles.image} />
                 <TouchableOpacity style={styles.favoriteIcon}>
