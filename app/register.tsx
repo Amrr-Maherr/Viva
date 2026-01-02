@@ -215,41 +215,7 @@ export default function RegisterScreen() {
             <Text style={styles.boldText}>Cookie Use</Text>
           </Text>
 
-          <View style={styles.dividerContainer}>
-            <View style={styles.dividerLine} />
-            <Text style={styles.dividerText}>or</Text>
-            <View style={styles.dividerLine} />
-          </View>
 
-          <View style={styles.socialContainer}>
-            <TouchableOpacity
-              style={styles.googleButton}
-              onPress={() =>
-                Alert.alert(
-                  "Google Register",
-                  "Google registration functionality to be implemented"
-                )
-              }
-            >
-              <Ionicons name="logo-google" size={24} color="#fff" />
-              <Text style={styles.socialButtonText}>Register with Google</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.facebookButton}
-              onPress={() =>
-                Alert.alert(
-                  "Facebook Register",
-                  "Facebook registration functionality to be implemented"
-                )
-              }
-            >
-              <Ionicons name="logo-facebook" size={24} color="#fff" />
-              <Text style={styles.socialButtonText}>
-                Register with Facebook
-              </Text>
-            </TouchableOpacity>
-          </View>
 
       <TouchableOpacity onPress={() => router.push("/login")}>
         <View style={styles.linkContainer}>

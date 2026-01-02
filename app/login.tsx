@@ -135,39 +135,7 @@ export default function LoginScreen() {
             <Text style={styles.buttonText}>Login</Text>
           </TouchableOpacity>
 
-          <View style={styles.dividerContainer}>
-            <View style={styles.dividerLine} />
-            <Text style={styles.dividerText}>or</Text>
-            <View style={styles.dividerLine} />
-          </View>
 
-          <View style={styles.socialContainer}>
-            <TouchableOpacity
-              style={styles.googleButton}
-              onPress={() =>
-                Alert.alert(
-                  "Google Login",
-                  "Google login functionality to be implemented"
-                )
-              }
-            >
-              <Ionicons name="logo-google" size={24} color="#fff" />
-              <Text style={styles.socialButtonText}>Login with Google</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.facebookButton}
-              onPress={() =>
-                Alert.alert(
-                  "Facebook Login",
-                  "Facebook login functionality to be implemented"
-                )
-              }
-            >
-              <Ionicons name="logo-facebook" size={24} color="#fff" />
-              <Text style={styles.socialButtonText}>Login with Facebook</Text>
-            </TouchableOpacity>
-          </View>
 
           <TouchableOpacity onPress={() => router.push("/register")}>
             <View style={styles.linkContainer}>
