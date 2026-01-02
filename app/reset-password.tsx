@@ -10,29 +10,37 @@ import {
   Platform,
   ScrollView,
 } from "react-native";
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useForm, Controller } from "react-hook-form";
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { forgotPassword } from '@/api/auth';
+import { resetPassword } from '@/api/auth';
 
-export default function ForgotPasswordScreen() {
+export default function ResetPasswordScreen() {
+  const { resetCode } = useLocalSearchParams();
+
   const {
     control,
     handleSubmit,
     formState: { errors, isLoading },
   } = useForm({
     defaultValues: {
-      email: "",
+      newPassword: "",
+      confirmPassword: "",
     },
   });
 
   const onSubmit = async (data: any) => {
+    if (data.newPassword !== data.confirmPassword) {
+      Alert.alert("Error", "Passwords do not match");
+      return;
+    }
+
     try {
-      const result = await forgotPassword(data.email);
-      Alert.alert("Reset Email Sent", "Please check your email for password reset instructions.");
-      console.log('Forgot password result:', result);
-      // Navigate to verify code
-      (router.push as any)('/verify-reset-code');
+      const result = await resetPassword("routeegyptnodejs@gmail.com", data.newPassword);
+      Alert.alert("Password Reset", "Your password has been reset successfully. Please login with your new password.");
+      console.log('Reset password result:', result);
+      // Navigate to login
+      router.replace('/login');
     } catch (error: any) {
       Alert.alert("Error", error.response?.data?.message || "Something went wrong");
       console.log(error);
@@ -49,37 +57,60 @@ export default function ForgotPasswordScreen() {
           contentContainerStyle={styles.scrollContainer}
           keyboardShouldPersistTaps="never"
         >
-          <Text style={styles.title}>Forgot Password</Text>
-          <Text style={styles.subtitle}>Enter your email address and we'll send you a link to reset your password.</Text>
+          <Text style={styles.title}>Reset Password</Text>
+          <Text style={styles.subtitle}>Enter your new password.</Text>
 
           <View style={styles.inputContainer}>
-            <Text style={styles.label}>Email</Text>
+            <Text style={styles.label}>New Password</Text>
             <Controller
               control={control}
               rules={{
                 required: true,
-                pattern: {
-                  value: /^\S+@\S+$/i,
-                  message: "Invalid email address",
+                minLength: {
+                  value: 6,
+                  message: "Password must be at least 6 characters",
                 },
               }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
                   style={styles.input}
-                  placeholder="Enter your email"
+                  placeholder="Enter new password"
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
-                  keyboardType="email-address"
-                  autoCapitalize="none"
+                  secureTextEntry
                 />
               )}
-              name="email"
+              name="newPassword"
             />
-            {errors.email && (
+            {errors.newPassword && (
               <Text style={styles.errorText}>
-                Please enter valid email address
+                {errors.newPassword.message || "Please enter new password"}
               </Text>
+            )}
+          </View>
+
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Confirm Password</Text>
+            <Controller
+              control={control}
+              rules={{
+                required: true,
+              }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  style={styles.input}
+                  placeholder="Confirm new password"
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  secureTextEntry
+                />
+              )}
+              name="confirmPassword"
+            />
+            {errors.confirmPassword && (
+              <Text style={styles.errorText}>Please confirm your password</Text>
             )}
           </View>
 
@@ -88,12 +119,12 @@ export default function ForgotPasswordScreen() {
             disabled={isLoading}
             onPress={handleSubmit(onSubmit)}
           >
-            <Text style={styles.buttonText}>Send Reset Link</Text>
+            <Text style={styles.buttonText}>Reset Password</Text>
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => router.back()}>
             <View style={styles.linkContainer}>
-              <Text style={styles.linkText}>Back to Login</Text>
+              <Text style={styles.linkText}>Back</Text>
             </View>
           </TouchableOpacity>
         </ScrollView>

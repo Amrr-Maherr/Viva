@@ -13,28 +13,28 @@ import {
 import { router } from 'expo-router';
 import { useForm, Controller } from "react-hook-form";
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { forgotPassword } from '@/api/auth';
+import { verifyResetCode } from '@/api/auth';
 
-export default function ForgotPasswordScreen() {
+export default function VerifyResetCodeScreen() {
   const {
     control,
     handleSubmit,
     formState: { errors, isLoading },
   } = useForm({
     defaultValues: {
-      email: "",
+      resetCode: "",
     },
   });
 
   const onSubmit = async (data: any) => {
     try {
-      const result = await forgotPassword(data.email);
-      Alert.alert("Reset Email Sent", "Please check your email for password reset instructions.");
-      console.log('Forgot password result:', result);
-      // Navigate to verify code
-      (router.push as any)('/verify-reset-code');
+      const result = await verifyResetCode(data.resetCode);
+      Alert.alert("Code Verified", "Please set your new password.");
+      console.log('Verify reset code result:', result);
+      // Navigate to reset password
+      (router.push as any)({ pathname: '/reset-password', params: { resetCode: data.resetCode } });
     } catch (error: any) {
-      Alert.alert("Error", error.response?.data?.message || "Something went wrong");
+      Alert.alert("Invalid Code", error.response?.data?.message || "The code is incorrect or expired");
       console.log(error);
     }
   };
@@ -49,36 +49,36 @@ export default function ForgotPasswordScreen() {
           contentContainerStyle={styles.scrollContainer}
           keyboardShouldPersistTaps="never"
         >
-          <Text style={styles.title}>Forgot Password</Text>
-          <Text style={styles.subtitle}>Enter your email address and we'll send you a link to reset your password.</Text>
+          <Text style={styles.title}>Verify Reset Code</Text>
+          <Text style={styles.subtitle}>Enter the 6-digit code sent to your email.</Text>
 
           <View style={styles.inputContainer}>
-            <Text style={styles.label}>Email</Text>
+            <Text style={styles.label}>Reset Code</Text>
             <Controller
               control={control}
               rules={{
                 required: true,
                 pattern: {
-                  value: /^\S+@\S+$/i,
-                  message: "Invalid email address",
+                  value: /^\d{6}$/,
+                  message: "Reset code must be 6 digits",
                 },
               }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
                   style={styles.input}
-                  placeholder="Enter your email"
+                  placeholder="Enter 6-digit code"
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
-                  keyboardType="email-address"
-                  autoCapitalize="none"
+                  keyboardType="number-pad"
+                  maxLength={6}
                 />
               )}
-              name="email"
+              name="resetCode"
             />
-            {errors.email && (
+            {errors.resetCode && (
               <Text style={styles.errorText}>
-                Please enter valid email address
+                {errors.resetCode.message || "Please enter valid reset code"}
               </Text>
             )}
           </View>
@@ -88,12 +88,12 @@ export default function ForgotPasswordScreen() {
             disabled={isLoading}
             onPress={handleSubmit(onSubmit)}
           >
-            <Text style={styles.buttonText}>Send Reset Link</Text>
+            <Text style={styles.buttonText}>Verify Code</Text>
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => router.back()}>
             <View style={styles.linkContainer}>
-              <Text style={styles.linkText}>Back to Login</Text>
+              <Text style={styles.linkText}>Back</Text>
             </View>
           </TouchableOpacity>
         </ScrollView>
@@ -145,6 +145,9 @@ const styles = StyleSheet.create({
     padding: 12,
     fontSize: 16,
     backgroundColor: "#fff",
+    textAlign: "center",
+    fontSize: 24,
+    letterSpacing: 8,
   },
   button: {
     backgroundColor: "#1A1A1A",

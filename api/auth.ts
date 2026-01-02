@@ -40,3 +40,28 @@ export const forgotPassword = async (email: string) => {
         throw error;
     }
 };
+
+export const verifyResetCode = async (resetCode: string) => {
+    try {
+        const response = await axios.post('https://ecommerce.routemisr.com/api/v1/auth/verifyResetCode', {
+            resetCode
+        });
+        return response?.data;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+};
+
+export const resetPassword = async (email: string, newPassword: string) => {
+    try {
+        const response = await axios.put('https://ecommerce.routemisr.com/api/v1/auth/resetPassword', {
+            email,
+            newPassword
+        });
+        return response?.data;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+};
