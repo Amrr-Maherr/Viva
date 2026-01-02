@@ -7,6 +7,10 @@ import ErrorView from '@/components/ErrorView';
 export default function MyOrdersScreen() {
     const { data, isLoading, isError, refetch } = useFetchOrders();
 
+    console.log('Orders data:', data);
+    console.log('Loading:', isLoading);
+    console.log('Error:', isError);
+
     if (isLoading) {
         return <Loader />;
     }
@@ -35,6 +39,18 @@ export default function MyOrdersScreen() {
             ))}
         </View>
     );
+
+    if (!data || data.length === 0) {
+        return (
+            <View style={styles.container}>
+                <Text style={styles.title}>My Orders</Text>
+                <View style={styles.emptyState}>
+                    <Text style={styles.emptyTitle}>No orders yet</Text>
+                    <Text style={styles.emptySubtitle}>Start shopping to see your orders here</Text>
+                </View>
+            </View>
+        );
+    }
 
     return (
         <View style={styles.container}>
@@ -126,5 +142,22 @@ const styles = StyleSheet.create({
     itemPrice: {
         fontSize: 14,
         color: '#666',
+    },
+    emptyState: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingHorizontal: 40,
+    },
+    emptyTitle: {
+        fontSize: 20,
+        fontWeight: '600',
+        color: '#1A1A1A',
+        marginBottom: 8,
+    },
+    emptySubtitle: {
+        fontSize: 16,
+        color: '#666',
+        textAlign: 'center',
     },
 });
