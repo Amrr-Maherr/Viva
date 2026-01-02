@@ -1,10 +1,11 @@
 import React from 'react';
-import { StyleSheet, ScrollView, TouchableOpacity, Alert, Text, View, Image, FlatList, ActivityIndicator } from 'react-native';
+import { StyleSheet, ScrollView, TouchableOpacity, Text, View, Image, FlatList, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import useFetchCart from '@/hooks/useFetchCart';
 import { useRemoveFromCartMutation } from '@/api/cart';
 import Loader from '@/components/Loader';
 import ErrorView from '@/components/ErrorView';
+import { showToast } from '@/utils/toast';
 
 export default function CartScreen() {
   const { data, isLoading, isError, refetch } = useFetchCart();
@@ -24,9 +25,9 @@ export default function CartScreen() {
   const handleRemoveFromCart = async (productId: string) => {
     try {
       await removeFromCartMutation.mutateAsync(productId);
-      Alert.alert("Removed", "Removed from cart");
+      showToast("info", "Removed from cart");
     } catch (error: any) {
-      Alert.alert("Error", error?.response?.data?.message || "Failed to remove from cart");
+      showToast("error", error?.response?.data?.message || "Failed to remove from cart");
     }
   };
 
@@ -70,7 +71,7 @@ export default function CartScreen() {
           <Text style={styles.totalLabel}>Total:</Text>
           <Text style={styles.totalAmount}>${total.toFixed(2)}</Text>
         </View>
-        <TouchableOpacity style={styles.checkoutButton} onPress={() => Alert.alert('Checkout')}>
+        <TouchableOpacity style={styles.checkoutButton} onPress={() => showToast('info', 'Checkout')}>
           <Text style={styles.checkoutText}>Proceed to Checkout</Text>
         </TouchableOpacity>
       </View>

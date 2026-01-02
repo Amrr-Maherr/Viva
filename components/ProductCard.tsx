@@ -1,9 +1,10 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAddToCartMutation } from '@/api/cart';
 import { useAddToWishlistMutation, useRemoveFromWishlistMutation } from '@/api/wishlist';
+import { showToast } from '@/utils/toast';
 
 interface Product {
     _id: string;
@@ -27,9 +28,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     const handleAddToCart = async () => {
         try {
             await addToCartMutation.mutateAsync(product._id);
-            Alert.alert("Success", "Added to cart!");
+            showToast("success", "Added to cart!");
         } catch (error: any) {
-            Alert.alert("Error", error?.response?.data?.message || "Failed to add to cart");
+            showToast("error", error?.response?.data?.message || "Failed to add to cart");
         }
     };
 
@@ -37,14 +38,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         try {
             if (isFavorite) {
                 await removeFromWishlistMutation.mutateAsync(product._id);
-                Alert.alert("Removed", "Removed from wishlist");
+                showToast("info", "Removed from wishlist");
             } else {
                 await addToWishlistMutation.mutateAsync(product._id);
-                Alert.alert("Added", "Added to wishlist");
+                showToast("success", "Added to wishlist");
             }
             setIsFavorite(!isFavorite);
         } catch (error: any) {
-            Alert.alert("Error", error?.response?.data?.message || "Failed to update wishlist");
+            showToast("error", error?.response?.data?.message || "Failed to update wishlist");
         }
     };
 

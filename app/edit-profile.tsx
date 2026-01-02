@@ -3,7 +3,6 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
-  Alert,
   Text,
   View,
   KeyboardAvoidingView,
@@ -14,6 +13,7 @@ import { router } from 'expo-router';
 import { useForm, Controller } from "react-hook-form";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { updateMe } from '@/api/users';
+import { showToast } from '@/utils/toast';
 
 export default function EditProfileScreen() {
   const {
@@ -31,12 +31,12 @@ export default function EditProfileScreen() {
   const onSubmit = async (data: any) => {
     try {
       const result = await updateMe(data.name, data.email, data.phone);
-      Alert.alert("Profile Updated", "Your profile has been updated successfully.");
+      showToast('success', "Your profile has been updated successfully.");
       console.log('Update profile result:', result);
       // Navigate back
       router.back();
     } catch (error: any) {
-      Alert.alert("Update Failed", error.response?.data?.message || "Something went wrong");
+      showToast('error', error.response?.data?.message || "Something went wrong");
       console.log(error);
     }
   };

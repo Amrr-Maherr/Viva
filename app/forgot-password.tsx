@@ -3,7 +3,6 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
-  Alert,
   Text,
   View,
   KeyboardAvoidingView,
@@ -14,6 +13,7 @@ import { router } from 'expo-router';
 import { useForm, Controller } from "react-hook-form";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { forgotPassword } from '@/api/auth';
+import { showToast } from '@/utils/toast';
 
 export default function ForgotPasswordScreen() {
   const {
@@ -29,12 +29,12 @@ export default function ForgotPasswordScreen() {
   const onSubmit = async (data: any) => {
     try {
       const result = await forgotPassword(data.email);
-      Alert.alert("Reset Email Sent", "Please check your email for password reset instructions.");
+      showToast('success', "Please check your email for password reset instructions.");
       console.log('Forgot password result:', result);
       // Navigate to verify code
       (router.push as any)('/verify-reset-code');
     } catch (error: any) {
-      Alert.alert("Error", error.response?.data?.message || "Something went wrong");
+      showToast('error', error.response?.data?.message || "Something went wrong");
       console.log(error);
     }
   };

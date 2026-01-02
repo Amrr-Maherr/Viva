@@ -3,7 +3,6 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
-  Alert,
   Text,
   View,
   KeyboardAvoidingView,
@@ -14,6 +13,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useForm, Controller } from "react-hook-form";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { resetPassword } from '@/api/auth';
+import { showToast } from '@/utils/toast';
 
 export default function ResetPasswordScreen() {
   const { resetCode } = useLocalSearchParams();
@@ -31,18 +31,18 @@ export default function ResetPasswordScreen() {
 
   const onSubmit = async (data: any) => {
     if (data.newPassword !== data.confirmPassword) {
-      Alert.alert("Error", "Passwords do not match");
+      showToast('error', "Passwords do not match");
       return;
     }
 
     try {
       const result = await resetPassword("routeegyptnodejs@gmail.com", data.newPassword);
-      Alert.alert("Password Reset", "Your password has been reset successfully. Please login with your new password.");
+      showToast('success', "Your password has been reset successfully. Please login with your new password.");
       console.log('Reset password result:', result);
       // Navigate to login
       router.replace('/login');
     } catch (error: any) {
-      Alert.alert("Error", error.response?.data?.message || "Something went wrong");
+      showToast('error', error.response?.data?.message || "Something went wrong");
       console.log(error);
     }
   };

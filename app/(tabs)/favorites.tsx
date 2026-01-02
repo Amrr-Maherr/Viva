@@ -1,11 +1,12 @@
 import React from 'react';
-import { StyleSheet, ScrollView, TouchableOpacity, Alert, Text, View, Image, ActivityIndicator } from 'react-native';
+import { StyleSheet, ScrollView, TouchableOpacity, Text, View, Image, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import useFetchWishlist from '@/hooks/useFetchWishlist';
 import { useRemoveFromWishlistMutation } from '@/api/wishlist';
 import { useAddToCartMutation } from '@/api/cart';
 import Loader from '@/components/Loader';
 import ErrorView from '@/components/ErrorView';
+import { showToast } from '@/utils/toast';
 
 export default function FavoritesScreen() {
   const { data, isLoading, isError, refetch } = useFetchWishlist();
@@ -25,18 +26,18 @@ export default function FavoritesScreen() {
   const handleRemoveFromFavorites = async (productId: string) => {
     try {
       await removeFromWishlistMutation.mutateAsync(productId);
-      Alert.alert("Removed", "Removed from favorites");
+      showToast("info", "Removed from favorites");
     } catch (error: any) {
-      Alert.alert("Error", error?.response?.data?.message || "Failed to remove from favorites");
+      showToast("error", error?.response?.data?.message || "Failed to remove from favorites");
     }
   };
 
   const handleAddToCart = async (productId: string) => {
     try {
       await addToCartMutation.mutateAsync(productId);
-      Alert.alert("Added", "Added to cart");
+      showToast("success", "Added to cart");
     } catch (error: any) {
-      Alert.alert("Error", error?.response?.data?.message || "Failed to add to cart");
+      showToast("error", error?.response?.data?.message || "Failed to add to cart");
     }
   };
 
@@ -49,7 +50,7 @@ export default function FavoritesScreen() {
 
       <ScrollView style={styles.itemsContainer}>
         {favorites.map((item: any) => (
-          <TouchableOpacity key={item._id} style={styles.favoriteItem} onPress={() => Alert.alert('Product Details')}>
+          <TouchableOpacity key={item._id} style={styles.favoriteItem} onPress={() => showToast('info', 'Product Details')}>
             <Image source={{ uri: item.imageCover }} style={styles.itemImage} />
             <View style={styles.itemDetails}>
               <Text style={styles.itemName}>{item.title}</Text>

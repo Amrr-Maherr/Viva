@@ -3,7 +3,6 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
-  Alert,
   Text,
   View,
   KeyboardAvoidingView,
@@ -15,6 +14,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useForm, Controller } from "react-hook-form";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { login } from '@/api/auth';
+import { showToast } from '@/utils/toast';
 
 export default function LoginScreen() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -32,12 +32,12 @@ export default function LoginScreen() {
   const onSubmit = async (data: any) => {
     try {
       const result = await login(data.email, data.password);
-      Alert.alert("Login", `Welcome back! Login successful.`);
+      showToast('success', `Welcome back! Login successful.`);
       console.log('Login result:', result);
       // Navigate to home or wherever
       router.replace('/(tabs)');
     } catch (error: any) {
-      Alert.alert("Login Failed", error.response?.data?.message || "Something went wrong");
+      showToast('error', error.response?.data?.message || "Something went wrong");
       console.log(error);
     }
   };

@@ -5,6 +5,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from 'react';
 import 'react-native-reanimated';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Toast from 'react-native-toast-message';
 
 import { useColorScheme } from '@/components/useColorScheme';
 import Provider from '@/provider/Provider';
@@ -92,6 +93,7 @@ function RootLayoutNav() {
         <Stack.Screen name="contact" options={{ title: "Contact Us" }} />
         <Stack.Screen name="modal" options={{ presentation: "modal" }} />
       </Stack>
+      <Toast />
     </Provider>
   );
 }

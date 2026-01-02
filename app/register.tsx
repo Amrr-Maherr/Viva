@@ -3,7 +3,6 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
-  Alert,
   Text,
   View,
   KeyboardAvoidingView,
@@ -15,6 +14,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useForm, Controller } from "react-hook-form";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { signup } from '@/api/auth';
+import { showToast } from '@/utils/toast';
 export default function RegisterScreen() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
    const {
@@ -33,12 +33,12 @@ export default function RegisterScreen() {
    const onSubmit = async (data: any) => {
      try {
        const result = await signup(data.name, data.email, data.password, data.rePassword, data.phone);
-       Alert.alert("Registration", `Welcome ${data.name}! Registration successful.`);
+       showToast('success', `Welcome ${data.name}! Registration successful.`);
        console.log('Signup result:', result);
        // Navigate to login
        router.push('/login');
      } catch (error: any) {
-       Alert.alert("Registration Failed", error.response?.data?.message || "Something went wrong");
+       showToast('error', error.response?.data?.message || "Something went wrong");
        console.log(error);
      }
    };

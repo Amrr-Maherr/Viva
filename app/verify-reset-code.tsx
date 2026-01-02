@@ -3,7 +3,6 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
-  Alert,
   Text,
   View,
   KeyboardAvoidingView,
@@ -14,6 +13,7 @@ import { router } from 'expo-router';
 import { useForm, Controller } from "react-hook-form";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { verifyResetCode } from '@/api/auth';
+import { showToast } from '@/utils/toast';
 
 export default function VerifyResetCodeScreen() {
   const {
@@ -29,12 +29,12 @@ export default function VerifyResetCodeScreen() {
   const onSubmit = async (data: any) => {
     try {
       const result = await verifyResetCode(data.resetCode);
-      Alert.alert("Code Verified", "Please set your new password.");
+      showToast('success', "Please set your new password.");
       console.log('Verify reset code result:', result);
       // Navigate to reset password
       (router.push as any)({ pathname: '/reset-password', params: { resetCode: data.resetCode } });
     } catch (error: any) {
-      Alert.alert("Invalid Code", error.response?.data?.message || "The code is incorrect or expired");
+      showToast('error', error.response?.data?.message || "The code is incorrect or expired");
       console.log(error);
     }
   };

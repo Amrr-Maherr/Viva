@@ -26,7 +26,7 @@ export default function HomeScreen() {
   return (
     <>
       <View style={{flex:1,paddingHorizontal:20,backgroundColor:"#fff"}}>
-        <SearchInput />
+        {/* <SearchInput /> */}
         <CategoryButtons onCategorySelect={setSelectedCategoryId} />
         <ProductsList products={data?.data} />
       </View>

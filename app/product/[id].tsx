@@ -1,5 +1,5 @@
 import React, { useState, useLayoutEffect } from 'react';
-import { View, Text, Image, ScrollView, TouchableOpacity, FlatList, StyleSheet, Dimensions, Alert } from 'react-native';
+import { View, Text, Image, ScrollView, TouchableOpacity, FlatList, StyleSheet, Dimensions } from 'react-native';
 import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import useFetchProduct from '@/hooks/useFetchProduct';
@@ -10,6 +10,7 @@ import ProductImageGallery from '@/components/ProductImageGallery';
 import Loader from '@/components/Loader';
 import ErrorView from '@/components/ErrorView';
 import Colors from '@/constants/Colors';
+import { showToast } from '@/utils/toast';
 
 const { width } = Dimensions.get('window');
 
@@ -367,14 +368,14 @@ export default function ProductDetailsScreen() {
                             try {
                                 if (isFavorite) {
                                     await removeFromWishlist(product._id);
-                                    Alert.alert("Removed", "Removed from wishlist");
+                                    showToast('info', "Removed from wishlist");
                                 } else {
                                     await addToWishlist(product._id);
-                                    Alert.alert("Added", "Added to wishlist");
+                                    showToast('success', "Added to wishlist");
                                 }
                                 setIsFavorite(!isFavorite);
                             } catch (error: any) {
-                                Alert.alert("Error", error.response?.data?.message || "Failed to update wishlist");
+                                showToast('error', error.response?.data?.message || "Failed to update wishlist");
                             } finally {
                                 setIsUpdatingWishlist(false);
                             }
@@ -495,9 +496,9 @@ export default function ProductDetailsScreen() {
                         setIsAddingToCart(true);
                         try {
                             await addToCart(product._id);
-                            Alert.alert("Success", "Product added to cart!");
+                            showToast('success', "Product added to cart!");
                         } catch (error: any) {
-                            Alert.alert("Error", error.response?.data?.message || "Failed to add to cart");
+                            showToast('error', error.response?.data?.message || "Failed to add to cart");
                         } finally {
                             setIsAddingToCart(false);
                         }
