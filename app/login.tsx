@@ -160,7 +160,10 @@ export default function LoginScreen() {
           </View>
 
           <TouchableOpacity onPress={() => router.push("/register")}>
-            <Text style={styles.linkText}>Don't have an account? Register</Text>
+            <View style={styles.linkContainer}>
+              <Text style={styles.linkText}>Don't have an account? </Text>
+              <Text style={[styles.linkText, styles.linkBold]}>Register</Text>
+            </View>
           </TouchableOpacity>
         </ScrollView>
       </SafeAreaView>
@@ -317,5 +320,14 @@ const styles = StyleSheet.create({
     top: "50%",
     transform: [{ translateY: -12 }],
     padding: 4,
+  },
+  linkContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 20,
+  },
+  linkBold: {
+    fontWeight: "bold",
   },
 });

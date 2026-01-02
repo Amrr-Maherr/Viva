@@ -193,12 +193,12 @@ export default function RegisterScreen() {
             </TouchableOpacity>
           </View>
 
-          <TouchableOpacity onPress={() => router.push("/login")}>
-            <View style={styles.linkContainer}>
-              <Text>Already have an account?</Text>
-              <Text style={styles.linkText}>Login</Text>
-            </View>
-          </TouchableOpacity>
+      <TouchableOpacity onPress={() => router.push("/login")}>
+        <View style={styles.linkContainer}>
+          <Text style={styles.linkText}>Already have an account? </Text>
+          <Text style={[styles.linkText, styles.linkBold]}>Login</Text>
+        </View>
+      </TouchableOpacity>
         </ScrollView>
       </SafeAreaView>
     </KeyboardAvoidingView>
@@ -372,5 +372,8 @@ const styles = StyleSheet.create({
     top: "50%",
     transform: [{ translateY: -12 }],
     padding: 4,
+  },
+  linkBold: {
+    fontWeight: "bold",
   },
 });
