@@ -321,6 +321,8 @@ export default function ProductDetailsScreen() {
     const [selectedColor, setSelectedColor] = useState('Red');
     const [selectedSize, setSelectedSize] = useState('M');
     const [isFavorite, setIsFavorite] = useState(false);
+    const [isAddingToCart, setIsAddingToCart] = useState(false);
+    const [isUpdatingWishlist, setIsUpdatingWishlist] = useState(false);
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -360,7 +362,8 @@ export default function ProductDetailsScreen() {
                         <TouchableOpacity style={styles.overlayButton} onPress={() => router.back()}>
                             <Ionicons name="chevron-back" size={24} color="#fff" />
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.overlayButton} onPress={async () => {
+                        <TouchableOpacity style={[styles.overlayButton, isUpdatingWishlist && { opacity: 0.5 }]} disabled={isUpdatingWishlist} onPress={async () => {
+                            setIsUpdatingWishlist(true);
                             try {
                                 if (isFavorite) {
                                     await removeFromWishlist(product._id);
@@ -372,6 +375,8 @@ export default function ProductDetailsScreen() {
                                 setIsFavorite(!isFavorite);
                             } catch (error: any) {
                                 Alert.alert("Error", error.response?.data?.message || "Failed to update wishlist");
+                            } finally {
+                                setIsUpdatingWishlist(false);
                             }
                         }}>
                             <Ionicons name={isFavorite ? "heart" : "heart-outline"} size={24} color={isFavorite ? "#ff3b30" : "#fff"} />
@@ -485,17 +490,22 @@ export default function ProductDetailsScreen() {
             <View style={styles.bottomCTA}>
                 <TouchableOpacity
                     style={[styles.addToBagButton, product.quantity === 0 && styles.disabledButton]}
-                    disabled={product.quantity === 0}
+                    disabled={product.quantity === 0 || isAddingToCart}
                     onPress={async () => {
+                        setIsAddingToCart(true);
                         try {
                             await addToCart(product._id);
                             Alert.alert("Success", "Product added to cart!");
                         } catch (error: any) {
                             Alert.alert("Error", error.response?.data?.message || "Failed to add to cart");
+                        } finally {
+                            setIsAddingToCart(false);
                         }
                     }}
                 >
-                    <Text style={styles.addToBagText}>Add to Bag</Text>
+                    <Text style={styles.addToBagText}>
+                        {isAddingToCart ? 'Adding...' : 'Add to Bag'}
+                    </Text>
                 </TouchableOpacity>
             </View>
         </View>
