@@ -16,12 +16,12 @@ export default function ProfileScreen() {
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Account Settings</Text>
-        <TouchableOpacity style={styles.menuItem} onPress={() => Alert.alert('Edit Profile')}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/edit-profile')}>
           <Ionicons name="person-outline" size={24} color="#1A1A1A" />
           <Text style={styles.menuText}>Edit Profile</Text>
           <Ionicons name="chevron-forward" size={24} color="#ccc" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem} onPress={() => Alert.alert('Change Password')}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/change-password')}>
           <Ionicons name="lock-closed-outline" size={24} color="#1A1A1A" />
           <Text style={styles.menuText}>Change Password</Text>
           <Ionicons name="chevron-forward" size={24} color="#ccc" />
@@ -35,12 +35,12 @@ export default function ProfileScreen() {
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Support</Text>
-        <TouchableOpacity style={styles.menuItem} onPress={() => Alert.alert('Help Center')}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/help-center')}>
           <Ionicons name="help-circle-outline" size={24} color="#1A1A1A" />
           <Text style={styles.menuText}>Help Center</Text>
           <Ionicons name="chevron-forward" size={24} color="#ccc" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem} onPress={() => Alert.alert('Contact Us')}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/contact')}>
           <Ionicons name="mail-outline" size={24} color="#1A1A1A" />
           <Text style={styles.menuText}>Contact Us</Text>
           <Ionicons name="chevron-forward" size={24} color="#ccc" />
