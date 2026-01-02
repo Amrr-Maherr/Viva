@@ -1,16 +1,25 @@
 import React, { useState } from 'react';
 import { FlatList, View, StyleSheet } from 'react-native';
-import { categories } from '../data/categories';
 import CategoryButton from './CategoryButton';
+import useFetchCategories from '../hooks/useFetchCategories';
+import { Category } from '../types/Categories';
 
-export default function CategoryButtons() {
-    const [selectedCategory, setSelectedCategory] = useState("All");
-    const buttonsData = ["All", ...categories];
-    const renderItem = ({ item }: { item: string }) => (
+interface CategoryButtonsProps {
+    onCategorySelect: (id: string) => void;
+}
+
+export default function CategoryButtons({ onCategorySelect }: CategoryButtonsProps) {
+    const [selectedId, setSelectedId] = useState("all");
+    const { data: categoriesData } = useFetchCategories();
+    const buttonsData = categoriesData ? [{ id: "all", name: "All" }, ...categoriesData.data.map((cat: Category) => ({ id: cat._id, name: cat.name }))] : [];
+    const renderItem = ({ item }: { item: { id: string; name: string } }) => (
         <CategoryButton
-            item={item}
-            selected={selectedCategory === item}
-            onPress={() => setSelectedCategory(item)}
+            item={item.name}
+            selected={selectedId === item.id}
+            onPress={() => {
+                setSelectedId(item.id);
+                onCategorySelect(item.id);
+            }}
         />
     );
     return (
@@ -20,7 +29,7 @@ export default function CategoryButtons() {
                 renderItem={renderItem}
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                keyExtractor={(item) => item}
+                keyExtractor={(item) => item.id}
                 contentContainerStyle={styles.listContainer}
             />
         </View>
