@@ -6,9 +6,19 @@ import useFetchProducts from "@/hooks/useFetchProducts";
 import SearchInput from "@/components/SearchInput";
 import CategoryButtons from "@/components/CategoryButtons";
 import ProductsList from "@/components/ProductsList";
+import Loader from "@/components/Loader";
+import ErrorView from "@/components/ErrorView";
 
 export default function HomeScreen() {
-  const { data } = useFetchProducts();
+  const { data, isLoading, isError, refetch } = useFetchProducts();
+
+  if (isLoading) {
+    return <Loader />;
+  }
+
+  if (isError) {
+    return <ErrorView onRefetch={refetch} />;
+  }
 
   return (
     <>
