@@ -2,11 +2,13 @@ import React from 'react';
 import { StyleSheet, ScrollView, TouchableOpacity, Alert, Text, View, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import useFetchWishlist from '@/hooks/useFetchWishlist';
+import { useRemoveFromWishlistMutation } from '@/api/wishlist';
 import Loader from '@/components/Loader';
 import ErrorView from '@/components/ErrorView';
 
 export default function FavoritesScreen() {
   const { data, isLoading, isError, refetch } = useFetchWishlist();
+  const removeFromWishlistMutation = useRemoveFromWishlistMutation();
 
   if (isLoading) {
     return <Loader />;
@@ -17,6 +19,15 @@ export default function FavoritesScreen() {
   }
 
   const favorites = data?.data || [];
+
+  const handleRemoveFromFavorites = async (productId: string) => {
+    try {
+      await removeFromWishlistMutation.mutateAsync(productId);
+      Alert.alert("Removed", "Removed from favorites");
+    } catch (error: any) {
+      Alert.alert("Error", error?.response?.data?.message || "Failed to remove from favorites");
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -37,7 +48,7 @@ export default function FavoritesScreen() {
               <TouchableOpacity style={styles.actionButton} onPress={() => Alert.alert('Add to Cart')}>
                 <Ionicons name="bag-add-outline" size={20} color="#1A1A1A" />
               </TouchableOpacity>
-              <TouchableOpacity style={styles.actionButton} onPress={() => Alert.alert('Remove from Favorites')}>
+              <TouchableOpacity style={styles.actionButton} onPress={() => handleRemoveFromFavorites(item._id)}>
                 <Ionicons name="heart-dislike-outline" size={20} color="#FF3B30" />
               </TouchableOpacity>
             </View>
