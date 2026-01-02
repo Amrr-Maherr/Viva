@@ -1,10 +1,10 @@
 import fetchProducts from '@/api/fetchProducts'
 import { useQuery } from '@tanstack/react-query'
 
-const useFetchProducts = () => {
+const useFetchProducts = (categoryId: string = 'all') => {
     return useQuery({
-        queryKey: ['products'],
-        queryFn: () => fetchProducts()
+        queryKey: ['products', categoryId],
+        queryFn: () => fetchProducts(categoryId)
     })
 }
 
