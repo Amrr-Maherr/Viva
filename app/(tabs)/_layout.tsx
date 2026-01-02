@@ -21,44 +21,64 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
         // Disable the static render of the header on web
         // to prevent a hydration error in React Navigation v6.
         headerShown: useClientOnlyValue(false, true),
-      }}>
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <TabBarIcon name="home-outline" color={color} />,
+          title: "Home",
+          headerTitle: "Discover",
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name="home-outline" color={color} />
+          ),
+          headerRight: () => (
+            <Ionicons
+              name="notifications"
+              size={24}
+              onPress={() => alert("Settings pressed")}
+              style={{ marginRight: 15 }}
+            />
+          )
         }}
       />
       <Tabs.Screen
         name="search"
         options={{
-          title: 'Search',
-          tabBarIcon: ({ color }) => <TabBarIcon name="search-outline" color={color} />,
+          title: "Search",
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name="search-outline" color={color} />
+          ),
         }}
       />
       <Tabs.Screen
         name="cart"
         options={{
-          title: 'Cart',
-          tabBarIcon: ({ color }) => <TabBarIcon name="bag-outline" color={color} />,
+          title: "Cart",
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name="bag-outline" color={color} />
+          ),
         }}
       />
       <Tabs.Screen
         name="favorites"
         options={{
-          title: 'Favorites',
-          tabBarIcon: ({ color }) => <TabBarIcon name="heart-outline" color={color} />,
+          title: "Favorites",
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name="heart-outline" color={color} />
+          ),
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
-          title: 'Profile',
-          tabBarIcon: ({ color }) => <TabBarIcon name="person-outline" color={color} />,
+          title: "Profile",
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name="person-outline" color={color} />
+          ),
         }}
       />
     </Tabs>
