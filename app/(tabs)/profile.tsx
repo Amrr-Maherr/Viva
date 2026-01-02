@@ -26,6 +26,21 @@ export default function ProfileScreen() {
           <Text style={styles.menuText}>Change Password</Text>
           <Ionicons name="chevron-forward" size={24} color="#ccc" />
         </TouchableOpacity>
+        <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/my-orders')}>
+          <Ionicons name="bag-handle-outline" size={24} color="#1A1A1A" />
+          <Text style={styles.menuText}>My Orders</Text>
+          <Ionicons name="chevron-forward" size={24} color="#ccc" />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/address')}>
+          <Ionicons name="location-outline" size={24} color="#1A1A1A" />
+          <Text style={styles.menuText}>My Addresses</Text>
+          <Ionicons name="chevron-forward" size={24} color="#ccc" />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/payment-method')}>
+          <Ionicons name="card-outline" size={24} color="#1A1A1A" />
+          <Text style={styles.menuText}>Payment Methods</Text>
+          <Ionicons name="chevron-forward" size={24} color="#ccc" />
+        </TouchableOpacity>
         <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/notifications')}>
           <Ionicons name="notifications-outline" size={24} color="#1A1A1A" />
           <Text style={styles.menuText}>Notifications</Text>
