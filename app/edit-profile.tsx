@@ -1,167 +1,228 @@
 import React, { useState } from 'react';
-import { StyleSheet, ScrollView, TouchableOpacity, TextInput, Alert, Text, View } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import {
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+  Text,
+  View,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+} from "react-native";
 import { router } from 'expo-router';
+import { useForm, Controller } from "react-hook-form";
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { updateMe } from '@/api/users';
 
 export default function EditProfileScreen() {
-  const [formData, setFormData] = useState({
-    firstName: 'John',
-    lastName: 'Doe',
-    email: 'john.doe@example.com',
-    phone: '+1 (555) 123-4567',
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isLoading },
+  } = useForm({
+    defaultValues: {
+      name: "",
+      email: "",
+      phone: "",
+    },
   });
 
-  const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  };
-
-  const handleSaveProfile = () => {
-    // Basic validation
-    if (!formData.firstName || !formData.lastName || !formData.email) {
-      Alert.alert('Error', 'Please fill in all required fields');
-      return;
+  const onSubmit = async (data: any) => {
+    try {
+      const result = await updateMe(data.name, data.email, data.phone);
+      Alert.alert("Profile Updated", "Your profile has been updated successfully.");
+      console.log('Update profile result:', result);
+      // Navigate back
+      router.back();
+    } catch (error: any) {
+      Alert.alert("Update Failed", error.response?.data?.message || "Something went wrong");
+      console.log(error);
     }
-
-    if (!formData.email.includes('@')) {
-      Alert.alert('Error', 'Please enter a valid email address');
-      return;
-    }
-
-    Alert.alert(
-      'Profile Updated',
-      'Your profile information has been saved successfully!',
-      [
-        { text: 'OK', onPress: () => router.back() },
-      ]
-    );
   };
-
-  const renderInput = (label: string, field: string, placeholder: string, keyboardType: any = 'default', required = false) => (
-    <View style={styles.inputContainer}>
-      <Text style={styles.inputLabel}>
-        {label} {required && <Text style={styles.required}>*</Text>}
-      </Text>
-      <TextInput
-        style={styles.input}
-        placeholder={placeholder}
-        value={formData[field as keyof typeof formData]}
-        onChangeText={(value) => handleInputChange(field, value)}
-        keyboardType={keyboardType}
-        autoCapitalize={field.includes('Name') ? 'words' : 'none'}
-      />
-    </View>
-  );
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Edit Profile</Text>
-      </View>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.keyboardAvoidingContainer}
+    >
+      <SafeAreaView style={styles.safeAreaContainer}>
+        <ScrollView
+          contentContainerStyle={styles.scrollContainer}
+          keyboardShouldPersistTaps="never"
+        >
+          <Text style={styles.title}>Edit Profile</Text>
+          <Text style={styles.subtitle}>Update your personal information.</Text>
 
-      <View style={styles.avatarSection}>
-        <View style={styles.avatar}>
-          <Ionicons name="person" size={50} color="#666" />
-        </View>
-        <TouchableOpacity style={styles.changePhotoButton}>
-          <Ionicons name="camera" size={20} color="#1A1A1A" />
-          <Text style={styles.changePhotoText}>Change Photo</Text>
-        </TouchableOpacity>
-      </View>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Full Name</Text>
+            <Controller
+              control={control}
+              rules={{
+                required: true,
+              }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  style={styles.input}
+                  placeholder="Enter your full name"
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  autoCapitalize="words"
+                />
+              )}
+              name="name"
+            />
+            {errors.name && (
+              <Text style={styles.errorText}>Please enter valid user name</Text>
+            )}
+          </View>
 
-      <View style={styles.form}>
-        <View style={styles.row}>
-          {renderInput('First Name', 'firstName', 'Enter first name', 'default', true)}
-          {renderInput('Last Name', 'lastName', 'Enter last name', 'default', true)}
-        </View>
-        {renderInput('Email', 'email', 'Enter email address', 'email-address', true)}
-        {renderInput('Phone', 'phone', 'Enter phone number', 'phone-pad')}
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Email</Text>
+            <Controller
+              control={control}
+              rules={{
+                required: true,
+                pattern: {
+                  value: /^\S+@\S+$/i,
+                  message: "Invalid email address",
+                },
+              }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  style={styles.input}
+                  placeholder="Enter your email"
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                />
+              )}
+              name="email"
+            />
+            {errors.email && (
+              <Text style={styles.errorText}>
+                Please enter valid email address
+              </Text>
+            )}
+          </View>
 
-        <TouchableOpacity style={styles.saveButton} onPress={handleSaveProfile}>
-          <Text style={styles.saveButtonText}>Save Changes</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Phone</Text>
+            <Controller
+              control={control}
+              rules={{
+                required: true,
+              }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  style={styles.input}
+                  placeholder="Enter your phone number"
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  keyboardType="phone-pad"
+                />
+              )}
+              name="phone"
+            />
+            {errors.phone && (
+              <Text style={styles.errorText}>Please enter valid phone number</Text>
+            )}
+          </View>
+
+          <TouchableOpacity
+            style={styles.button}
+            disabled={isLoading}
+            onPress={handleSubmit(onSubmit)}
+          >
+            <Text style={styles.buttonText}>Update Profile</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => router.back()}>
+            <View style={styles.linkContainer}>
+              <Text style={styles.linkText}>Cancel</Text>
+            </View>
+          </TouchableOpacity>
+        </ScrollView>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  keyboardAvoidingContainer: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
-  header: {
-    padding: 20,
-    backgroundColor: '#f8f8f8',
-    alignItems: 'center',
+  safeAreaContainer: {
+    flex: 1,
+    backgroundColor: "#fff",
+  },
+  scrollContainer: {
+    flex: 1,
+    justifyContent: "center",
+    paddingHorizontal: 25,
+    backgroundColor: "#fff",
   },
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#1A1A1A',
+    fontSize: 32,
+    fontWeight: "semibold",
+    textAlign: "left",
+    marginBottom: 8,
   },
-  avatarSection: {
-    alignItems: 'center',
-    padding: 20,
-  },
-  avatar: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    backgroundColor: '#e0e0e0',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 15,
-  },
-  changePhotoButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 15,
-    paddingVertical: 8,
-    backgroundColor: '#f0f0f0',
-    borderRadius: 20,
-  },
-  changePhotoText: {
-    fontSize: 14,
-    color: '#1A1A1A',
-    marginLeft: 8,
-  },
-  form: {
-    padding: 20,
+  subtitle: {
+    fontSize: 16,
+    color: "#808080",
+    textAlign: "left",
+    marginBottom: 24,
   },
   inputContainer: {
-    marginBottom: 16,
+    marginBottom: 20,
   },
-  inputLabel: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#1A1A1A',
-    marginBottom: 6,
-  },
-  required: {
-    color: '#FF3B30',
+  label: {
+    fontSize: 16,
+    fontWeight: "medium",
+    marginBottom: 4,
+    color: "#1A1A1A",
   },
   input: {
     borderWidth: 1,
-    borderColor: '#e0e0e0',
-    borderRadius: 8,
+    borderColor: "#ccc",
+    borderRadius: 10,
     padding: 12,
     fontSize: 16,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  saveButton: {
-    backgroundColor: '#1A1A1A',
-    padding: 16,
-    borderRadius: 8,
-    alignItems: 'center',
+  button: {
+    backgroundColor: "#1A1A1A",
+    padding: 15,
+    borderRadius: 10,
+    alignItems: "center",
     marginTop: 20,
   },
-  saveButtonText: {
-    color: '#fff',
+  buttonText: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "600",
+  },
+  linkContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 20,
+  },
+  linkText: {
+    textAlign: "center",
     fontSize: 16,
-    fontWeight: '600',
+    color: "#1A1A1A",
+    fontWeight: "bold",
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 14,
+    marginTop: 4,
   },
 });
