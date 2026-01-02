@@ -1,0 +1,430 @@
+import React, { useState, useLayoutEffect } from 'react';
+import { View, Text, Image, ScrollView, TouchableOpacity, FlatList, StyleSheet, Dimensions } from 'react-native';
+import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import useFetchProduct from '@/hooks/useFetchProduct';
+import ProductImageGallery from '@/components/ProductImageGallery';
+import Loader from '@/components/Loader';
+import ErrorView from '@/components/ErrorView';
+import Colors from '@/constants/Colors';
+
+const { width } = Dimensions.get('window');
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: Colors.light.background,
+    },
+    center: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: Colors.light.background,
+    },
+    header: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingHorizontal: 16,
+        paddingVertical: 12,
+        backgroundColor: '#fff',
+        borderBottomWidth: StyleSheet.hairlineWidth,
+        borderBottomColor: '#ccc',
+    },
+    headerButton: {
+        padding: 8,
+    },
+    headerRight: {
+        flexDirection: 'row',
+    },
+    galleryContainer: {
+        position: 'relative',
+    },
+    galleryImage: {
+        width: width,
+        height: Dimensions.get('window').height * 0.38,
+        resizeMode: 'contain',
+        backgroundColor: '#fff',
+    },
+    pagination: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        position: 'absolute',
+        bottom: 16,
+        left: 0,
+        right: 0,
+    },
+    dot: {
+        width: 6,
+        height: 6,
+        borderRadius: 3,
+        backgroundColor: 'rgba(0,0,0,0.2)',
+        marginHorizontal: 4,
+    },
+    activeDot: {
+        backgroundColor: '#1A1A1A',
+    },
+    imageContainer: {
+        position: 'relative',
+    },
+    overlayIcons: {
+        position: 'absolute',
+        top: 50,
+        left: 16,
+        right: 16,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    overlayButton: {
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        borderRadius: 20,
+        padding: 10,
+    },
+    scrollView: {
+        flex: 1,
+        backgroundColor: '#f2f2f7',
+    },
+    content: {
+        backgroundColor: '#fff',
+        paddingHorizontal: 16,
+        paddingTop: 24,
+        paddingBottom: 24,
+    },
+    brand: {
+        fontSize: 13,
+        fontWeight: '600',
+        color: '#666',
+        textTransform: 'uppercase',
+        letterSpacing: 1,
+        marginBottom: 8,
+    },
+    productTitle: {
+        fontSize: 25,
+        fontWeight: '500',
+        color: '#1A1A1A',
+        marginBottom: 4,
+        lineHeight: 30,
+    },
+    category: {
+        fontSize: 14,
+        fontWeight: '400',
+        color: '#808080',
+        marginBottom: 16,
+    },
+    price: {
+        fontSize: 19,
+        fontWeight: '400',
+        color: '#1A1A1A',
+        marginBottom: 12,
+    },
+    metaContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 24,
+    },
+    ratingContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    stars: {
+        flexDirection: 'row',
+        marginRight: 6,
+    },
+    reviewsText: {
+        fontSize: 14,
+        color: '#808080',
+        fontWeight: '400',
+    },
+    soldText: {
+        fontSize: 14,
+        color: '#808080',
+        fontWeight: '400',
+    },
+    section: {
+        marginBottom: 24,
+    },
+    sectionTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#000',
+        marginBottom: 16,
+        textTransform: 'uppercase',
+        letterSpacing: 0.5,
+    },
+    specRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 8,
+    },
+    specLabel: {
+        fontSize: 16,
+        color: '#666',
+        fontWeight: '500',
+    },
+    specValue: {
+        fontSize: 16,
+        color: '#1A1A1A',
+        fontWeight: '400',
+    },
+    description: {
+        fontSize: 16,
+        lineHeight: 24,
+        color: '#1A1A1A',
+        marginBottom: 16,
+    },
+    readMore: {
+        color: '#1A1A1A',
+        fontWeight: '600',
+        fontSize: 16,
+    },
+    variantContainer: {
+        flexDirection: 'row',
+        marginBottom: 16,
+    },
+    sizeButton: {
+        flex: 1,
+        height: 40,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 1,
+        borderColor: '#d1d1d6',
+        marginRight: 8,
+        backgroundColor: '#fff',
+        borderRadius: 8,
+    },
+    selectedSizeButton: {
+        borderColor: '#007aff',
+        backgroundColor: '#007aff',
+    },
+    sizeText: {
+        fontSize: 16,
+        fontWeight: '400',
+        color: '#333',
+    },
+    selectedSizeText: {
+        color: '#fff',
+    },
+    colorSwatch: {
+        width: 32,
+        height: 32,
+        borderRadius: 16,
+        marginRight: 12,
+        borderWidth: 2,
+        borderColor: '#d1d1d6',
+    },
+    selectedColorSwatch: {
+        borderColor: '#007aff',
+    },
+    additionalInfo: {
+        backgroundColor: '#f2f2f7',
+        padding: 16,
+        borderRadius: 10,
+        marginBottom: 16,
+    },
+    infoItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 8,
+    },
+    infoText: {
+        fontSize: 14,
+        color: '#666',
+        marginLeft: 8,
+        fontWeight: '400',
+    },
+    bottomCTA: {
+        backgroundColor: '#fff',
+        paddingVertical: 16,
+        paddingHorizontal: 16,
+        paddingBottom: 34,
+        borderTopWidth: StyleSheet.hairlineWidth,
+        borderTopColor: '#c6c6c8',
+    },
+
+    availability: {
+        fontSize: 16,
+        fontWeight: '400',
+    },
+    disabledButton: {
+        backgroundColor: '#c7c7cc',
+    },
+    addToBagButton: {
+        backgroundColor: '#1A1A1A',
+        paddingVertical: 12,
+        borderRadius: 10,
+        width: '100%',
+        alignItems: 'center',
+    },
+    imagesGrid: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'space-between',
+    },
+    imagesHorizontal: {
+        paddingHorizontal: 16,
+    },
+    gridImage: {
+        width: 120,
+        height: 120,
+        marginRight: 8,
+        borderRadius: 8,
+    },
+    addToBagText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: '600',
+    },
+});
+
+export default function ProductDetailsScreen() {
+    const { id } = useLocalSearchParams();
+    const navigation = useNavigation();
+    const router = useRouter();
+    const { data: product, isLoading, isError, refetch } = useFetchProduct(id as string);
+    const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+    const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
+    const [quantity, setQuantity] = useState(1);
+    const [selectedColor, setSelectedColor] = useState('Red');
+    const [selectedSize, setSelectedSize] = useState('M');
+    const [isFavorite, setIsFavorite] = useState(false);
+
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            title: product?.title || 'Product Details',
+        });
+    }, [navigation, product]);
+
+    if (isLoading) {
+        return <Loader />;
+    }
+
+    if (isError) {
+        return <ErrorView onRefetch={refetch} />;
+    }
+
+    if (!product) {
+        return (
+            <View style={styles.center}>
+                <Text>No product found</Text>
+            </View>
+    );
+}
+
+    const productImages = [product.imageCover, ...(product.images || [])];
+    const colors = ['Red', 'Blue', 'Black', 'White'];
+    const sizes = ['S', 'M', 'L', 'XL'];
+    const shortDescription = product.description.slice(0, 100);
+    const fullDescription = product.description;
+
+    return (
+        <View style={styles.container}>
+            <ScrollView style={styles.scrollView}>
+                {/* Image Gallery with Overlay Icons */}
+                <View style={styles.imageContainer}>
+                    <ProductImageGallery images={productImages} />
+                    <View style={styles.overlayIcons}>
+                        <TouchableOpacity style={styles.overlayButton} onPress={() => router.back()}>
+                            <Ionicons name="chevron-back" size={24} color="#fff" />
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.overlayButton} onPress={() => setIsFavorite(!isFavorite)}>
+                            <Ionicons name={isFavorite ? "heart" : "heart-outline"} size={24} color={isFavorite ? "#ff3b30" : "#fff"} />
+                        </TouchableOpacity>
+                    </View>
+                </View>
+
+                <View style={styles.content}>
+                    {/* Product Header */}
+                    <Text style={styles.brand}>{product.brand?.name}</Text>
+                    <Text style={styles.productTitle} numberOfLines={2}>{product.title}</Text>
+                    <Text style={styles.category}>{product.category?.name}</Text>
+
+                    {/* Price & Meta */}
+                    <Text style={styles.price}>${product.price}</Text>
+                    <View style={styles.metaContainer}>
+                        <View style={styles.ratingContainer}>
+                            <View style={styles.stars}>
+                                {[1,2,3,4,5].map(star => (
+                                    <Ionicons key={star} name="star" size={14} color="#ffcc02" />
+                                ))}
+                            </View>
+                            <Text style={styles.reviewsText}>({product.ratingsQuantity})</Text>
+                        </View>
+                        <Text style={styles.soldText}>{product.sold} sold</Text>
+                    </View>
+
+                    {/* Description */}
+                    <View style={styles.section}>
+                        <Text style={styles.description} numberOfLines={isDescriptionExpanded ? undefined : 3}>
+                            {product.description}
+                        </Text>
+                        <TouchableOpacity onPress={() => setIsDescriptionExpanded(!isDescriptionExpanded)}>
+                            <Text style={styles.readMore}>
+                                {isDescriptionExpanded ? 'Show less' : 'Show more'}
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+
+                    {/* Product Specs */}
+                    <View style={styles.section}>
+                        <Text style={styles.sectionTitle}>Product Details</Text>
+                        <View style={styles.specRow}>
+                            <Text style={styles.specLabel}>Subcategory:</Text>
+                            <Text style={styles.specValue}>{product.subcategory?.[0]?.name}</Text>
+                        </View>
+                        <View style={styles.specRow}>
+                            <Text style={styles.specLabel}>Stock:</Text>
+                            <Text style={styles.specValue}>{product.quantity} available</Text>
+                        </View>
+                        <View style={styles.specRow}>
+                            <Text style={styles.specLabel}>Sold:</Text>
+                            <Text style={styles.specValue}>{product.sold} units</Text>
+                        </View>
+                        <View style={styles.specRow}>
+                            <Text style={styles.specLabel}>Rating:</Text>
+                            <Text style={styles.specValue}>{product.ratingsAverage}/5 ({product.ratingsQuantity} reviews)</Text>
+                        </View>
+                        <View style={styles.specRow}>
+                            <Text style={styles.specLabel}>Images:</Text>
+                            <Text style={styles.specValue}>{product.images?.length || 0} photos</Text>
+                        </View>
+                    </View>
+
+                    {/* Availability */}
+                    <View style={styles.section}>
+                        <Text style={[styles.availability, {
+                            color: product.quantity > 10 ? '#34c759' : product.quantity > 0 ? '#ff9500' : '#ff3b30'
+                        }]}>
+                            {product.quantity > 10 ? 'In stock' : product.quantity > 0 ? 'Low stock' : 'Out of stock'}
+                        </Text>
+                    </View>
+
+                    {/* All Images */}
+                    <View style={styles.section}>
+                        <Text style={styles.sectionTitle}>All Images</Text>
+                        <FlatList
+                            data={productImages}
+                            renderItem={({ item }) => <Image source={{ uri: item }} style={styles.gridImage} />}
+                            keyExtractor={(item, index) => index.toString()}
+                            horizontal
+                            showsHorizontalScrollIndicator={false}
+                            contentContainerStyle={styles.imagesHorizontal}
+                        />
+                    </View>
+                </View>
+            </ScrollView>
+
+            {/* Bottom Action Area */}
+            <View style={styles.bottomCTA}>
+                <TouchableOpacity
+                    style={[styles.addToBagButton, product.quantity === 0 && styles.disabledButton]}
+                    disabled={product.quantity === 0}
+                >
+                    <Text style={styles.addToBagText}>Add to Bag</Text>
+                </TouchableOpacity>
+            </View>
+        </View>
+    );
+}
