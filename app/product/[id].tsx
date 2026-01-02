@@ -1,9 +1,10 @@
 import React, { useState, useLayoutEffect } from 'react';
-import { View, Text, Image, ScrollView, TouchableOpacity, FlatList, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, Image, ScrollView, TouchableOpacity, FlatList, StyleSheet, Dimensions, Alert } from 'react-native';
 import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import useFetchProduct from '@/hooks/useFetchProduct';
 import useFetchBrands from '@/hooks/useFetchBrands';
+import { addToCart } from '@/api/cart';
 import ProductImageGallery from '@/components/ProductImageGallery';
 import Loader from '@/components/Loader';
 import ErrorView from '@/components/ErrorView';
@@ -471,6 +472,14 @@ export default function ProductDetailsScreen() {
                 <TouchableOpacity
                     style={[styles.addToBagButton, product.quantity === 0 && styles.disabledButton]}
                     disabled={product.quantity === 0}
+                    onPress={async () => {
+                        try {
+                            await addToCart(product._id);
+                            Alert.alert("Success", "Product added to cart!");
+                        } catch (error: any) {
+                            Alert.alert("Error", error.response?.data?.message || "Failed to add to cart");
+                        }
+                    }}
                 >
                     <Text style={styles.addToBagText}>Add to Bag</Text>
                 </TouchableOpacity>
