@@ -1,4 +1,5 @@
 import axios from "axios";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const login = async (email: string, password: string) => {
     try {
@@ -6,7 +7,11 @@ export const login = async (email: string, password: string) => {
             email,
             password
         });
-        return response?.data;
+        const data = response?.data;
+        if (data?.token) {
+            await AsyncStorage.setItem('token', data.token);
+        }
+        return data;
     } catch (error) {
         console.log(error);
         throw error;
