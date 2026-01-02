@@ -10,6 +10,7 @@ export const login = async (email: string, password: string) => {
         const data = response?.data;
         if (data?.token) {
             await AsyncStorage.setItem('token', data.token);
+            await AsyncStorage.setItem('user', JSON.stringify(data.user));
         }
         return data;
     } catch (error) {
