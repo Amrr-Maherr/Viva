@@ -14,6 +14,7 @@ import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useForm, Controller } from "react-hook-form";
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { signup } from '@/api/auth';
 export default function RegisterScreen() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
    const {
@@ -22,15 +23,24 @@ export default function RegisterScreen() {
      formState: { errors,isLoading},
    } = useForm({
      defaultValues: {
-       firstName: "",
+       name: "",
        email: "",
-       password:""
+       password:"",
+       rePassword: "",
+       phone: ""
      },
    });
-   const onSubmit = (data: any) => {
-     Alert.alert("Registration", `Welcome ${data.firstName}! Registration successful.`);
-     // Here you would typically send data to your backend
-     console.log(data);
+   const onSubmit = async (data: any) => {
+     try {
+       const result = await signup(data.name, data.email, data.password, data.rePassword, data.phone);
+       Alert.alert("Registration", `Welcome ${data.name}! Registration successful.`);
+       console.log('Signup result:', result);
+       // Navigate to login
+       router.push('/login');
+     } catch (error: any) {
+       Alert.alert("Registration Failed", error.response?.data?.message || "Something went wrong");
+       console.log(error);
+     }
    };
   return (
     <KeyboardAvoidingView
@@ -62,9 +72,9 @@ export default function RegisterScreen() {
                   autoCapitalize="words"
                 />
               )}
-              name="firstName"
+              name="name"
             />
-            {errors.firstName && (
+            {errors.name && (
               <Text style={styles.errorText}>Please enter valid user name</Text>
             )}
           </View>
@@ -137,6 +147,54 @@ export default function RegisterScreen() {
             </View>
             {errors.password && (
               <Text style={styles.errorText}>Please enter valid password</Text>
+            )}
+          </View>
+
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Confirm Password</Text>
+            <Controller
+              control={control}
+              rules={{
+                required: true,
+              }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  style={styles.input}
+                  placeholder="Confirm your password"
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  secureTextEntry
+                />
+              )}
+              name="rePassword"
+            />
+            {errors.rePassword && (
+              <Text style={styles.errorText}>Please confirm your password</Text>
+            )}
+          </View>
+
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Phone</Text>
+            <Controller
+              control={control}
+              rules={{
+                required: true,
+              }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  style={styles.input}
+                  placeholder="Enter your phone number"
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  keyboardType="phone-pad"
+                />
+              )}
+              name="phone"
+            />
+            {errors.phone && (
+              <Text style={styles.errorText}>Please enter valid phone number</Text>
             )}
           </View>
 
