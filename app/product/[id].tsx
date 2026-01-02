@@ -3,6 +3,7 @@ import { View, Text, Image, ScrollView, TouchableOpacity, FlatList, StyleSheet, 
 import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import useFetchProduct from '@/hooks/useFetchProduct';
+import useFetchBrands from '@/hooks/useFetchBrands';
 import ProductImageGallery from '@/components/ProductImageGallery';
 import Loader from '@/components/Loader';
 import ErrorView from '@/components/ErrorView';
@@ -272,6 +273,33 @@ const styles = StyleSheet.create({
         marginRight: 8,
         borderRadius: 8,
     },
+    brandCard: {
+        alignItems: 'center',
+        marginRight: 16,
+        padding: 8,
+        backgroundColor: '#fff',
+        borderRadius: 8,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 3,
+    },
+    brandImage: {
+        width: 60,
+        height: 60,
+        borderRadius: 30,
+        marginBottom: 8,
+    },
+    brandName: {
+        fontSize: 14,
+        fontWeight: '600',
+        color: '#1A1A1A',
+        textAlign: 'center',
+    },
+    brandsHorizontal: {
+        paddingHorizontal: 16,
+    },
     addToBagText: {
         color: '#fff',
         fontSize: 16,
@@ -284,6 +312,7 @@ export default function ProductDetailsScreen() {
     const navigation = useNavigation();
     const router = useRouter();
     const { data: product, isLoading, isError, refetch } = useFetchProduct(id as string);
+    const { data: brands } = useFetchBrands();
     const [selectedImageIndex, setSelectedImageIndex] = useState(0);
     const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
     const [quantity, setQuantity] = useState(1);
@@ -411,6 +440,27 @@ export default function ProductDetailsScreen() {
                             horizontal
                             showsHorizontalScrollIndicator={false}
                             contentContainerStyle={styles.imagesHorizontal}
+                        />
+                    </View>
+
+                    {/* Brands */}
+                    <View style={styles.section}>
+                        <Text style={styles.sectionTitle}>Brands</Text>
+                        <FlatList
+                            data={brands?.data}
+                            renderItem={({ item }) => (
+                                <TouchableOpacity
+                                    style={styles.brandCard}
+                                    onPress={() => (router.push as any)({ pathname: '/', params: { brand: item._id } })}
+                                >
+                                    <Image source={{ uri: item.image }} style={styles.brandImage} />
+                                    <Text style={styles.brandName}>{item.name}</Text>
+                                </TouchableOpacity>
+                            )}
+                            keyExtractor={(item) => item._id}
+                            horizontal
+                            showsHorizontalScrollIndicator={false}
+                            contentContainerStyle={styles.brandsHorizontal}
                         />
                     </View>
                 </View>
