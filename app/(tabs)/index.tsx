@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet } from "react-native";
 import { Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -10,7 +10,8 @@ import Loader from "@/components/Loader";
 import ErrorView from "@/components/ErrorView";
 
 export default function HomeScreen() {
-  const { data, isLoading, isError, refetch } = useFetchProducts();
+  const [selectedCategoryId, setSelectedCategoryId] = useState("all");
+  const { data, isLoading, isError, refetch } = useFetchProducts(selectedCategoryId);
 
   if (isLoading) {
     return <Loader />;
@@ -24,7 +25,7 @@ export default function HomeScreen() {
     <>
       <View style={{flex:1,paddingHorizontal:20,backgroundColor:"#fff"}}>
         <SearchInput />
-        <CategoryButtons/>
+        <CategoryButtons onCategorySelect={setSelectedCategoryId} />
         <ProductsList products={data?.data} />
       </View>
     </>
