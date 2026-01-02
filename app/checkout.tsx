@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
-import { Text, View } from '@/components/Themed';
+import { StyleSheet, ScrollView, TouchableOpacity, Alert, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
 
 export default function CheckoutScreen() {
   const [selectedAddress, setSelectedAddress] = useState(1);
@@ -36,7 +36,7 @@ export default function CheckoutScreen() {
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>Delivery Address</Text>
-          <TouchableOpacity onPress={() => Alert.alert('Add New Address')}>
+          <TouchableOpacity onPress={() => router.push('/new-address')}>
             <Text style={styles.addButton}>Add New</Text>
           </TouchableOpacity>
         </View>
@@ -60,7 +60,7 @@ export default function CheckoutScreen() {
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>Payment Method</Text>
-          <TouchableOpacity onPress={() => Alert.alert('Add New Payment')}>
+          <TouchableOpacity onPress={() => router.push('/new-card')}>
             <Text style={styles.addButton}>Add New</Text>
           </TouchableOpacity>
         </View>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { StyleSheet, ScrollView, TouchableOpacity, TextInput, Alert } from 'react-native';
-import { Text, View } from '@/components/Themed';
+import { StyleSheet, ScrollView, TouchableOpacity, TextInput, Alert, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
 
 export default function NewAddressScreen() {
   const [addressType, setAddressType] = useState('Home');
@@ -32,7 +32,7 @@ export default function NewAddressScreen() {
       'Address Saved',
       'Your new address has been saved successfully!',
       [
-        { text: 'OK', onPress: () => Alert.alert('Navigate back') },
+        { text: 'OK', onPress: () => router.back() },
       ]
     );
   };

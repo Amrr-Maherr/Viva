@@ -1,7 +1,7 @@
 import React from 'react';
-import { StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
-import { Text, View } from '@/components/Themed';
+import { StyleSheet, ScrollView, TouchableOpacity, Alert, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
 
 export default function AddressScreen() {
   const addresses = [
@@ -52,7 +52,7 @@ export default function AddressScreen() {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>My Addresses</Text>
-        <TouchableOpacity style={styles.addButton} onPress={() => Alert.alert('Add New Address')}>
+        <TouchableOpacity style={styles.addButton} onPress={() => router.push('/new-address')}>
           <Ionicons name="add" size={20} color="#fff" />
           <Text style={styles.addButtonText}>Add New</Text>
         </TouchableOpacity>

@@ -1,7 +1,7 @@
 import React from 'react';
-import { StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
-import { Text, View } from '@/components/Themed';
+import { StyleSheet, ScrollView, TouchableOpacity, Alert, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
 
 export default function PaymentMethodScreen() {
   const paymentMethods = [
@@ -65,7 +65,7 @@ export default function PaymentMethodScreen() {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Payment Methods</Text>
-        <TouchableOpacity style={styles.addButton} onPress={() => Alert.alert('Add New Payment')}>
+        <TouchableOpacity style={styles.addButton} onPress={() => router.push('/new-card')}>
           <Ionicons name="add" size={20} color="#fff" />
           <Text style={styles.addButtonText}>Add New</Text>
         </TouchableOpacity>
