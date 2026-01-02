@@ -1,7 +1,6 @@
-import { CategoriesResponse } from "@/types/Categories";
 import axios from "axios";
 
-const fetchCategories = async (): Promise<CategoriesResponse> => {
+const fetchCategories = async () => {
     try {
         const response = await axios.get('https://ecommerce.routemisr.com/api/v1/categories');
         return response?.data;
