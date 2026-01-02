@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, ScrollView, TouchableOpacity, Alert, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function ProfileScreen() {
   return (
@@ -72,7 +73,28 @@ export default function ProfileScreen() {
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity style={styles.logoutButton} onPress={() => Alert.alert('Logout', 'Are you sure?')}>
+      <TouchableOpacity style={styles.logoutButton} onPress={async () => {
+        Alert.alert(
+          'Logout',
+          'Are you sure you want to logout?',
+          [
+            { text: 'Cancel', style: 'cancel' },
+            {
+              text: 'Logout',
+              style: 'destructive',
+              onPress: async () => {
+                try {
+                  await AsyncStorage.removeItem('token');
+                  router.replace('/login');
+                } catch (error) {
+                  console.log('Error removing token:', error);
+                  Alert.alert('Error', 'Failed to logout');
+                }
+              },
+            },
+          ]
+        );
+      }}>
         <Text style={styles.logoutText}>Logout</Text>
       </TouchableOpacity>
     </ScrollView>
