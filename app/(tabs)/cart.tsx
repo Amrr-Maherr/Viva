@@ -1,15 +1,23 @@
 import React from 'react';
-import { StyleSheet, ScrollView, TouchableOpacity, Alert, Text, View } from 'react-native';
+import { StyleSheet, ScrollView, TouchableOpacity, Alert, Text, View, Image, FlatList } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import useFetchCart from '@/hooks/useFetchCart';
+import Loader from '@/components/Loader';
+import ErrorView from '@/components/ErrorView';
 
 export default function CartScreen() {
-  const cartItems = [
-    { id: 1, name: 'Product 1', price: 29.99, quantity: 2 },
-    { id: 2, name: 'Product 2', price: 19.99, quantity: 1 },
-    { id: 3, name: 'Product 3', price: 49.99, quantity: 1 },
-  ];
+  const { data, isLoading, isError, refetch } = useFetchCart();
 
-  const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  if (isLoading) {
+    return <Loader />;
+  }
+
+  if (isError) {
+    return <ErrorView onRefetch={refetch} />;
+  }
+
+  const cartItems = data?.data?.products || [];
+  const total = data?.data?.totalCartPrice || 0;
 
   return (
     <View style={styles.container}>
@@ -19,19 +27,17 @@ export default function CartScreen() {
       </View>
 
       <ScrollView style={styles.itemsContainer}>
-        {cartItems.map((item) => (
-          <View key={item.id} style={styles.cartItem}>
-            <View style={styles.itemImage}>
-              <Ionicons name="image-outline" size={40} color="#ccc" />
-            </View>
+        {cartItems.map((item: any) => (
+          <View key={item.product._id} style={styles.cartItem}>
+            <Image source={{ uri: item.product.imageCover }} style={styles.itemImage} />
             <View style={styles.itemDetails}>
-              <Text style={styles.itemName}>{item.name}</Text>
-              <Text style={styles.itemPrice}>${item.price.toFixed(2)}</Text>
+              <Text style={styles.itemName}>{item.product.title}</Text>
+              <Text style={styles.itemPrice}>${item.price}</Text>
               <View style={styles.quantityContainer}>
                 <TouchableOpacity style={styles.quantityButton}>
                   <Ionicons name="remove" size={16} color="#1A1A1A" />
                 </TouchableOpacity>
-                <Text style={styles.quantity}>{item.quantity}</Text>
+                <Text style={styles.quantity}>{item.count}</Text>
                 <TouchableOpacity style={styles.quantityButton}>
                   <Ionicons name="add" size={16} color="#1A1A1A" />
                 </TouchableOpacity>

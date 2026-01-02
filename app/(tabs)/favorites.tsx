@@ -1,14 +1,22 @@
 import React from 'react';
-import { StyleSheet, ScrollView, TouchableOpacity, Alert, Text, View } from 'react-native';
+import { StyleSheet, ScrollView, TouchableOpacity, Alert, Text, View, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import useFetchWishlist from '@/hooks/useFetchWishlist';
+import Loader from '@/components/Loader';
+import ErrorView from '@/components/ErrorView';
 
 export default function FavoritesScreen() {
-  const favorites = [
-    { id: 1, name: 'Favorite Product 1', price: 29.99 },
-    { id: 2, name: 'Favorite Product 2', price: 19.99 },
-    { id: 3, name: 'Favorite Product 3', price: 49.99 },
-    { id: 4, name: 'Favorite Product 4', price: 39.99 },
-  ];
+  const { data, isLoading, isError, refetch } = useFetchWishlist();
+
+  if (isLoading) {
+    return <Loader />;
+  }
+
+  if (isError) {
+    return <ErrorView onRefetch={refetch} />;
+  }
+
+  const favorites = data?.data || [];
 
   return (
     <View style={styles.container}>
@@ -18,14 +26,12 @@ export default function FavoritesScreen() {
       </View>
 
       <ScrollView style={styles.itemsContainer}>
-        {favorites.map((item) => (
-          <TouchableOpacity key={item.id} style={styles.favoriteItem} onPress={() => Alert.alert('Product Details')}>
-            <View style={styles.itemImage}>
-              <Ionicons name="heart" size={30} color="#FF3B30" />
-            </View>
+        {favorites.map((item: any) => (
+          <TouchableOpacity key={item._id} style={styles.favoriteItem} onPress={() => Alert.alert('Product Details')}>
+            <Image source={{ uri: item.imageCover }} style={styles.itemImage} />
             <View style={styles.itemDetails}>
-              <Text style={styles.itemName}>{item.name}</Text>
-              <Text style={styles.itemPrice}>${item.price.toFixed(2)}</Text>
+              <Text style={styles.itemName}>{item.title}</Text>
+              <Text style={styles.itemPrice}>${item.price}</Text>
             </View>
             <View style={styles.itemActions}>
               <TouchableOpacity style={styles.actionButton} onPress={() => Alert.alert('Add to Cart')}>

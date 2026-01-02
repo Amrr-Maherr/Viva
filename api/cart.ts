@@ -17,3 +17,18 @@ export const addToCart = async (productId: string) => {
         throw error;
     }
 };
+
+export const getCart = async () => {
+    try {
+        const token = await AsyncStorage.getItem('token');
+        const response = await axios.get('https://ecommerce.routemisr.com/api/v1/cart', {
+            headers: {
+                token
+            }
+        });
+        return response?.data;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+};
