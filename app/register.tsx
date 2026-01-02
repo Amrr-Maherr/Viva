@@ -272,7 +272,6 @@ const styles = StyleSheet.create({
     // marginTop: 20,
     fontSize: 16,
     color: "#1A1A1A",
-    fontWeight:"bold"
   },
   socialContainer: {
     marginTop: 20,
