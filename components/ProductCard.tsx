@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAddToCartMutation } from '@/api/cart';
@@ -52,15 +52,23 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <TouchableOpacity style={styles.card} onPress={() => router.push({ pathname: '/product/[id]', params: { id: product._id } })}>
             <View style={styles.imageContainer}>
                 <Image source={{ uri: product.imageCover }} style={styles.image} />
-                <TouchableOpacity style={styles.favoriteIcon} onPress={handleToggleFavorite}>
-                    <Ionicons name={isFavorite ? "heart" : "heart-outline"} size={24} color={isFavorite ? "#ff3b30" : "white"} />
+                <TouchableOpacity style={styles.favoriteIcon} onPress={handleToggleFavorite} disabled={addToWishlistMutation.isPending || removeFromWishlistMutation.isPending}>
+                    {addToWishlistMutation.isPending || removeFromWishlistMutation.isPending ? (
+                        <ActivityIndicator size="small" color="white" />
+                    ) : (
+                        <Ionicons name={isFavorite ? "heart" : "heart-outline"} size={24} color={isFavorite ? "#ff3b30" : "white"} />
+                    )}
                 </TouchableOpacity>
             </View>
             <View style={styles.info}>
                 <Text style={styles.title}>{product.title.slice(0,10)}</Text>
                 <Text style={styles.price}>${product.price}</Text>
-                <TouchableOpacity style={styles.cartIcon} onPress={handleAddToCart}>
-                    <Ionicons name="bag-outline" size={20} color="#333" />
+                <TouchableOpacity style={styles.cartIcon} onPress={handleAddToCart} disabled={addToCartMutation.isPending}>
+                    {addToCartMutation.isPending ? (
+                        <ActivityIndicator size="small" color="#333" />
+                    ) : (
+                        <Ionicons name="bag-outline" size={20} color="#333" />
+                    )}
                 </TouchableOpacity>
             </View>
         </TouchableOpacity>

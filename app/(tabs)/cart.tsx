@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, ScrollView, TouchableOpacity, Alert, Text, View, Image, FlatList } from 'react-native';
+import { StyleSheet, ScrollView, TouchableOpacity, Alert, Text, View, Image, FlatList, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import useFetchCart from '@/hooks/useFetchCart';
 import { useRemoveFromCartMutation } from '@/api/cart';
@@ -54,8 +54,12 @@ export default function CartScreen() {
                 </TouchableOpacity>
               </View>
             </View>
-            <TouchableOpacity style={styles.removeButton} onPress={() => handleRemoveFromCart(item.product._id)}>
-              <Ionicons name="trash-outline" size={20} color="#FF3B30" />
+            <TouchableOpacity style={styles.removeButton} onPress={() => handleRemoveFromCart(item.product._id)} disabled={removeFromCartMutation.isPending}>
+              {removeFromCartMutation.isPending ? (
+                <ActivityIndicator size="small" color="#FF3B30" />
+              ) : (
+                <Ionicons name="trash-outline" size={20} color="#FF3B30" />
+              )}
             </TouchableOpacity>
           </View>
         ))}

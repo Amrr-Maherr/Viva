@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, ScrollView, TouchableOpacity, Alert, Text, View, Image } from 'react-native';
+import { StyleSheet, ScrollView, TouchableOpacity, Alert, Text, View, Image, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import useFetchWishlist from '@/hooks/useFetchWishlist';
 import { useRemoveFromWishlistMutation } from '@/api/wishlist';
@@ -56,11 +56,19 @@ export default function FavoritesScreen() {
               <Text style={styles.itemPrice}>${item.price}</Text>
             </View>
             <View style={styles.itemActions}>
-              <TouchableOpacity style={styles.actionButton} onPress={() => handleAddToCart(item._id)}>
-                <Ionicons name="bag-add-outline" size={20} color="#1A1A1A" />
+              <TouchableOpacity style={styles.actionButton} onPress={() => handleAddToCart(item._id)} disabled={addToCartMutation.isPending}>
+                {addToCartMutation.isPending ? (
+                  <ActivityIndicator size="small" color="#1A1A1A" />
+                ) : (
+                  <Ionicons name="bag-add-outline" size={20} color="#1A1A1A" />
+                )}
               </TouchableOpacity>
-              <TouchableOpacity style={styles.actionButton} onPress={() => handleRemoveFromFavorites(item._id)}>
-                <Ionicons name="heart-dislike-outline" size={20} color="#FF3B30" />
+              <TouchableOpacity style={styles.actionButton} onPress={() => handleRemoveFromFavorites(item._id)} disabled={removeFromWishlistMutation.isPending}>
+                {removeFromWishlistMutation.isPending ? (
+                  <ActivityIndicator size="small" color="#FF3B30" />
+                ) : (
+                  <Ionicons name="heart-dislike-outline" size={20} color="#FF3B30" />
+                )}
               </TouchableOpacity>
             </View>
           </TouchableOpacity>
