@@ -1,5 +1,6 @@
 import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export const addToWishlist = async (productId: string) => {
     try {
@@ -46,4 +47,24 @@ export const getWishlist = async () => {
         console.log(error);
         throw error;
     }
+};
+
+export const useAddToWishlistMutation = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: addToWishlist,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['wishlist'] });
+        },
+    });
+};
+
+export const useRemoveFromWishlistMutation = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: removeFromWishlist,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['wishlist'] });
+        },
+    });
 };

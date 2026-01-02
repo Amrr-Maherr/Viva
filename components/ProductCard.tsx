@@ -1,7 +1,9 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useAddToCartMutation } from '@/api/cart';
+import { useAddToWishlistMutation, useRemoveFromWishlistMutation } from '@/api/wishlist';
 
 interface Product {
     _id: string;
@@ -17,19 +19,47 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     const router = useRouter();
+    const addToCartMutation = useAddToCartMutation();
+    const addToWishlistMutation = useAddToWishlistMutation();
+    const removeFromWishlistMutation = useRemoveFromWishlistMutation();
+    const [isFavorite, setIsFavorite] = React.useState(false); // You might want to fetch this from wishlist data
+
+    const handleAddToCart = async () => {
+        try {
+            await addToCartMutation.mutateAsync(product._id);
+            Alert.alert("Success", "Added to cart!");
+        } catch (error: any) {
+            Alert.alert("Error", error?.response?.data?.message || "Failed to add to cart");
+        }
+    };
+
+    const handleToggleFavorite = async () => {
+        try {
+            if (isFavorite) {
+                await removeFromWishlistMutation.mutateAsync(product._id);
+                Alert.alert("Removed", "Removed from wishlist");
+            } else {
+                await addToWishlistMutation.mutateAsync(product._id);
+                Alert.alert("Added", "Added to wishlist");
+            }
+            setIsFavorite(!isFavorite);
+        } catch (error: any) {
+            Alert.alert("Error", error?.response?.data?.message || "Failed to update wishlist");
+        }
+    };
 
     return (
         <TouchableOpacity style={styles.card} onPress={() => router.push({ pathname: '/product/[id]', params: { id: product._id } })}>
             <View style={styles.imageContainer}>
                 <Image source={{ uri: product.imageCover }} style={styles.image} />
-                <TouchableOpacity style={styles.favoriteIcon}>
-                    <Ionicons name="heart-outline" size={24} color="white" />
+                <TouchableOpacity style={styles.favoriteIcon} onPress={handleToggleFavorite}>
+                    <Ionicons name={isFavorite ? "heart" : "heart-outline"} size={24} color={isFavorite ? "#ff3b30" : "white"} />
                 </TouchableOpacity>
             </View>
             <View style={styles.info}>
                 <Text style={styles.title}>{product.title.slice(0,10)}</Text>
                 <Text style={styles.price}>${product.price}</Text>
-                <TouchableOpacity style={styles.cartIcon}>
+                <TouchableOpacity style={styles.cartIcon} onPress={handleAddToCart}>
                     <Ionicons name="bag-outline" size={20} color="#333" />
                 </TouchableOpacity>
             </View>

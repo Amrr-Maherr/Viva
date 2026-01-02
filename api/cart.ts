@@ -1,5 +1,6 @@
 import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export const addToCart = async (productId: string) => {
     try {
@@ -31,4 +32,14 @@ export const getCart = async () => {
         console.log(error);
         throw error;
     }
+};
+
+export const useAddToCartMutation = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: addToCart,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['cart'] });
+        },
+    });
 };
