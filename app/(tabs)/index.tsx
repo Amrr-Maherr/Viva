@@ -27,12 +27,15 @@ export default function HomeScreen() {
   return (
     <>
       <View style={{flex:1,paddingHorizontal:20,backgroundColor:"#fff"}}>
-        <View style={{flexDirection: 'row', justifyContent: 'space-between', marginBottom: 16}}>
+        <View style={{flexDirection: 'row', justifyContent: 'space-around', marginBottom: 16}}>
           <TouchableOpacity style={styles.linkButton} onPress={() => (router.push as any)('/categories')}>
             <Text style={styles.linkText}>Categories</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.linkButton} onPress={() => (router.push as any)('/brands')}>
             <Text style={styles.linkText}>Brands</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.linkButton} onPress={() => (router.push as any)('/orders')}>
+            <Text style={styles.linkText}>Orders</Text>
           </TouchableOpacity>
         </View>
         <SearchInput />
