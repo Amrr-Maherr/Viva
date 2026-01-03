@@ -1,6 +1,6 @@
-# E-Commerce App
+# Viva - E-Commerce Mobile App
 
-A full-featured e-commerce mobile application built with React Native, Expo, and React Query.
+A comprehensive e-commerce mobile application built with React Native and Expo, offering a seamless shopping experience with advanced features and modern UI/UX design.
 
 ## Features
 
@@ -37,6 +37,8 @@ A full-featured e-commerce mobile application built with React Native, Expo, and
 - **Loaders**: Loading indicators on buttons and icons during operations
 - **Toast Notifications**: Success and error toasts instead of alerts
 - **Responsive Design**: Optimized for mobile screens
+- **Filters Modal**: Advanced product filtering with price, rating, brand, and sorting
+- **Pull-to-Refresh**: Refresh functionality across all screens for real-time data updates
 
 ### Technical Features
 - **API Integration**: RESTful API calls with Axios
@@ -65,6 +67,36 @@ A full-featured e-commerce mobile application built with React Native, Expo, and
 - **React Hot Toast**: Notifications (web version adapted)
 - **React Hook Form**: Form management
 
+## Screenshots
+
+### Home Screen with Filters
+- Product browsing with category selection
+- Advanced filtering modal for price, rating, brand, and sorting
+- Pull-to-refresh functionality for real-time updates
+
+### Shopping Experience
+- Detailed product pages with image galleries
+- Add to cart and wishlist functionality
+- Seamless navigation between screens
+
+### User Management
+- Complete authentication flow
+- Profile management and order history
+- Secure data persistence
+
+## What's New (Latest Updates)
+
+### v1.1.0 - Enhanced User Experience
+- **Advanced Filters Modal**: Comprehensive product filtering with price ranges, ratings, brands, and sorting options
+- **Pull-to-Refresh**: Added refresh functionality to Cart and Favorites screens for real-time data updates
+- **Improved Architecture**: Separated React Query hooks into dedicated `queries/` folder for better code organization
+- **UI Enhancements**: Better loading states and user feedback across all screens
+
+### v1.0.0 - Initial Release
+- Complete e-commerce functionality with authentication, product browsing, cart, and wishlist
+- Modern React Native architecture with TypeScript
+- Responsive design optimized for mobile devices
+
 ## Installation
 
 1. Clone the repository
@@ -84,42 +116,63 @@ A full-featured e-commerce mobile application built with React Native, Expo, and
 
 ```
 app/
-  _layout.tsx          # Root layout with navigation
+  _layout.tsx          # Root layout with navigation and providers
   (tabs)/              # Tab screens
-    _layout.tsx        # Tab navigation
-    index.tsx          # Home screen
+    _layout.tsx        # Tab navigation setup
+    index.tsx          # Home screen with filters and products
     search.tsx         # Search screen
-    cart.tsx           # Cart screen
-    favorites.tsx      # Favorites screen
+    cart.tsx           # Cart screen with pull-to-refresh
+    favorites.tsx      # Favorites screen with pull-to-refresh
     profile.tsx        # Profile screen
-  login.tsx            # Login screen
-  register.tsx         # Register screen
-  edit-profile.tsx     # Edit profile screen
-  forgot-password.tsx  # Forgot password screen
-  verify-reset-code.tsx # Verify reset code screen
-  reset-password.tsx   # Reset password screen
+  login.tsx            # Authentication screens
+  register.tsx
+  edit-profile.tsx
+  forgot-password.tsx
+  verify-reset-code.tsx
+  reset-password.tsx
   product/[id].tsx     # Product details screen
+  brands.tsx           # Brand listing screen
+  categories.tsx       # Category listing screen
 
 api/
-  auth.ts              # Authentication APIs
+  auth.ts              # Authentication API functions
   users.ts             # User management APIs
-  cart.ts              # Cart APIs
-  wishlist.ts          # Wishlist APIs
-  fetchProducts.ts     # Product fetching APIs
+  cart.ts              # Shopping cart operations
+  wishlist.ts          # Wishlist/favorites operations
+  fetchProducts.ts     # Product data fetching
+  fetchCategories.ts   # Categories data
+  fetchBrands.ts       # Brands data
+
+queries/
+  useFetchProducts.ts  # React Query hooks for products
+  useFetchCart.ts      # Cart data hooks
+  useFetchWishlist.ts  # Wishlist data hooks
+  useFetchCategories.ts # Categories hooks
+  useFetchBrands.ts    # Brands hooks
+  useFetchOrders.ts    # Orders hooks
 
 components/
-  ProductCard.tsx      # Product card component
-  Loader.tsx           # Loading component
-  ErrorView.tsx        # Error display component
+  ProductCard.tsx      # Product display component
+  ProductImageGallery.tsx # Image carousel component
+  CategoryButtons.tsx  # Category selection buttons
+  FiltersModal.tsx     # Advanced filtering modal
+  Loader.tsx           # Loading indicators
+  ErrorView.tsx        # Error display with retry
+  StyledText.tsx       # Custom text component
 
-hooks/
-  useFetch*.ts         # Custom hooks for data fetching
+provider/
+  Provider.tsx         # React Query provider setup
 
 constants/
-  Colors.ts            # Color constants
+  Colors.ts            # App color palette
 
 types/
-  product.ts           # TypeScript types
+  product.ts           # Product type definitions
+  Products.ts          # Products API types
+  Categories.ts        # Category types
+
+utils/
+  toast.ts             # Toast notification utilities
 ```
 
 ## Contributing
