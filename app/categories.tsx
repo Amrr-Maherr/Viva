@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, FlatList, TouchableOpacity, Image, StyleSheet, Dimensions } from 'react-native';
 import { useRouter } from 'expo-router';
-import useFetchCategories from '@/hooks/useFetchCategories';
+import useFetchCategories from '@/queries/useFetchCategories';
 import Loader from '@/components/Loader';
 import ErrorView from '@/components/ErrorView';
 

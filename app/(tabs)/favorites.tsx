@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, ScrollView, TouchableOpacity, Text, View, Image, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import useFetchWishlist from '@/hooks/useFetchWishlist';
+import useFetchWishlist from '@/queries/useFetchWishlist';
 import { useRemoveFromWishlistMutation } from '@/api/wishlist';
 import { useAddToCartMutation } from '@/api/cart';
 import Loader from '@/components/Loader';

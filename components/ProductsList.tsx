@@ -11,25 +11,27 @@ interface Product {
 }
 
 interface ProductsListProps {
-    products: Product[] | undefined;
+  products: Product[] | undefined;
+  refetch:()=>void
 }
 
-const ProductsList: React.FC<ProductsListProps> = ({ products }) => {
-    return (
-        <>
-            {products && (
-                <FlatList
-                    data={products}
-                    renderItem={({ item }) => <ProductCard product={item} />}
-                    numColumns={2}
-                    keyExtractor={(item) => item._id}
-                    contentContainerStyle={styles.container}
-                    columnWrapperStyle={styles.columnWrapper}
-                    showsVerticalScrollIndicator={false}
-                />
-            )}
-        </>
-    );
+const ProductsList: React.FC<ProductsListProps> = ({ products, refetch }) => {
+  return (
+    <>
+      {products && (
+        <FlatList
+          data={products}
+          renderItem={({ item }) => <ProductCard product={item} />}
+          numColumns={2}
+          keyExtractor={(item) => item._id}
+          contentContainerStyle={styles.container}
+          columnWrapperStyle={styles.columnWrapper}
+          showsVerticalScrollIndicator={false}
+          onRefresh={refetch}
+        />
+      )}
+    </>
+  );
 };
 
 const styles = StyleSheet.create({

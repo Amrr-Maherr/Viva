@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FlatList, View, StyleSheet } from 'react-native';
 import CategoryButton from './CategoryButton';
-import useFetchCategories from '../hooks/useFetchCategories';
+import useFetchCategories from '../queries/useFetchCategories';
 import { Category } from '../types/Categories';
 
 interface CategoryButtonsProps {

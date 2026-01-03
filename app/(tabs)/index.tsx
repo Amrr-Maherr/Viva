@@ -3,7 +3,7 @@ import { StyleSheet, TouchableOpacity } from "react-native";
 import { Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import useFetchProducts from "@/hooks/useFetchProducts";
+import useFetchProducts from "@/queries/useFetchProducts";
 import SearchInput from "@/components/SearchInput";
 import CategoryButtons from "@/components/CategoryButtons";
 import ProductsList from "@/components/ProductsList";
@@ -25,10 +25,10 @@ export default function HomeScreen() {
 
   return (
     <>
-      <View style={{flex:1,paddingHorizontal:20,backgroundColor:"#fff"}}>
+      <View style={{ flex: 1, paddingHorizontal: 20, backgroundColor: "#fff" }}>
         {/* <SearchInput /> */}
         <CategoryButtons onCategorySelect={setSelectedCategoryId} />
-        <ProductsList products={data?.data} />
+        <ProductsList products={data?.data} refetch={refetch} />
       </View>
     </>
   );

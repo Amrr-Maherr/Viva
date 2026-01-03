@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import useFetchOrders from '@/hooks/useFetchOrders';
+import useFetchOrders from '@/queries/useFetchOrders';
 import Loader from '@/components/Loader';
 import ErrorView from '@/components/ErrorView';
 
