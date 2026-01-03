@@ -1,5 +1,5 @@
-import React from 'react';
-import { StyleSheet, ScrollView, TouchableOpacity, Text, View, Image, ActivityIndicator } from 'react-native';
+import React, { useCallback, useState } from 'react';
+import { StyleSheet, ScrollView, TouchableOpacity, Text, View, Image, ActivityIndicator, RefreshControl } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import useFetchWishlist from '@/queries/useFetchWishlist';
 import { useRemoveFromWishlistMutation } from '@/api/wishlist';
@@ -12,6 +12,13 @@ export default function FavoritesScreen() {
   const { data, isLoading, isError, refetch } = useFetchWishlist();
   const removeFromWishlistMutation = useRemoveFromWishlistMutation();
   const addToCartMutation = useAddToCartMutation();
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
+  }, [refetch]);
 
   if (isLoading) {
     return <Loader />;
@@ -48,7 +55,12 @@ export default function FavoritesScreen() {
         <Text style={styles.subtitle}>{favorites.length} items</Text>
       </View>
 
-      <ScrollView style={styles.itemsContainer}>
+      <ScrollView
+        style={styles.itemsContainer}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         {favorites.map((item: any) => (
           <TouchableOpacity key={item._id} style={styles.favoriteItem} onPress={() => showToast('info', 'Product Details')}>
             <Image source={{ uri: item.imageCover }} style={styles.itemImage} />

@@ -1,5 +1,5 @@
-import React from 'react';
-import { StyleSheet, ScrollView, TouchableOpacity, Text, View, Image, FlatList, ActivityIndicator } from 'react-native';
+import React, { useCallback, useState } from 'react';
+import { StyleSheet, ScrollView, TouchableOpacity, Text, View, Image, FlatList, ActivityIndicator, RefreshControl } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import useFetchCart from '@/queries/useFetchCart';
 import { useRemoveFromCartMutation } from '@/api/cart';
@@ -10,6 +10,13 @@ import { showToast } from '@/utils/toast';
 export default function CartScreen() {
   const { data, isLoading, isError, refetch } = useFetchCart();
   const removeFromCartMutation = useRemoveFromCartMutation();
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
+  }, [refetch]);
 
   if (isLoading) {
     return <Loader />;
@@ -38,7 +45,12 @@ export default function CartScreen() {
         <Text style={styles.subtitle}>{cartItems.length} items</Text>
       </View>
 
-      <ScrollView style={styles.itemsContainer}>
+      <ScrollView
+        style={styles.itemsContainer}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         {cartItems.map((item: any) => (
           <View key={item.product._id} style={styles.cartItem}>
             <Image source={{ uri: item.product.imageCover }} style={styles.itemImage} />
