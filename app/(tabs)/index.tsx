@@ -1,20 +1,30 @@
-import React, { useState, useCallback } from "react";
-import { StyleSheet, Text, ScrollView, RefreshControl } from "react-native";
-import { View } from "react-native";
-import { useLocalSearchParams } from 'expo-router';
-import useFetchProducts from "@/queries/useFetchProducts";
-import SearchInput from "@/components/SearchInput";
+import BannerAd from "@/components/BannerAd";
 import CategoryButtons from "@/components/CategoryButtons";
-import ProductsList from "@/components/ProductsList";
-import Loader from "@/components/Loader";
-import ErrorView from "@/components/ErrorView";
 import EmptyState from "@/components/EmptyState";
+import ErrorView from "@/components/ErrorView";
 import HeroSection from "@/components/HeroSection";
+import Loader from "@/components/Loader";
+import ProductsList from "@/components/ProductsList";
+import SectionTitle from "@/components/SectionTitle";
+import useFetchProducts from "@/queries/useFetchProducts";
+import { useLocalSearchParams } from "expo-router";
+import React, { useCallback, useState } from "react";
+import { RefreshControl, ScrollView, StyleSheet, Text, View } from "react-native";
 
 export default function HomeScreen() {
   const { category } = useLocalSearchParams();
-  const [selectedCategoryId, setSelectedCategoryId] = useState(category as string || "all");
-  const { data, isLoading, isError, refetch, fetchNextPage, hasNextPage, isFetchingNextPage } = useFetchProducts(selectedCategoryId);
+  const [selectedCategoryId, setSelectedCategoryId] = useState(
+    (category as string) || "all"
+  );
+  const {
+    data,
+    isLoading,
+    isError,
+    refetch,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useFetchProducts(selectedCategoryId);
 
   const onRefresh = useCallback(async () => {
     await refetch();
@@ -34,11 +44,11 @@ export default function HomeScreen() {
     return <ErrorView onRefetch={refetch} />;
   }
 
-  const allProducts = data?.pages.flatMap(page => page.data) || [];
+  const allProducts = data?.pages.flatMap((page) => page.data) || [];
 
   if (allProducts.length === 0 && !isLoading && !isFetchingNextPage) {
     return (
-      <View style={{flex:1,backgroundColor:"#fff",paddingHorizontal:20}}>
+      <View style={{ flex: 1, backgroundColor: "#fff", paddingHorizontal: 20 }}>
         {/* <SearchInput /> */}
         <CategoryButtons onCategorySelect={setSelectedCategoryId} />
         <EmptyState
@@ -52,29 +62,68 @@ export default function HomeScreen() {
 
   return (
     <ScrollView
-      style={{flex:1,backgroundColor:"#fff"}}
+      style={{ flex: 1, backgroundColor: "#fff" }}
       refreshControl={
         <RefreshControl refreshing={false} onRefresh={onRefresh} />
       }
     >
       <HeroSection />
-      <View style={{paddingHorizontal:20}}>
-        {/* <SearchInput /> */}
-        <CategoryButtons onCategorySelect={setSelectedCategoryId} />
+      {/* <BannerAd
+        source={require("../../assets/images/portrait-person-attending-vibrant-techno-music-party.jpg")}
+      /> */}
+      {/* <View style={{ paddingHorizontal: 20 }}> */}
+      {/* <SearchInput /> */}
+      {/* <CategoryButtons onCategorySelect={setSelectedCategoryId} /> */}
+      <View style={{ paddingHorizontal: 20 }}>
+        <SectionTitle title="Featured Products" />
         <ProductsList
-          products={allProducts}
+          products={allProducts.slice(0, 5)}
           onLoadMore={loadMore}
           isLoadingMore={isFetchingNextPage}
         />
       </View>
+      <BannerAd
+        source={require("../../assets/images/Gemini_Generated_Image_77eo7777eo7777eo.png")}
+      />
+      <View style={{ paddingHorizontal: 20 }}>
+        <SectionTitle title="New Arrivals" />
+        <ProductsList
+          products={allProducts.slice(5, 10)}
+          onLoadMore={loadMore}
+          isLoadingMore={isFetchingNextPage}
+        />
+      </View>
+      <BannerAd
+        source={require("../../assets/images/Gemini_Generated_Image_ulbru1ulbru1ulbr.png")}
+      />
+      <View style={{ paddingHorizontal: 20 }}>
+        <SectionTitle title="Best Sellers" />
+        <ProductsList
+          products={allProducts.slice(10, 15)}
+          onLoadMore={loadMore}
+          isLoadingMore={isFetchingNextPage}
+        />
+      </View>
+      <BannerAd
+        source={require("../../assets/images/Gemini_Generated_Image_rj0hdtrj0hdtrj0h.png")}
+      />
+      <View style={{ paddingHorizontal: 20 }}>
+        <SectionTitle title="Recommended Products" />
+        <ProductsList
+          products={allProducts.slice(15, 20)}
+          onLoadMore={loadMore}
+          isLoadingMore={isFetchingNextPage}
+        />
+      </View>
+      {/* </View> */}
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   navigationRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
+    flexDirection: "row",
+    justifyContent: "space-around",
     marginBottom: 16,
   },
   navButton: {
@@ -82,13 +131,13 @@ const styles = StyleSheet.create({
     marginHorizontal: 4,
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: "#f0f0f0",
     borderRadius: 8,
-    alignItems: 'center',
+    alignItems: "center",
   },
   navText: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#007aff',
+    fontWeight: "600",
+    color: "#007aff",
   },
 });

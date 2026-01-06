@@ -23,7 +23,7 @@ const HeroSection = () => {
         isMuted
       />
       <View style={styles.overlay}>
-        <View style={styles.content}>
+        {/* <View style={styles.content}>
           <Text style={styles.title}>Discover Amazing Products</Text>
           <Text style={styles.subtitle}>Shop the latest trends and find everything you need</Text>
           <TouchableOpacity
@@ -32,7 +32,7 @@ const HeroSection = () => {
           >
             <Text style={styles.buttonText}>Start Shopping</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
       </View>
     </View>
   );

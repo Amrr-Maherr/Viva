@@ -87,6 +87,7 @@ const styles = StyleSheet.create({
         elevation: 3,
         width: 170,
         height: 250,
+        marginRight:15
     },
     imageContainer: {
         position: 'relative',

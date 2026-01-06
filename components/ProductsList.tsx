@@ -23,15 +23,21 @@ const ProductsList: React.FC<ProductsListProps> = ({ products, onLoadMore, isLoa
           <FlatList
             data={products}
             renderItem={({ item }) => <ProductCard product={item} />}
-            numColumns={2}
+            horizontal
             keyExtractor={(item) => item._id}
             contentContainerStyle={styles.container}
-            columnWrapperStyle={styles.columnWrapper}
-            showsVerticalScrollIndicator={false}
-            scrollEnabled={false}
+            showsHorizontalScrollIndicator={false}
             onEndReached={onLoadMore}
             onEndReachedThreshold={0.5}
-            ListFooterComponent={isLoadingMore ? <ActivityIndicator size="large" color="#1A1A1A" style={styles.loader} /> : null}
+            ListFooterComponent={
+              isLoadingMore ? (
+                <ActivityIndicator
+                  size="large"
+                  color="#1A1A1A"
+                  style={styles.loader}
+                />
+              ) : null
+            }
           />
         )}
       </>
@@ -41,12 +47,7 @@ const ProductsList: React.FC<ProductsListProps> = ({ products, onLoadMore, isLoa
 const styles = StyleSheet.create({
   container: {
     marginTop: 5,
-
-  },
-  columnWrapper: {
-    justifyContent: "space-around",
-    marginBottom: 15,
-    gap: 5,
+    paddingVertical:10
   },
   loader: {
     marginVertical: 20,
