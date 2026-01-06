@@ -368,10 +368,10 @@ export default function ProductDetailsScreen() {
                             try {
                                 if (isFavorite) {
                                     await removeFromWishlist(product._id);
-                                    showToast('info', "Removed from wishlist");
+                                    showToast('info', `${product.title} removed from wishlist`);
                                 } else {
                                     await addToWishlist(product._id);
-                                    showToast('success', "Added to wishlist");
+                                    showToast('success', `${product.title} added to wishlist`);
                                 }
                                 setIsFavorite(!isFavorite);
                             } catch (error: any) {
@@ -496,7 +496,7 @@ export default function ProductDetailsScreen() {
                         setIsAddingToCart(true);
                         try {
                             await addToCart(product._id);
-                            showToast('success', "Product added to cart!");
+                            showToast('success', `${product.title} added to cart!`);
                         } catch (error: any) {
                             showToast('error', error.response?.data?.message || "Failed to add to cart");
                         } finally {

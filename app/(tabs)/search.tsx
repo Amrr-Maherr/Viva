@@ -1,23 +1,30 @@
 import React, { useState } from 'react';
 import { StyleSheet, ScrollView, TextInput, TouchableOpacity, Alert, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
+import useFetchSearchProducts from '@/queries/useFetchSearchProducts';
+import ProductsList from '@/components/ProductsList';
+import Loader from '@/components/Loader';
+import ErrorView from '@/components/ErrorView';
 
 export default function SearchScreen() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [debouncedQuery, setDebouncedQuery] = useState('');
+  const router = useRouter();
+
+  const { data: searchResults, isLoading, isError, refetch } = useFetchSearchProducts(debouncedQuery);
 
   const popularSearches = ['Electronics', 'Clothing', 'Books', 'Home & Garden', 'Sports'];
 
   const recentSearches = ['Wireless headphones', 'Running shoes', 'Coffee maker'];
 
   const handleSearch = () => {
-    if (searchQuery.trim()) {
-      // Mock search results
-      setSearchResults([
-        { id: 1, name: `${searchQuery} Product 1`, price: 29.99 },
-        { id: 2, name: `${searchQuery} Product 2`, price: 19.99 },
-      ]);
-    }
+    setDebouncedQuery(searchQuery.trim());
+  };
+
+  const handleTagPress = (tag: string) => {
+    setSearchQuery(tag);
+    setDebouncedQuery(tag);
   };
 
   return (
@@ -43,67 +50,57 @@ export default function SearchScreen() {
         </TouchableOpacity>
       </View>
 
-      <ScrollView style={styles.content}>
-        {!searchQuery && (
-          <>
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Popular Searches</Text>
-              <View style={styles.tagsContainer}>
-                {popularSearches.map((search, index) => (
-                  <TouchableOpacity
-                    key={index}
-                    style={styles.tag}
-                    onPress={() => setSearchQuery(search)}
-                  >
-                    <Text style={styles.tagText}>{search}</Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            </View>
-
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Recent Searches</Text>
-              {recentSearches.map((search, index) => (
+      {!debouncedQuery ? (
+        <ScrollView style={styles.content}>
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Popular Searches</Text>
+            <View style={styles.tagsContainer}>
+              {popularSearches.map((search, index) => (
                 <TouchableOpacity
                   key={index}
-                  style={styles.recentItem}
-                  onPress={() => setSearchQuery(search)}
+                  style={styles.tag}
+                  onPress={() => handleTagPress(search)}
                 >
-                  <Ionicons name="time-outline" size={20} color="#666" />
-                  <Text style={styles.recentText}>{search}</Text>
-                  <Ionicons name="chevron-forward" size={20} color="#ccc" />
+                  <Text style={styles.tagText}>{search}</Text>
                 </TouchableOpacity>
               ))}
             </View>
-          </>
-        )}
+          </View>
 
-        {searchQuery && searchResults.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Search Results</Text>
-            {searchResults.map((item) => (
-              <TouchableOpacity key={item.id} style={styles.resultItem} onPress={() => Alert.alert('Product Details')}>
-                <View style={styles.itemImage}>
-                  <Ionicons name="image-outline" size={30} color="#ccc" />
-                </View>
-                <View style={styles.itemDetails}>
-                  <Text style={styles.itemName}>{item.name}</Text>
-                  <Text style={styles.itemPrice}>${item.price.toFixed(2)}</Text>
-                </View>
-                <Ionicons name="chevron-forward" size={24} color="#ccc" />
+            <Text style={styles.sectionTitle}>Recent Searches</Text>
+            {recentSearches.map((search, index) => (
+              <TouchableOpacity
+                key={index}
+                style={styles.recentItem}
+                onPress={() => handleTagPress(search)}
+              >
+                <Ionicons name="time-outline" size={20} color="#666" />
+                <Text style={styles.recentText}>{search}</Text>
+                <Ionicons name="chevron-forward" size={20} color="#ccc" />
               </TouchableOpacity>
             ))}
           </View>
-        )}
-
-        {searchQuery && searchResults.length === 0 && (
-          <View style={styles.emptyState}>
-            <Ionicons name="search" size={64} color="#ccc" />
-            <Text style={styles.emptyTitle}>No results found</Text>
-            <Text style={styles.emptySubtitle}>Try different keywords</Text>
-          </View>
-        )}
-      </ScrollView>
+        </ScrollView>
+      ) : (
+        <>
+          {isLoading && <Loader />}
+          {isError && <ErrorView onRefetch={refetch} />}
+          {!isLoading && !isError && searchResults?.data && searchResults.data.length > 0 && (
+            <View style={styles.resultsContainer}>
+              <Text style={styles.resultsTitle}>Search Results for "{debouncedQuery}"</Text>
+              <ProductsList products={searchResults.data} />
+            </View>
+          )}
+          {!isLoading && !isError && searchResults?.data && searchResults.data.length === 0 && (
+            <View style={styles.emptyState}>
+              <Ionicons name="search" size={64} color="#ccc" />
+              <Text style={styles.emptyTitle}>No results found</Text>
+              <Text style={styles.emptySubtitle}>Try different keywords</Text>
+            </View>
+          )}
+        </>
+      )}
     </View>
   );
 }
@@ -251,5 +248,16 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#666',
     textAlign: 'center',
+  },
+  resultsContainer: {
+    flex: 1,
+    paddingHorizontal: 20,
+  },
+  resultsTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#1A1A1A',
+    marginTop: 20,
+    marginBottom: 15,
   },
 });
