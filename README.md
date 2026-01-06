@@ -152,6 +152,7 @@ components/
   ProductCard.tsx      # Product display component
   ProductImageGallery.tsx # Image carousel component
   CategoryButtons.tsx  # Category selection buttons
+  EmptyState.tsx       # Empty state component
   Loader.tsx           # Loading indicators
   ErrorView.tsx        # Error display with retry
   StyledText.tsx       # Custom text component

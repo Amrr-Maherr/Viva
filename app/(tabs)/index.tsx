@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, Text } from "react-native";
 import { View } from "react-native";
 import { useLocalSearchParams } from 'expo-router';
 import useFetchProducts from "@/queries/useFetchProducts";
@@ -8,6 +8,7 @@ import CategoryButtons from "@/components/CategoryButtons";
 import ProductsList from "@/components/ProductsList";
 import Loader from "@/components/Loader";
 import ErrorView from "@/components/ErrorView";
+import EmptyState from "@/components/EmptyState";
 
 export default function HomeScreen() {
   const { category } = useLocalSearchParams();
@@ -33,6 +34,20 @@ export default function HomeScreen() {
   }
 
   const allProducts = data?.pages.flatMap(page => page.data) || [];
+
+  if (allProducts.length === 0 && !isLoading && !isFetchingNextPage) {
+    return (
+      <View style={{flex:1,backgroundColor:"#fff",paddingHorizontal:20}}>
+        {/* <SearchInput /> */}
+        <CategoryButtons onCategorySelect={setSelectedCategoryId} />
+        <EmptyState
+          title="No products found"
+          subtitle="Try selecting a different category"
+          icon="shopping-outline"
+        />
+      </View>
+    );
+  }
 
   return (
     <View style={{flex:1,backgroundColor:"#fff",paddingHorizontal:20}}>
