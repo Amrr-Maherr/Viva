@@ -1,10 +1,10 @@
 {
   "expo": {
     "name": "Viva",
-    "slug": "Viva",
+    "slug": "my-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/Vectorr.png",
     "scheme": "viva",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
