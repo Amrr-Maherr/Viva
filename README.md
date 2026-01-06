@@ -37,7 +37,6 @@ A comprehensive e-commerce mobile application built with React Native and Expo, 
 - **Loaders**: Loading indicators on buttons and icons during operations
 - **Toast Notifications**: Success and error toasts instead of alerts
 - **Responsive Design**: Optimized for mobile screens
-- **Filters Modal**: Advanced product filtering with price, rating, brand, and sorting
 - **Pull-to-Refresh**: Refresh functionality across all screens for real-time data updates
 
 ### Technical Features
@@ -69,9 +68,8 @@ A comprehensive e-commerce mobile application built with React Native and Expo, 
 
 ## Screenshots
 
-### Home Screen with Filters
+### Home Screen
 - Product browsing with category selection
-- Advanced filtering modal for price, rating, brand, and sorting
 - Pull-to-refresh functionality for real-time updates
 
 ### Shopping Experience
@@ -87,7 +85,6 @@ A comprehensive e-commerce mobile application built with React Native and Expo, 
 ## What's New (Latest Updates)
 
 ### v1.1.0 - Enhanced User Experience
-- **Advanced Filters Modal**: Comprehensive product filtering with price ranges, ratings, brands, and sorting options
 - **Pull-to-Refresh**: Added refresh functionality to Cart and Favorites screens for real-time data updates
 - **Improved Architecture**: Separated React Query hooks into dedicated `queries/` folder for better code organization
 - **UI Enhancements**: Better loading states and user feedback across all screens
@@ -119,7 +116,7 @@ app/
   _layout.tsx          # Root layout with navigation and providers
   (tabs)/              # Tab screens
     _layout.tsx        # Tab navigation setup
-    index.tsx          # Home screen with filters and products
+    index.tsx          # Home screen with products
     search.tsx         # Search screen
     cart.tsx           # Cart screen with pull-to-refresh
     favorites.tsx      # Favorites screen with pull-to-refresh
@@ -155,7 +152,6 @@ components/
   ProductCard.tsx      # Product display component
   ProductImageGallery.tsx # Image carousel component
   CategoryButtons.tsx  # Category selection buttons
-  FiltersModal.tsx     # Advanced filtering modal
   Loader.tsx           # Loading indicators
   ErrorView.tsx        # Error display with retry
   StyledText.tsx       # Custom text component
