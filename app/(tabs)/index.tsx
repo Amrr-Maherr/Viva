@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { StyleSheet, Text } from "react-native";
+import { StyleSheet, Text, ScrollView, RefreshControl } from "react-native";
 import { View } from "react-native";
 import { useLocalSearchParams } from 'expo-router';
 import useFetchProducts from "@/queries/useFetchProducts";
@@ -9,6 +9,7 @@ import ProductsList from "@/components/ProductsList";
 import Loader from "@/components/Loader";
 import ErrorView from "@/components/ErrorView";
 import EmptyState from "@/components/EmptyState";
+import HeroSection from "@/components/HeroSection";
 
 export default function HomeScreen() {
   const { category } = useLocalSearchParams();
@@ -50,16 +51,23 @@ export default function HomeScreen() {
   }
 
   return (
-    <View style={{flex:1,backgroundColor:"#fff",paddingHorizontal:20}}>
-      {/* <SearchInput /> */}
-      <CategoryButtons onCategorySelect={setSelectedCategoryId} />
-      <ProductsList
-        products={allProducts}
-        onLoadMore={loadMore}
-        isLoadingMore={isFetchingNextPage}
-        onRefresh={onRefresh}
-      />
-    </View>
+    <ScrollView
+      style={{flex:1,backgroundColor:"#fff"}}
+      refreshControl={
+        <RefreshControl refreshing={false} onRefresh={onRefresh} />
+      }
+    >
+      <HeroSection />
+      <View style={{paddingHorizontal:20}}>
+        {/* <SearchInput /> */}
+        <CategoryButtons onCategorySelect={setSelectedCategoryId} />
+        <ProductsList
+          products={allProducts}
+          onLoadMore={loadMore}
+          isLoadingMore={isFetchingNextPage}
+        />
+      </View>
+    </ScrollView>
   );
 }
 
