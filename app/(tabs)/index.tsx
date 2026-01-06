@@ -12,14 +12,17 @@ import ErrorView from "@/components/ErrorView";
 export default function HomeScreen() {
   const { category } = useLocalSearchParams();
   const [selectedCategoryId, setSelectedCategoryId] = useState(category as string || "all");
-  const [refreshing, setRefreshing] = useState(false);
-  const { data, isLoading, isError, refetch } = useFetchProducts(selectedCategoryId);
+  const { data, isLoading, isError, refetch, fetchNextPage, hasNextPage, isFetchingNextPage } = useFetchProducts(selectedCategoryId);
 
   const onRefresh = useCallback(async () => {
-    setRefreshing(true);
     await refetch();
-    setRefreshing(false);
   }, [refetch]);
+
+  const loadMore = () => {
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  };
 
   if (isLoading) {
     return <Loader />;
@@ -29,11 +32,18 @@ export default function HomeScreen() {
     return <ErrorView onRefetch={refetch} />;
   }
 
+  const allProducts = data?.pages.flatMap(page => page.data) || [];
+
   return (
     <View style={{flex:1,backgroundColor:"#fff",paddingHorizontal:20}}>
       {/* <SearchInput /> */}
       <CategoryButtons onCategorySelect={setSelectedCategoryId} />
-      <ProductsList products={data?.data} refreshing={refreshing} onRefresh={onRefresh} />
+      <ProductsList
+        products={allProducts}
+        onLoadMore={loadMore}
+        isLoadingMore={isFetchingNextPage}
+        onRefresh={onRefresh}
+      />
     </View>
   );
 }

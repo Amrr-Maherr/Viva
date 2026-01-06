@@ -1,10 +1,13 @@
 import { ProductsResponse } from "@/types/Products";
 import axios from "axios";
 
-const fetchProducts = async (category?: string, searchQuery?: string): Promise<ProductsResponse> => {
+const fetchProducts = async (category?: string, searchQuery?: string, page: number = 1, limit: number = 20): Promise<ProductsResponse> => {
     try {
         let url = 'https://ecommerce.routemisr.com/api/v1/products';
         const params: string[] = [];
+
+        params.push(`page=${page}`);
+        params.push(`limit=${limit}`);
 
         if (category && category !== 'all') {
             params.push(`category[in]=${category}`);
@@ -14,9 +17,7 @@ const fetchProducts = async (category?: string, searchQuery?: string): Promise<P
             params.push(`search=${encodeURIComponent(searchQuery.trim())}`);
         }
 
-        if (params.length > 0) {
-            url += '?' + params.join('&');
-        }
+        url += '?' + params.join('&');
 
         const response = await axios.get(url);
         return response?.data;

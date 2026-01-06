@@ -1,10 +1,15 @@
 import fetchProducts from '@/api/fetchProducts'
-import { useQuery } from '@tanstack/react-query'
+import { useInfiniteQuery } from '@tanstack/react-query'
 
 const useFetchProducts = (categoryId: string = 'all') => {
-    return useQuery({
+    return useInfiniteQuery({
         queryKey: ['products', categoryId],
-        queryFn: () => fetchProducts(categoryId)
+        queryFn: ({ pageParam = 1 }) => fetchProducts(categoryId, undefined, pageParam, 20),
+        initialPageParam: 1,
+        getNextPageParam: (lastPage, allPages) => {
+            const totalPages = Math.ceil(lastPage.results / 20);
+            return allPages.length < totalPages ? allPages.length + 1 : undefined;
+        },
     })
 }
 

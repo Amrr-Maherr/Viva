@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, StyleSheet, RefreshControl } from 'react-native';
+import { FlatList, StyleSheet, RefreshControl, ActivityIndicator } from 'react-native';
 import ProductCard from './ProductCard';
 
 interface Product {
@@ -14,9 +14,11 @@ interface ProductsListProps {
     products: Product[] | undefined;
     refreshing?: boolean;
     onRefresh?: () => void;
+    onLoadMore?: () => void;
+    isLoadingMore?: boolean;
 }
 
-const ProductsList: React.FC<ProductsListProps> = ({ products, refreshing, onRefresh }) => {
+const ProductsList: React.FC<ProductsListProps> = ({ products, refreshing, onRefresh, onLoadMore, isLoadingMore }) => {
     return (
       <>
         {products && (
@@ -33,6 +35,9 @@ const ProductsList: React.FC<ProductsListProps> = ({ products, refreshing, onRef
                 <RefreshControl refreshing={refreshing || false} onRefresh={onRefresh} />
               ) : undefined
             }
+            onEndReached={onLoadMore}
+            onEndReachedThreshold={0.5}
+            ListFooterComponent={isLoadingMore ? <ActivityIndicator size="large" color="#1A1A1A" style={styles.loader} /> : null}
           />
         )}
       </>
@@ -48,6 +53,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     marginBottom: 15,
     gap: 5,
+  },
+  loader: {
+    marginVertical: 20,
   },
 });
 
