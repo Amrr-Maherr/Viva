@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, StyleSheet } from 'react-native';
+import { FlatList, StyleSheet, RefreshControl } from 'react-native';
 import ProductCard from './ProductCard';
 
 interface Product {
@@ -12,9 +12,11 @@ interface Product {
 
 interface ProductsListProps {
     products: Product[] | undefined;
+    refreshing?: boolean;
+    onRefresh?: () => void;
 }
 
-const ProductsList: React.FC<ProductsListProps> = ({ products }) => {
+const ProductsList: React.FC<ProductsListProps> = ({ products, refreshing, onRefresh }) => {
     return (
       <>
         {products && (
@@ -26,6 +28,11 @@ const ProductsList: React.FC<ProductsListProps> = ({ products }) => {
             contentContainerStyle={styles.container}
             columnWrapperStyle={styles.columnWrapper}
             showsVerticalScrollIndicator={false}
+            refreshControl={
+              onRefresh ? (
+                <RefreshControl refreshing={refreshing || false} onRefresh={onRefresh} />
+              ) : undefined
+            }
           />
         )}
       </>

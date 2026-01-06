@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { StyleSheet, ScrollView, RefreshControl } from "react-native";
+import { StyleSheet } from "react-native";
 import { View } from "react-native";
 import { useLocalSearchParams } from 'expo-router';
 import useFetchProducts from "@/queries/useFetchProducts";
@@ -30,19 +30,11 @@ export default function HomeScreen() {
   }
 
   return (
-    <>
-      <ScrollView
-        style={{flex:1,backgroundColor:"#fff"}}
-        contentContainerStyle={{paddingHorizontal:20}}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      >
-        {/* <SearchInput /> */}
-        <CategoryButtons onCategorySelect={setSelectedCategoryId} />
-        <ProductsList products={data?.data} />
-      </ScrollView>
-    </>
+    <View style={{flex:1,backgroundColor:"#fff",paddingHorizontal:20}}>
+      {/* <SearchInput /> */}
+      <CategoryButtons onCategorySelect={setSelectedCategoryId} />
+      <ProductsList products={data?.data} refreshing={refreshing} onRefresh={onRefresh} />
+    </View>
   );
 }
 
