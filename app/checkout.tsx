@@ -2,10 +2,16 @@ import React, { useState } from 'react';
 import { StyleSheet, ScrollView, TouchableOpacity, Alert, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import useFetchCart from '@/queries/useFetchCart';
+import Loader from '@/components/Loader';
+import ErrorView from '@/components/ErrorView';
+import { showToast } from '@/utils/toast';
 
 export default function CheckoutScreen() {
   const [selectedAddress, setSelectedAddress] = useState(1);
   const [selectedPayment, setSelectedPayment] = useState(1);
+  const [isPlacingOrder, setIsPlacingOrder] = useState(false);
+  const { data: cartData, isLoading, isError, refetch } = useFetchCart();
 
   const addresses = [
     { id: 1, type: 'Home', address: '123 Main St, City, State 12345' },
@@ -17,12 +23,16 @@ export default function CheckoutScreen() {
     { id: 2, type: 'PayPal', email: 'user@example.com' },
   ];
 
-  const cartItems = [
-    { id: 1, name: 'Wireless Headphones', price: 99.99, quantity: 1 },
-    { id: 2, name: 'Phone Case', price: 29.99, quantity: 2 },
-  ];
+  if (isLoading) {
+    return <Loader />;
+  }
 
-  const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  if (isError) {
+    return <ErrorView onRefetch={refetch} />;
+  }
+
+  const cartItems = cartData?.data?.products || [];
+  const subtotal = cartData?.data?.totalCartPrice || 0;
   const shipping = 9.99;
   const tax = subtotal * 0.08;
   const total = subtotal + shipping + tax;
@@ -85,13 +95,13 @@ export default function CheckoutScreen() {
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Order Summary</Text>
-        {cartItems.map((item) => (
-          <View key={item.id} style={styles.orderItem}>
+        {cartItems.map((item: any) => (
+          <View key={item.product._id} style={styles.orderItem}>
             <View style={styles.itemInfo}>
-              <Text style={styles.itemName}>{item.name}</Text>
-              <Text style={styles.itemQuantity}>Qty: {item.quantity}</Text>
+              <Text style={styles.itemName}>{item.product.title}</Text>
+              <Text style={styles.itemQuantity}>Qty: {item.count}</Text>
             </View>
-            <Text style={styles.itemPrice}>${(item.price * item.quantity).toFixed(2)}</Text>
+            <Text style={styles.itemPrice}>${(item.price * item.count).toFixed(2)}</Text>
           </View>
         ))}
 
@@ -115,8 +125,22 @@ export default function CheckoutScreen() {
         </View>
       </View>
 
-      <TouchableOpacity style={styles.placeOrderButton} onPress={() => Alert.alert('Order Placed!', 'Your order has been successfully placed.')}>
-        <Text style={styles.placeOrderText}>Place Order</Text>
+      <TouchableOpacity
+        style={styles.placeOrderButton}
+        disabled={isPlacingOrder}
+        onPress={async () => {
+          setIsPlacingOrder(true);
+          // Simulate order placement
+          setTimeout(() => {
+            setIsPlacingOrder(false);
+            showToast('success', 'Order placed successfully!');
+            router.push('/order-success'); // Navigate to success screen
+          }, 2000); // 2 second delay to simulate API call
+        }}
+      >
+        <Text style={styles.placeOrderText}>
+          {isPlacingOrder ? 'Placing Order...' : 'Place Order'}
+        </Text>
       </TouchableOpacity>
     </ScrollView>
   );

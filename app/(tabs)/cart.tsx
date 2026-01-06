@@ -6,6 +6,7 @@ import { useRemoveFromCartMutation } from '@/api/cart';
 import Loader from '@/components/Loader';
 import ErrorView from '@/components/ErrorView';
 import { showToast } from '@/utils/toast';
+import { router } from 'expo-router';
 
 export default function CartScreen() {
   const { data, isLoading, isError, refetch } = useFetchCart();
@@ -83,7 +84,7 @@ export default function CartScreen() {
           <Text style={styles.totalLabel}>Total:</Text>
           <Text style={styles.totalAmount}>${total.toFixed(2)}</Text>
         </View>
-        <TouchableOpacity style={styles.checkoutButton} onPress={() => showToast('info', 'Checkout')}>
+        <TouchableOpacity style={styles.checkoutButton} onPress={() => router.push("/checkout")}>
           <Text style={styles.checkoutText}>Proceed to Checkout</Text>
         </TouchableOpacity>
       </View>
