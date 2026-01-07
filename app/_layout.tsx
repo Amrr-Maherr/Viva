@@ -2,9 +2,8 @@ import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import 'react-native-reanimated';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
 
 import { useColorScheme } from '@/components/useColorScheme';
@@ -38,33 +37,10 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
-  const [initialRoute, setInitialRoute] = useState<string | null>(null);
-
-  useEffect(() => {
-    const checkToken = async () => {
-      try {
-        const token = await AsyncStorage.getItem('token');
-        if (token) {
-          setInitialRoute('(tabs)');
-        } else {
-          setInitialRoute('Splash');
-        }
-      } catch (error) {
-        console.log('Error checking token:', error);
-        setInitialRoute('Splash');
-      }
-    };
-
-    checkToken();
-  }, []);
-
-  if (initialRoute === null) {
-    return null; // or a loading screen
-  }
 
   return (
     <Provider>
-      <Stack initialRouteName={initialRoute} screenOptions={{ headerShown: false }}>
+      <Stack initialRouteName="Splash" screenOptions={{ headerShown: false }}>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="Splash" options={{ headerShown: false }} />
         <Stack.Screen name="Onboarding" options={{ headerShown: false }} />

@@ -3,6 +3,8 @@ import { Image, Animated } from "react-native";
 import { View } from "react-native";
 import { StyleSheet, ActivityIndicator } from "react-native";
 import { router } from "expo-router";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 export default function Splash() {
   const backgroundFadeAnim1 = useRef(new Animated.Value(0)).current;
   const backgroundFadeAnim2 = useRef(new Animated.Value(0)).current;
@@ -52,10 +54,29 @@ export default function Splash() {
       useNativeDriver: true,
     }).start();
 
-    const NavigationTimer = setTimeout(() => {
-      router.push("/Onboarding");
-    }, 3000);
-    return ()=> clearTimeout(NavigationTimer)
+    const checkTokenAndNavigate = async () => {
+      try {
+        const token = await AsyncStorage.getItem('token');
+        const hasSeenOnboarding = await AsyncStorage.getItem('hasSeenOnboarding');
+
+        setTimeout(() => {
+          if (token) {
+            router.push("/(tabs)");
+          } else if (!hasSeenOnboarding) {
+            router.push("/Onboarding");
+          } else {
+            router.push("/login");
+          }
+        }, 3000);
+      } catch (error) {
+        console.log('Error checking token:', error);
+        setTimeout(() => {
+          router.push("/Onboarding");
+        }, 3000);
+      }
+    };
+
+    checkTokenAndNavigate();
   },[])
   return (
     <>
