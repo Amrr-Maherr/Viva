@@ -23,7 +23,6 @@ export default function CategoriesScreen() {
     const renderItem = ({ item }: { item: any }) => (
         <TouchableOpacity
             style={styles.categoryCard}
-            onPress={() => router.push({ pathname: '/(tabs)/index', params: { category: item._id } })}
         >
             <Image source={{ uri: item.image }} style={styles.categoryImage} />
             <Text style={styles.categoryName}>{item.name}</Text>
@@ -48,6 +47,8 @@ export default function CategoriesScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        justifyContent: "space-around",
+        alignItems:"center",
         backgroundColor: '#f2f2f7',
         paddingTop: 50,
     },
@@ -59,7 +60,7 @@ const styles = StyleSheet.create({
         color: '#1A1A1A',
     },
     grid: {
-        paddingHorizontal: 16,
+        // paddingHorizontal: 16,
     },
     categoryCard: {
         backgroundColor: '#fff',
@@ -75,9 +76,9 @@ const styles = StyleSheet.create({
         width: itemWidth,
     },
     categoryImage: {
-        width: 80,
-        height: 80,
-        borderRadius: 40,
+        width: "100%",
+        height: 100,
+        // borderRadius: 40,
         marginBottom: 12,
     },
     categoryName: {

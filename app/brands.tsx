@@ -46,44 +46,46 @@ export default function BrandsScreen() {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#f2f2f7',
-        paddingTop: 50,
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        marginBottom: 16,
-        color: '#1A1A1A',
-    },
-    grid: {
-        paddingHorizontal: 16,
-    },
-    brandCard: {
-        backgroundColor: '#fff',
-        borderRadius: 12,
-        margin: 8,
-        padding: 16,
-        alignItems: 'center',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 3,
-        width: itemWidth,
-    },
-    brandImage: {
-        width: 80,
-        height: 80,
-        borderRadius: 40,
-        marginBottom: 12,
-    },
-    brandName: {
-        fontSize: 16,
-        fontWeight: '600',
-        color: '#1A1A1A',
-        textAlign: 'center',
-    },
+  container: {
+    flex: 1,
+    justifyContent: "space-around",
+    alignItems: "center",
+    backgroundColor: "#f2f2f7",
+    paddingTop: 50,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginBottom: 16,
+    color: "#1A1A1A",
+  },
+  grid: {
+    // paddingHorizontal: 16,
+  },
+  brandCard: {
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    margin: 8,
+    padding: 16,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+    width: itemWidth,
+  },
+  brandImage: {
+    width: "100%",
+    height: 100,
+    // borderRadius: 40,
+    marginBottom: 12,
+  },
+  brandName: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#1A1A1A",
+    textAlign: "center",
+  },
 });
