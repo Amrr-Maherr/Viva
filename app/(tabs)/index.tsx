@@ -2,6 +2,7 @@ import BannerAd from "@/components/BannerAd";
 import CategoryButtons from "@/components/CategoryButtons";
 import EmptyState from "@/components/EmptyState";
 import ErrorView from "@/components/ErrorView";
+import FeaturedProducts from "@/components/FeaturedProducts";
 import HeroSection from "@/components/HeroSection";
 import Loader from "@/components/Loader";
 import ProductsList from "@/components/ProductsList";
@@ -68,14 +69,9 @@ export default function HomeScreen() {
       }
     >
       <HeroSection />
-      {/* <BannerAd
-        source={require("../../assets/images/portrait-person-attending-vibrant-techno-music-party.jpg")}
-      /> */}
-      {/* <View style={{ paddingHorizontal: 20 }}> */}
-      {/* <SearchInput /> */}
-      {/* <CategoryButtons onCategorySelect={setSelectedCategoryId} /> */}
+      <FeaturedProducts products={allProducts.slice(0, 1)} title="Today's Special" />
       <View style={{ paddingHorizontal: 20 }}>
-        <SectionTitle title="Featured Products" />
+        <SectionTitle title="New Arrivals" />
         <ProductsList
           products={allProducts.slice(0, 5)}
           onLoadMore={loadMore}
@@ -86,7 +82,7 @@ export default function HomeScreen() {
         source={require("../../assets/images/Gemini_Generated_Image_77eo7777eo7777eo.png")}
       />
       <View style={{ paddingHorizontal: 20 }}>
-        <SectionTitle title="New Arrivals" />
+        <SectionTitle title="Best Sellers" />
         <ProductsList
           products={allProducts.slice(5, 10)}
           onLoadMore={loadMore}
@@ -96,21 +92,11 @@ export default function HomeScreen() {
       <BannerAd
         source={require("../../assets/images/Gemini_Generated_Image_ulbru1ulbru1ulbr.png")}
       />
-      <View style={{ paddingHorizontal: 20 }}>
-        <SectionTitle title="Best Sellers" />
-        <ProductsList
-          products={allProducts.slice(10, 15)}
-          onLoadMore={loadMore}
-          isLoadingMore={isFetchingNextPage}
-        />
-      </View>
-      <BannerAd
-        source={require("../../assets/images/Gemini_Generated_Image_rj0hdtrj0hdtrj0h.png")}
-      />
+      <FeaturedProducts products={allProducts.slice(1, 2)} title="Hot Deal" />
       <View style={{ paddingHorizontal: 20 }}>
         <SectionTitle title="Recommended Products" />
         <ProductsList
-          products={allProducts.slice(15, 20)}
+          products={allProducts.slice(10, 15)}
           onLoadMore={loadMore}
           isLoadingMore={isFetchingNextPage}
         />
