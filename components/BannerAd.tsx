@@ -18,11 +18,19 @@ export default function BannerAd({ source }: BannerAdProps) {
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 10,
+    marginVertical: 20,
+    marginHorizontal: 20,
+    borderRadius: 15,
     overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 10,
   },
   image: {
     width: '100%',
-    height: 250,
+    height: 200,
+    borderRadius: 15,
   },
 });
