@@ -77,6 +77,11 @@ export default function ProfileScreen() {
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Support</Text>
+        <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/chat')}>
+          <Ionicons name="chatbubbles-outline" size={24} color="#1A1A1A" />
+          <Text style={styles.menuText}>AI Assistant</Text>
+          <Ionicons name="chevron-forward" size={24} color="#ccc" />
+        </TouchableOpacity>
         <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/help-center')}>
           <Ionicons name="help-circle-outline" size={24} color="#1A1A1A" />
           <Text style={styles.menuText}>Help Center</Text>

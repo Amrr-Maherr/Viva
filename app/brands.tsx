@@ -32,7 +32,7 @@ export default function BrandsScreen() {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Brands</Text>
+            {/* <Text style={styles.title}>Brands</Text> */}
             <FlatList
                 data={data?.data}
                 renderItem={renderItem}
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     alignItems: "center",
     backgroundColor: "#f2f2f7",
-    paddingTop: 50,
+    paddingTop: 10,
   },
   title: {
     fontSize: 24,

@@ -79,9 +79,9 @@ export default function ChangePasswordScreen() {
 
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.header}>
+      {/* <View style={styles.header}>
         <Text style={styles.title}>Change Password</Text>
-      </View>
+      </View> */}
 
       <View style={styles.form}>
         <View style={styles.infoCard}>

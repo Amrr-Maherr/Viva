@@ -3,6 +3,7 @@ import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image } from 'react
 import useFetchOrders from '@/queries/useFetchOrders';
 import Loader from '@/components/Loader';
 import ErrorView from '@/components/ErrorView';
+import EmptyCardScreen from '@/components/EmptyCart';
 
 export default function MyOrdersScreen() {
     const { data, isLoading, isError, refetch } = useFetchOrders();
@@ -42,19 +43,13 @@ export default function MyOrdersScreen() {
 
     if (!data || data.length === 0) {
         return (
-            <View style={styles.container}>
-                <Text style={styles.title}>My Orders</Text>
-                <View style={styles.emptyState}>
-                    <Text style={styles.emptyTitle}>No orders yet</Text>
-                    <Text style={styles.emptySubtitle}>Start shopping to see your orders here</Text>
-                </View>
-            </View>
+            <EmptyCardScreen/>
         );
     }
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>My Orders</Text>
+            {/* <Text style={styles.title}>My Orders</Text> */}
             <FlatList
                 data={data}
                 renderItem={renderOrder}
@@ -70,7 +65,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#f2f2f7',
-        paddingTop: 50,
+        paddingTop: 10,
     },
     title: {
         fontSize: 24,
