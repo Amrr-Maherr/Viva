@@ -48,39 +48,41 @@ const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
 };
 
 const styles = StyleSheet.create({
-    container: {
-        position: 'relative',
-        backgroundColor: '#fff',
-    },
-    pagerView: {
-        width: width,
-    },
-    slide: {
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    image: {
-        width: '100%',
-    },
-    pagination: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        position: 'absolute',
-        bottom: 16,
-        left: 0,
-        right: 0,
-    },
-    dot: {
-        width: 6,
-        height: 6,
-        borderRadius: 3,
-        backgroundColor: 'rgba(0,0,0,0.2)',
-        marginHorizontal: 4,
-    },
-    activeDot: {
-        backgroundColor: '#007aff',
-    },
+  container: {
+    position: "relative",
+    backgroundColor: "#fff",
+  },
+  pagerView: {
+    width: width,
+  },
+  slide: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  image: {
+    width: "100%",
+  },
+  pagination: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "absolute",
+    bottom: 16,
+    left: 0,
+    right: 0,
+  },
+  dot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: "rgba(0,0,0,0.2)",
+    marginHorizontal: 4,
+  },
+  activeDot: {
+    backgroundColor: "#000",
+    width: 20,
+    height: 6,
+  },
 });
 
 export default ProductImageGallery;

@@ -302,6 +302,7 @@ const styles = StyleSheet.create({
     },
     brandsHorizontal: {
         paddingHorizontal: 16,
+        paddingVertical:20
     },
     addToBagText: {
         color: '#fff',
@@ -407,14 +408,14 @@ export default function ProductDetailsScreen() {
 
                     {/* Description */}
                     <View style={styles.section}>
-                        <Text style={styles.description} numberOfLines={isDescriptionExpanded ? undefined : 3}>
+                        <Text style={styles.description}>
                             {product.description}
                         </Text>
-                        <TouchableOpacity onPress={() => setIsDescriptionExpanded(!isDescriptionExpanded)}>
+                        {/* <TouchableOpacity onPress={() => setIsDescriptionExpanded(!isDescriptionExpanded)}>
                             <Text style={styles.readMore}>
                                 {isDescriptionExpanded ? 'Show less' : 'Show more'}
                             </Text>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                     </View>
 
                     {/* Product Specs */}

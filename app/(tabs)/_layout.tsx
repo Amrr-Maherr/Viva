@@ -1,7 +1,7 @@
 import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { Link, Tabs } from 'expo-router';
-import { Pressable } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { useRouter } from 'expo-router';
 
 import Colors from '@/constants/Colors';
@@ -27,6 +27,7 @@ export default function TabLayout() {
         // Disable the static render of the header on web
         // to prevent a hydration error in React Navigation v6.
         headerShown: useClientOnlyValue(false, true),
+        headerTitleAlign: 'center',
         animation: 'shift',
         tabBarStyle: {
           height: 65,
@@ -52,12 +53,24 @@ export default function TabLayout() {
           //   />
           // ),
           headerRight: () => (
-            <Ionicons
-              name="notifications"
-              size={24}
-              onPress={() => alert("Settings pressed")}
-              style={{ marginRight: 15 }}
-            />
+            <Pressable onPress={() => router.push('/notifications')} style={{ marginRight: 15 }}>
+              <Ionicons
+                name="notifications"
+                size={24}
+                color="#1A1A1A"
+              />
+              {/* Red dot indicator - show when there are unread notifications */}
+              <View style={{
+                position: 'absolute',
+                top: 0,
+                right: 0,
+                width: 8,
+                height: 8,
+                borderRadius: 4,
+                backgroundColor: 'red',
+                zIndex: 1
+              }} />
+            </Pressable>
           )
         }}
       />
