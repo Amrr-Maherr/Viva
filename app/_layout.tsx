@@ -81,7 +81,7 @@ function RootLayoutNav() {
         />
         <Stack.Screen name="contact" options={{ title: "Contact Us" }}
         />
-        <Stack.Screen name="chat" options={{ title: "AI Assistant" }}
+        <Stack.Screen name="chat" options={{ title: "Viva AI Assistant" }}
         />
         <Stack.Screen name="modal" options={{ presentation: "modal" }} />
       </Stack>

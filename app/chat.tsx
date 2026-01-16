@@ -47,28 +47,34 @@ console.log(isError);
   }, [data]);
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}
-    >
-      <StatusBar barStyle="light-content" backgroundColor="#667eea" />
-      <ChatHeader title="BrainBox AI" />
-      <View style={styles.chatContainer}>
-        <ChatList ref={chatListRef} messages={chatMessages} />
-        <MessageInput
-          value={message}
-          onChangeText={setMessage}
-          onSendPress={sendMessage}
-          isLoading={isLoading}
-        />
-      </View>
-    </KeyboardAvoidingView>
+    <View style={styles.container}>
+      {/* <StatusBar barStyle="light-content" backgroundColor="#667eea" />
+      <ChatHeader title="BrainBox AI" /> */}
+      <KeyboardAvoidingView
+        style={styles.keyboardAvoidingContainer}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 120 : 90}
+      >
+        <View style={styles.chatContainer}>
+          <ChatList ref={chatListRef} messages={chatMessages} />
+          <MessageInput
+            value={message}
+            onChangeText={setMessage}
+            onSendPress={sendMessage}
+            isLoading={isLoading}
+          />
+        </View>
+      </KeyboardAvoidingView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    backgroundColor: '#f0f4f8',
+  },
+  keyboardAvoidingContainer: {
     flex: 1,
     backgroundColor: '#f0f4f8',
   },

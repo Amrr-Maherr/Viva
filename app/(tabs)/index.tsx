@@ -10,7 +10,9 @@ import SectionTitle from "@/components/SectionTitle";
 import useFetchProducts from "@/queries/useFetchProducts";
 import { useLocalSearchParams } from "expo-router";
 import React, { useCallback, useState } from "react";
-import { RefreshControl, ScrollView, StyleSheet, Text, View } from "react-native";
+import { RefreshControl, ScrollView, StyleSheet, Text, View, TouchableOpacity, Animated } from "react-native";
+import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
 
 export default function HomeScreen() {
   const { category } = useLocalSearchParams();
@@ -62,47 +64,57 @@ export default function HomeScreen() {
   }
 
   return (
-    <ScrollView
-      style={{ flex: 1, backgroundColor: "#fff" }}
-      refreshControl={
-        <RefreshControl refreshing={false} onRefresh={onRefresh} />
-      }
-    >
-      <HeroSection />
-      <FeaturedProducts products={allProducts.slice(0, 1)} title="Today's Special" />
-      <View style={{ paddingHorizontal: 20 }}>
-        <SectionTitle title="New Arrivals" />
-        <ProductsList
-          products={allProducts.slice(0, 5)}
-          onLoadMore={loadMore}
-          isLoadingMore={isFetchingNextPage}
+    <View style={{ flex: 1, backgroundColor: "#fff" }}>
+      <ScrollView
+        style={{ flex: 1 }}
+        refreshControl={
+          <RefreshControl refreshing={false} onRefresh={onRefresh} />
+        }
+      >
+        <HeroSection />
+        <FeaturedProducts products={allProducts.slice(0, 1)} title="Today's Special" />
+        <View style={{ paddingHorizontal: 20 }}>
+          <SectionTitle title="New Arrivals" />
+          <ProductsList
+            products={allProducts.slice(0, 5)}
+            onLoadMore={loadMore}
+            isLoadingMore={isFetchingNextPage}
+          />
+        </View>
+        <BannerAd
+          source={require("../../assets/images/Gemini_Generated_Image_77eo7777eo7777eo.png")}
         />
-      </View>
-      <BannerAd
-        source={require("../../assets/images/Gemini_Generated_Image_77eo7777eo7777eo.png")}
-      />
-      <View style={{ paddingHorizontal: 20 }}>
-        <SectionTitle title="Best Sellers" />
-        <ProductsList
-          products={allProducts.slice(5, 10)}
-          onLoadMore={loadMore}
-          isLoadingMore={isFetchingNextPage}
+        <View style={{ paddingHorizontal: 20 }}>
+          <SectionTitle title="Best Sellers" />
+          <ProductsList
+            products={allProducts.slice(5, 10)}
+            onLoadMore={loadMore}
+            isLoadingMore={isFetchingNextPage}
+          />
+        </View>
+        <BannerAd
+          source={require("../../assets/images/Gemini_Generated_Image_ulbru1ulbru1ulbr.png")}
         />
-      </View>
-      <BannerAd
-        source={require("../../assets/images/Gemini_Generated_Image_ulbru1ulbru1ulbr.png")}
-      />
-      <FeaturedProducts products={allProducts.slice(1, 2)} title="Hot Deal" />
-      <View style={{ paddingHorizontal: 20 }}>
-        <SectionTitle title="Recommended Products" />
-        <ProductsList
-          products={allProducts.slice(10, 15)}
-          onLoadMore={loadMore}
-          isLoadingMore={isFetchingNextPage}
-        />
-      </View>
-      {/* </View> */}
-    </ScrollView>
+        <FeaturedProducts products={allProducts.slice(1, 2)} title="Hot Deal" />
+        <View style={{ paddingHorizontal: 20 }}>
+          <SectionTitle title="Recommended Products" />
+          <ProductsList
+            products={allProducts.slice(10, 15)}
+            onLoadMore={loadMore}
+            isLoadingMore={isFetchingNextPage}
+          />
+        </View>
+        {/* </View> */}
+      </ScrollView>
+
+      {/* Floating Chat Button */}
+      <TouchableOpacity
+        style={styles.fab}
+        onPress={() => router.push('/chat')}
+      >
+        <Ionicons name="chatbubble-ellipses" size={24} color="#fff" />
+      </TouchableOpacity>
+    </View>
   );
 }
 
@@ -125,5 +137,22 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     color: "#007aff",
+  },
+  fab: {
+    position: 'absolute',
+    width: 60,
+    height: 60,
+    alignItems: 'center',
+    justifyContent: 'center',
+    right: 20,
+    bottom: 20,
+    backgroundColor: '#667eea',
+    borderRadius: 30,
+    elevation: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    zIndex: 999,
   },
 });
