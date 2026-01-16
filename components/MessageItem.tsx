@@ -51,13 +51,13 @@ export default function MessageItem({ message }: MessageItemProps) {
             style={styles.actionButton}
             onPress={() => console.log("Like pressed")}
           >
-            <Ionicons name="thumbs-up-outline" size={14} color={message.sender === "user" ? "#FFFFFF" : "#666"} />
+            <Ionicons name="thumbs-up-outline" size={14} color="#4a5568" />
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.actionButton}
             onPress={() => console.log("Copy pressed")}
           >
-            <Ionicons name="copy-outline" size={14} color={message.sender === "user" ? "#FFFFFF" : "#666"} />
+            <Ionicons name="copy-outline" size={14} color="#4a5568" />
           </TouchableOpacity>
         </View>
       </View>

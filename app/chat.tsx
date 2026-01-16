@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { StyleSheet, KeyboardAvoidingView, Platform, View, StatusBar, Text } from "react-native";
+import { StyleSheet, KeyboardAvoidingView, Platform, View, Text } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
-import ChatHeader from '@/components/ChatHeader';
 import MessageInput from '@/components/MessageInput';
 import ChatList, { ChatListRef } from '@/components/ChatList';
 import useFetchChat from '@/hooks/useFetchChat';
@@ -49,8 +48,6 @@ console.log(isError);
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#667eea" />
-      <ChatHeader title="Viva Assistant" />
       <KeyboardAvoidingView
         style={styles.keyboardAvoidingContainer}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
