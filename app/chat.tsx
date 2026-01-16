@@ -50,7 +50,7 @@ console.log(isError);
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#667eea" />
-      <ChatHeader title="BrainBox AI" />
+      <ChatHeader title="Viva Assistant" />
       <KeyboardAvoidingView
         style={styles.keyboardAvoidingContainer}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -60,20 +60,20 @@ console.log(isError);
           {chatMessages.length === 0 ? (
             <View style={styles.welcomeContainer}>
               <Ionicons name="chatbubble-ellipses-outline" size={64} color="#667eea" style={styles.welcomeIcon} />
-              <Text style={styles.welcomeTitle}>Welcome to BrainBox AI!</Text>
-              <Text style={styles.welcomeSubtitle}>Ask me anything and I'll do my best to assist you.</Text>
+              <Text style={styles.welcomeTitle}>Welcome to Viva Assistant!</Text>
+              <Text style={styles.welcomeSubtitle}>I'm here to help you with products, orders, and shopping tips.</Text>
               <View style={styles.welcomeFeatures}>
                 <View style={styles.featureItem}>
-                  <Ionicons name="bulb-outline" size={20} color="#667eea" />
-                  <Text style={styles.featureText}>Get instant answers</Text>
+                  <Ionicons name="pricetag-outline" size={20} color="#667eea" />
+                  <Text style={styles.featureText}>Find products & deals</Text>
                 </View>
                 <View style={styles.featureItem}>
-                  <Ionicons name="chatbox-outline" size={20} color="#667eea" />
-                  <Text style={styles.featureText}>Friendly conversations</Text>
+                  <Ionicons name="card-outline" size={20} color="#667eea" />
+                  <Text style={styles.featureText}>Payment & shipping info</Text>
                 </View>
                 <View style={styles.featureItem}>
-                  <Ionicons name="rocket-outline" size={20} color="#667eea" />
-                  <Text style={styles.featureText}>Quick solutions</Text>
+                  <Ionicons name="information-circle-outline" size={20} color="#667eea" />
+                  <Text style={styles.featureText}>Order tracking & support</Text>
                 </View>
               </View>
             </View>
