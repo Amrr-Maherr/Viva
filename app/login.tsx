@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  ActivityIndicator
 } from "react-native";
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -121,9 +122,17 @@ export default function LoginScreen() {
             )}
           </View>
 
-          <TouchableOpacity style={styles.forgotPassword} onPress={() => router.push('/forgot-password')}>
+          <TouchableOpacity
+            style={styles.forgotPassword}
+            onPress={() => router.push("/forgot-password")}
+          >
             <Text style={styles.forgotPasswordText}>
-              Forgot your password? <Text style={{fontWeight:"bold",textDecorationLine:"underline"}}>Reset your password</Text>
+              Forgot your password?{" "}
+              <Text
+                style={{ fontWeight: "bold", textDecorationLine: "underline" }}
+              >
+                Reset your password
+              </Text>
             </Text>
           </TouchableOpacity>
 
@@ -132,10 +141,12 @@ export default function LoginScreen() {
             disabled={isLoading}
             onPress={handleSubmit(onSubmit)}
           >
-            <Text style={styles.buttonText}>Login</Text>
+            {isLoading ? (
+              <ActivityIndicator size={30} color={"#fff"}/>
+            ) : (
+              <Text style={styles.buttonText}>Login</Text>
+            )}
           </TouchableOpacity>
-
-
 
           <TouchableOpacity onPress={() => router.push("/register")}>
             <View style={styles.linkContainer}>

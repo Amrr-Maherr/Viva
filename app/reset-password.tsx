@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  ActivityIndicator
 } from "react-native";
 import { router, useLocalSearchParams } from 'expo-router';
 import { useForm, Controller } from "react-hook-form";
@@ -119,7 +120,11 @@ export default function ResetPasswordScreen() {
             disabled={isLoading}
             onPress={handleSubmit(onSubmit)}
           >
-            <Text style={styles.buttonText}>Reset Password</Text>
+            {isLoading ? (
+              <ActivityIndicator size={30} color={"#fff"}/>
+            ) : (
+              <Text style={styles.buttonText}>Reset Password</Text>
+            )}
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => router.back()}>

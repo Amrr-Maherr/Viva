@@ -7,7 +7,8 @@ import {
   View,
   KeyboardAvoidingView,
   Platform,
-  ScrollView
+  ScrollView,
+  ActivityIndicator
 } from "react-native";
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -203,7 +204,11 @@ export default function RegisterScreen() {
             disabled={isLoading}
             onPress={handleSubmit(onSubmit)}
           >
-            <Text style={styles.buttonText}>Register</Text>
+            {isLoading ? (
+              <ActivityIndicator size={30} color={"#fff"}/>
+            ) : (
+              <Text style={styles.buttonText}>Register</Text>
+            )}
           </TouchableOpacity>
 
           <Text style={styles.termsText}>
