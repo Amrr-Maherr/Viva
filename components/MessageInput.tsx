@@ -32,7 +32,10 @@ export default function MessageInput({
       <TextInput
         style={[
           styles.textInput,
-          { backgroundColor: ColorScheme === "dark" ? "#2D3748" : "#FFFFFF" }
+          {
+            backgroundColor: ColorScheme === "dark" ? "#2D3748" : "#FFFFFF",
+            color: "#FFFFFF"
+          }
         ]}
         placeholder={placeholder}
         value={value}
@@ -40,7 +43,7 @@ export default function MessageInput({
         onSubmitEditing={onSendPress}
         placeholderTextColor={`${ColorScheme === "dark" ? "#C2C3CB" : "#ACADB9"}`}
         multiline
-        maxHeight={120}
+        // maxHeight={120}
       />
       <TouchableOpacity
         style={[
@@ -83,6 +86,7 @@ const styles = StyleSheet.create({
     textAlignVertical: 'top',
     borderWidth: 1,
     borderColor: '#e2e8f0',
+    color:"#fff"
   },
   sendButton: {
     width: 44,
