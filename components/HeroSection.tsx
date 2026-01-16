@@ -1,26 +1,25 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
-import { Video, ResizeMode } from 'expo-av';
+import { VideoView, useVideoPlayer } from 'expo-video';
 import { router } from 'expo-router';
 
 const { width } = Dimensions.get('window');
 
 const HeroSection = () => {
-  const video = useRef<Video>(null);
+  const player = useVideoPlayer(require('../assets/Videos/9510023-uhd_4096_2160_25fps.mp4'), (player) => {
+    player.loop = true;
+    player.muted = true;
+    player.play();
+  });
 
   return (
     <View style={styles.container}>
-      <Video
-        ref={video}
+      <VideoView
         style={styles.video}
-        source={{
-          uri: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-        }}
-        useNativeControls={false}
-        resizeMode={ResizeMode.COVER}
-        isLooping
-        shouldPlay
-        isMuted
+        player={player}
+        allowsFullscreen={false}
+        contentFit="cover"
+        // isUserInteractionEnabled={false}
       />
       <View style={styles.overlay}>
         {/* <View style={styles.content}>
