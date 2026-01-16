@@ -31,6 +31,15 @@ A comprehensive e-commerce mobile application built with React Native and Expo, 
 - **Remove from Wishlist**: Unfavorite items
 - **Add to Cart from Wishlist**: Quick add to cart
 
+### AI Chat Assistant
+- **Viva Assistant**: Intelligent e-commerce assistant for product and order support
+- **Floating Chat Button**: Accessible from home screen with floating action button
+- **Welcome Screen**: Attractive welcome view when no messages exist
+- **E-commerce Support**: Answers questions about products, prices, discounts, orders, shipping, and returns
+- **Real-time Interaction**: Instant responses with typing indicators
+- **Message History**: Persistent chat history with timestamps
+- **Action Buttons**: Like and copy functionality for messages
+
 ### User Interface
 - **Tab Navigation**: Bottom tabs for Home, Search, Cart, Favorites, Profile
 - **Active Tab Styling**: Black active tab icons
@@ -65,6 +74,8 @@ A comprehensive e-commerce mobile application built with React Native and Expo, 
 - **Axios**: HTTP client
 - **React Hot Toast**: Notifications (web version adapted)
 - **React Hook Form**: Form management
+- **Google Gemini API**: AI-powered chat assistant
+- **Environment Variables**: Secure API key management
 
 ## Screenshots
 
@@ -83,6 +94,13 @@ A comprehensive e-commerce mobile application built with React Native and Expo, 
 - Secure data persistence
 
 ## What's New (Latest Updates)
+
+### v1.2.0 - AI Chat Assistant
+- **Viva Assistant**: Integrated intelligent e-commerce assistant using Google Gemini API
+- **Floating Chat Button**: Added floating action button on home screen for quick access
+- **Welcome View**: Attractive welcome screen when no messages exist
+- **E-commerce Support**: AI assistant provides product, order, and shopping support
+- **Secure API Management**: Environment variables for secure API key handling
 
 ### v1.1.0 - Enhanced User Experience
 - **Pull-to-Refresh**: Added refresh functionality to Cart and Favorites screens for real-time data updates
@@ -116,7 +134,7 @@ app/
   _layout.tsx          # Root layout with navigation and providers
   (tabs)/              # Tab screens
     _layout.tsx        # Tab navigation setup
-    index.tsx          # Home screen with products
+    index.tsx          # Home screen with products and floating chat button
     search.tsx         # Search screen
     cart.tsx           # Cart screen with pull-to-refresh
     favorites.tsx      # Favorites screen with pull-to-refresh
@@ -130,6 +148,7 @@ app/
   product/[id].tsx     # Product details screen
   brands.tsx           # Brand listing screen
   categories.tsx       # Category listing screen
+  chat.tsx             # AI chat assistant screen with welcome view
 
 api/
   auth.ts              # Authentication API functions
@@ -139,14 +158,10 @@ api/
   fetchProducts.ts     # Product data fetching
   fetchCategories.ts   # Categories data
   fetchBrands.ts       # Brands data
+  FetchChat.ts         # Google Gemini API integration for chat assistant
 
-queries/
-  useFetchProducts.ts  # React Query hooks for products
-  useFetchCart.ts      # Cart data hooks
-  useFetchWishlist.ts  # Wishlist data hooks
-  useFetchCategories.ts # Categories hooks
-  useFetchBrands.ts    # Brands hooks
-  useFetchOrders.ts    # Orders hooks
+hooks/
+  useFetchChat.ts      # React Query hook for chat functionality
 
 components/
   ProductCard.tsx      # Product display component
@@ -157,6 +172,10 @@ components/
   Loader.tsx           # Loading indicators
   ErrorView.tsx        # Error display with retry
   StyledText.tsx       # Custom text component
+  ChatHeader.tsx       # Chat screen header component
+  ChatList.tsx         # Chat message list component
+  MessageInput.tsx     # Chat message input component
+  MessageItem.tsx      # Individual chat message component
 
 provider/
   Provider.tsx         # React Query provider setup
@@ -168,6 +187,7 @@ types/
   product.ts           # Product type definitions
   Products.ts          # Products API types
   Categories.ts        # Category types
+  RequsetType.ts       # Type definitions for chat API responses
 
 utils/
   toast.ts             # Toast notification utilities
