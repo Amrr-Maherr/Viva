@@ -57,6 +57,7 @@ export default function ChangePasswordScreen() {
         <TextInput
           style={styles.passwordInput}
           placeholder={placeholder}
+          placeholderTextColor="#999"
           value={formData[field as keyof typeof formData]}
           onChangeText={(value) => handleInputChange(field, value)}
           secureTextEntry={!showPasswords[field as keyof typeof showPasswords]}

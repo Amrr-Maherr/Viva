@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { StyleSheet, ScrollView, TextInput, TouchableOpacity, Alert, Text, View } from 'react-native';
+import { StyleSheet, ScrollView, TextInput, TouchableOpacity, Alert, Text, View, KeyboardAvoidingView, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import useFetchSearchProducts from '@/queries/useFetchSearchProducts';
 import ProductsList from '@/components/ProductsList';
 import Loader from '@/components/Loader';
 import ErrorView from '@/components/ErrorView';
+import EmptyState from '@/components/EmptyState';
 
 export default function SearchScreen() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -14,9 +15,9 @@ export default function SearchScreen() {
 
   const { data: searchResults, isLoading, isError, refetch } = useFetchSearchProducts(debouncedQuery);
 
-  const popularSearches = ['Electronics', 'Clothing', 'Books', 'Home & Garden', 'Sports'];
+  const popularSearches = ['Electronics', 'Clothing', 'Books', 'Home & Garden', 'Sports', 'Beauty', 'Toys', 'Furniture'];
 
-  const recentSearches = ['Wireless headphones', 'Running shoes', 'Coffee maker'];
+  const recentSearches = ['Wireless headphones', 'Running shoes', 'Coffee maker', 'Smartphone', 'Laptop'];
 
   const handleSearch = () => {
     setDebouncedQuery(searchQuery.trim());
@@ -27,132 +28,168 @@ export default function SearchScreen() {
     setDebouncedQuery(tag);
   };
 
+  const clearSearch = () => {
+    setSearchQuery('');
+    setDebouncedQuery('');
+  };
+
   return (
-    <View style={styles.container}>
-      <View style={styles.searchContainer}>
-        <View style={styles.searchBar}>
-          <Ionicons name="search" size={20} color="#666" />
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Search products..."
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            onSubmitEditing={handleSearch}
-          />
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
+      <View style={styles.header}>
+        <View style={styles.searchContainer}>
+          <View style={styles.searchBar}>
+            <Ionicons name="search" size={20} color="#666" style={styles.searchIcon} />
+            <TextInput
+              style={styles.searchInput}
+              placeholder="Search products..."
+              placeholderTextColor="#999"
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+              onSubmitEditing={handleSearch}
+              autoFocus
+            />
+            {searchQuery.length > 0 && (
+              <TouchableOpacity onPress={clearSearch} style={styles.clearButton}>
+                <Ionicons name="close-circle" size={20} color="#ccc" />
+              </TouchableOpacity>
+            )}
+          </View>
           {searchQuery.length > 0 && (
-            <TouchableOpacity onPress={() => setSearchQuery('')}>
-              <Ionicons name="close" size={20} color="#666" />
+            <TouchableOpacity style={styles.cancelButton} onPress={clearSearch}>
+              <Text style={styles.cancelButtonText}>Cancel</Text>
             </TouchableOpacity>
           )}
         </View>
-        <TouchableOpacity style={styles.searchButton} onPress={handleSearch}>
-          <Text style={styles.searchButtonText}>Search</Text>
-        </TouchableOpacity>
       </View>
 
-      {!debouncedQuery ? (
-        <ScrollView style={styles.content}>
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Popular Searches</Text>
-            <View style={styles.tagsContainer}>
-              {popularSearches.map((search, index) => (
+      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+        {!debouncedQuery ? (
+          <>
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Popular Searches</Text>
+              <View style={styles.tagsContainer}>
+                {popularSearches.map((search, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    style={styles.tag}
+                    onPress={() => handleTagPress(search)}
+                  >
+                    <Ionicons name="flame-outline" size={14} color="#1A1A1A" style={styles.tagIcon} />
+                    <Text style={styles.tagText}>{search}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
+
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Recent Searches</Text>
+              {recentSearches.map((search, index) => (
                 <TouchableOpacity
                   key={index}
-                  style={styles.tag}
+                  style={styles.recentItem}
                   onPress={() => handleTagPress(search)}
                 >
-                  <Text style={styles.tagText}>{search}</Text>
+                  <Ionicons name="time-outline" size={20} color="#666" />
+                  <Text style={styles.recentText}>{search}</Text>
+                  <Ionicons name="chevron-forward" size={20} color="#ccc" />
                 </TouchableOpacity>
               ))}
             </View>
-          </View>
-
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Recent Searches</Text>
-            {recentSearches.map((search, index) => (
-              <TouchableOpacity
-                key={index}
-                style={styles.recentItem}
-                onPress={() => handleTagPress(search)}
-              >
-                <Ionicons name="time-outline" size={20} color="#666" />
-                <Text style={styles.recentText}>{search}</Text>
-                <Ionicons name="chevron-forward" size={20} color="#ccc" />
-              </TouchableOpacity>
-            ))}
-          </View>
-        </ScrollView>
-      ) : (
-        <>
-          {isLoading && <Loader />}
-          {isError && <ErrorView onRefetch={refetch} />}
-          {!isLoading && !isError && searchResults?.data && searchResults.data.length > 0 && (
-            <View style={styles.resultsContainer}>
-              <Text style={styles.resultsTitle}>Search Results for "{debouncedQuery}"</Text>
-              <ProductsList products={searchResults.data} />
-            </View>
-          )}
-          {!isLoading && !isError && searchResults?.data && searchResults.data.length === 0 && (
-            <View style={styles.emptyState}>
-              <Ionicons name="search" size={64} color="#ccc" />
-              <Text style={styles.emptyTitle}>No results found</Text>
-              <Text style={styles.emptySubtitle}>Try different keywords</Text>
-            </View>
-          )}
-        </>
-      )}
-    </View>
+          </>
+        ) : (
+          <>
+            {isLoading && <Loader />}
+            {isError && <ErrorView onRefetch={refetch} />}
+            {!isLoading && !isError && searchResults?.data && searchResults.data.length > 0 && (
+              <View style={styles.resultsContainer}>
+                <View style={styles.resultsHeader}>
+                  <Text style={styles.resultsTitle}>Search Results for "{debouncedQuery}"</Text>
+                  <Text style={styles.resultsCount}>{searchResults.data.length} items</Text>
+                </View>
+                <ProductsList products={searchResults.data} />
+              </View>
+            )}
+            {!isLoading && !isError && searchResults?.data && searchResults.data.length === 0 && (
+              <EmptyState
+                title="No results found"
+                subtitle="Try different keywords or browse categories"
+                icon="search"
+              />
+            )}
+          </>
+        )}
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#f5f5f5',
+  },
+  header: {
     backgroundColor: '#fff',
+    paddingTop: 15,
+    paddingBottom: 15,
+    paddingHorizontal: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 3,
   },
   searchContainer: {
-    padding: 20,
-    backgroundColor: '#f8f8f8',
-    borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   searchBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fff',
-    borderRadius: 25,
+    backgroundColor: '#f0f0f0',
+    borderRadius: 30,
     paddingHorizontal: 15,
     paddingVertical: 10,
-    marginBottom: 10,
+    flex: 1,
+    marginRight: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.05,
     shadowRadius: 2,
-    elevation: 2,
+    elevation: 1,
+  },
+  searchIcon: {
+    marginRight: 10,
   },
   searchInput: {
     flex: 1,
-    marginLeft: 10,
     fontSize: 16,
     color: '#1A1A1A',
+    paddingVertical: 0,
   },
-  searchButton: {
-    backgroundColor: '#1A1A1A',
-    padding: 12,
-    borderRadius: 8,
-    alignItems: 'center',
+  clearButton: {
+    marginLeft: 10,
   },
-  searchButtonText: {
-    color: '#fff',
+  cancelButton: {
+    paddingLeft: 15,
+    justifyContent: 'center',
+  },
+  cancelButtonText: {
     fontSize: 16,
-    fontWeight: '600',
+    color: '#1A1A1A',
+    fontWeight: '500',
   },
   content: {
     flex: 1,
+    backgroundColor: '#f5f5f5',
     paddingHorizontal: 20,
   },
   section: {
-    marginTop: 20,
+    marginTop: 25,
   },
   sectionTitle: {
     fontSize: 18,
@@ -165,30 +202,43 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   tag: {
-    backgroundColor: '#f0f0f0',
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    paddingHorizontal: 15,
+    paddingVertical: 10,
     borderRadius: 20,
-    marginRight: 8,
-    marginBottom: 8,
+    marginRight: 10,
+    marginBottom: 10,
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 1,
+  },
+  tagIcon: {
+    marginRight: 6,
   },
   tagText: {
     fontSize: 14,
     color: '#1A1A1A',
+    fontWeight: '500',
   },
   recentItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 10,
+    paddingVertical: 15,
+    paddingHorizontal: 15,
     backgroundColor: '#fff',
-    borderRadius: 8,
-    marginBottom: 8,
+    borderRadius: 12,
+    marginBottom: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.05,
     shadowRadius: 2,
-    elevation: 2,
+    elevation: 1,
   },
   recentText: {
     flex: 1,
@@ -201,13 +251,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 15,
     backgroundColor: '#fff',
-    borderRadius: 8,
+    borderRadius: 12,
     marginBottom: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.05,
     shadowRadius: 2,
-    elevation: 2,
+    elevation: 1,
   },
   itemImage: {
     width: 50,
@@ -231,11 +281,32 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#1A1A1A',
   },
+  resultsContainer: {
+    flex: 1,
+    paddingHorizontal: 0,
+    paddingTop: 10,
+  },
+  resultsHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+  resultsTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#1A1A1A',
+  },
+  resultsCount: {
+    fontSize: 14,
+    color: '#666',
+  },
   emptyState: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 40,
+    paddingTop: 100,
   },
   emptyTitle: {
     fontSize: 20,
@@ -248,16 +319,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#666',
     textAlign: 'center',
-  },
-  resultsContainer: {
-    flex: 1,
-    paddingHorizontal: 20,
-  },
-  resultsTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#1A1A1A',
-    marginTop: 20,
-    marginBottom: 15,
   },
 });

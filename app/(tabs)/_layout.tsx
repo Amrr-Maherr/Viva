@@ -2,6 +2,7 @@ import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { Link, Tabs } from 'expo-router';
 import { Pressable } from 'react-native';
+import { useRouter } from 'expo-router';
 
 import Colors from '@/constants/Colors';
 import { useColorScheme } from '@/components/useColorScheme';
@@ -17,6 +18,7 @@ function TabBarIcon(props: {
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const router = useRouter();
 
   return (
     <Tabs
@@ -41,6 +43,14 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => (
             <TabBarIcon name="home-outline" color={color} />
           ),
+          // headerLeft: () => (
+          //   <Ionicons
+          //     name="arrow-back"
+          //     size={24}
+          //     onPress={() => router.back()}
+          //     style={{ marginLeft: 15 }}
+          //   />
+          // ),
           headerRight: () => (
             <Ionicons
               name="notifications"
@@ -58,6 +68,14 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => (
             <TabBarIcon name="search-outline" color={color} />
           ),
+          headerLeft: () => (
+            <Ionicons
+              name="arrow-back"
+              size={24}
+              onPress={() => router.back()}
+              style={{ marginLeft: 15 }}
+            />
+          ),
         }}
       />
       <Tabs.Screen
@@ -66,6 +84,14 @@ export default function TabLayout() {
           title: "Cart",
           tabBarIcon: ({ color }) => (
             <TabBarIcon name="bag-outline" color={color} />
+          ),
+          headerLeft: () => (
+            <Ionicons
+              name="arrow-back"
+              size={24}
+              onPress={() => router.back()}
+              style={{ marginLeft: 15 }}
+            />
           ),
         }}
       />
@@ -76,6 +102,14 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => (
             <TabBarIcon name="heart-outline" color={color} />
           ),
+          headerLeft: () => (
+            <Ionicons
+              name="arrow-back"
+              size={24}
+              onPress={() => router.back()}
+              style={{ marginLeft: 15 }}
+            />
+          ),
         }}
       />
       <Tabs.Screen
@@ -84,6 +118,14 @@ export default function TabLayout() {
           title: "Profile",
           tabBarIcon: ({ color }) => (
             <TabBarIcon name="person-outline" color={color} />
+          ),
+          headerLeft: () => (
+            <Ionicons
+              name="arrow-back"
+              size={24}
+              onPress={() => router.back()}
+              style={{ marginLeft: 15 }}
+            />
           ),
         }}
       />

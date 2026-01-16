@@ -68,6 +68,7 @@ export default function VerifyResetCodeScreen() {
                 <TextInput
                   style={styles.input}
                   placeholder="Enter 6-digit code"
+                  placeholderTextColor="#999"
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}

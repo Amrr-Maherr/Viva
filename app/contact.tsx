@@ -128,6 +128,7 @@ export default function ContactScreen() {
           <TextInput
             style={styles.input}
             placeholder="Brief description of your inquiry"
+            placeholderTextColor="#999"
             value={formData.subject}
             onChangeText={(value) => handleInputChange('subject', value)}
           />
@@ -138,6 +139,7 @@ export default function ContactScreen() {
           <TextInput
             style={[styles.input, styles.messageInput]}
             placeholder="Please provide details about your question or issue..."
+            placeholderTextColor="#999"
             value={formData.message}
             onChangeText={(value) => handleInputChange('message', value)}
             multiline

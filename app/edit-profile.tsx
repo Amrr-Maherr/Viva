@@ -65,6 +65,7 @@ export default function EditProfileScreen() {
                 <TextInput
                   style={styles.input}
                   placeholder="Enter your full name"
+                  placeholderTextColor="#999"
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
@@ -93,6 +94,7 @@ export default function EditProfileScreen() {
                 <TextInput
                   style={styles.input}
                   placeholder="Enter your email"
+                  placeholderTextColor="#999"
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
@@ -120,6 +122,7 @@ export default function EditProfileScreen() {
                 <TextInput
                   style={styles.input}
                   placeholder="Enter your phone number"
+                  placeholderTextColor="#999"
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}

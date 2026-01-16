@@ -15,7 +15,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
       <TextInput
         style={styles.input}
         placeholder={placeholder}
-        placeholderTextColor="#999999"
+        placeholderTextColor="#999"
       />
       <Ionicons name="mic" size={25} color="gray" style={styles.iconRight} />
     </View>

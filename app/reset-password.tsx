@@ -76,6 +76,7 @@ export default function ResetPasswordScreen() {
                 <TextInput
                   style={styles.input}
                   placeholder="Enter new password"
+                  placeholderTextColor="#999"
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
@@ -102,6 +103,7 @@ export default function ResetPasswordScreen() {
                 <TextInput
                   style={styles.input}
                   placeholder="Confirm new password"
+                  placeholderTextColor="#999"
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}

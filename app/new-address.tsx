@@ -45,6 +45,7 @@ export default function NewAddressScreen() {
       <TextInput
         style={styles.input}
         placeholder={placeholder}
+        placeholderTextColor="#999"
         value={formData[field as keyof typeof formData]}
         onChangeText={(value) => handleInputChange(field, value)}
         keyboardType={keyboardType}
