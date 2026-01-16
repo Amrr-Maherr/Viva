@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { StyleSheet, KeyboardAvoidingView, Platform, View, StatusBar } from "react-native";
+import { StyleSheet, KeyboardAvoidingView, Platform, View, StatusBar, Text } from "react-native";
+import { Ionicons } from '@expo/vector-icons';
 import ChatHeader from '@/components/ChatHeader';
 import MessageInput from '@/components/MessageInput';
 import ChatList, { ChatListRef } from '@/components/ChatList';
@@ -48,15 +49,37 @@ console.log(isError);
 
   return (
     <View style={styles.container}>
-      {/* <StatusBar barStyle="light-content" backgroundColor="#667eea" />
-      <ChatHeader title="BrainBox AI" /> */}
+      <StatusBar barStyle="light-content" backgroundColor="#667eea" />
+      <ChatHeader title="BrainBox AI" />
       <KeyboardAvoidingView
         style={styles.keyboardAvoidingContainer}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         keyboardVerticalOffset={Platform.OS === "ios" ? 120 : 90}
       >
         <View style={styles.chatContainer}>
-          <ChatList ref={chatListRef} messages={chatMessages} />
+          {chatMessages.length === 0 ? (
+            <View style={styles.welcomeContainer}>
+              <Ionicons name="chatbubble-ellipses-outline" size={64} color="#667eea" style={styles.welcomeIcon} />
+              <Text style={styles.welcomeTitle}>Welcome to BrainBox AI!</Text>
+              <Text style={styles.welcomeSubtitle}>Ask me anything and I'll do my best to assist you.</Text>
+              <View style={styles.welcomeFeatures}>
+                <View style={styles.featureItem}>
+                  <Ionicons name="bulb-outline" size={20} color="#667eea" />
+                  <Text style={styles.featureText}>Get instant answers</Text>
+                </View>
+                <View style={styles.featureItem}>
+                  <Ionicons name="chatbox-outline" size={20} color="#667eea" />
+                  <Text style={styles.featureText}>Friendly conversations</Text>
+                </View>
+                <View style={styles.featureItem}>
+                  <Ionicons name="rocket-outline" size={20} color="#667eea" />
+                  <Text style={styles.featureText}>Quick solutions</Text>
+                </View>
+              </View>
+            </View>
+          ) : (
+            <ChatList ref={chatListRef} messages={chatMessages} />
+          )}
           <MessageInput
             value={message}
             onChangeText={setMessage}
@@ -81,5 +104,48 @@ const styles = StyleSheet.create({
   chatContainer: {
     flex: 1,
     backgroundColor: '#f0f4f8',
+  },
+  welcomeContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 30,
+    paddingTop: 40,
+    paddingBottom: 20,
+  },
+  welcomeIcon: {
+    marginBottom: 20,
+    opacity: 0.8,
+  },
+  welcomeTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#333',
+    textAlign: 'center',
+    marginBottom: 12,
+  },
+  welcomeSubtitle: {
+    fontSize: 16,
+    color: '#666',
+    textAlign: 'center',
+    marginBottom: 30,
+    lineHeight: 24,
+  },
+  welcomeFeatures: {
+    width: '100%',
+    alignItems: 'flex-start',
+    marginTop: 20,
+  },
+  featureItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 15,
+    width: '100%',
+    paddingLeft: 10,
+  },
+  featureText: {
+    fontSize: 16,
+    color: '#555',
+    marginLeft: 12,
   },
 });
