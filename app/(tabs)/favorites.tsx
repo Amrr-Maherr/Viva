@@ -6,6 +6,7 @@ import { useRemoveFromWishlistMutation } from '@/api/wishlist';
 import { useAddToCartMutation } from '@/api/cart';
 import Loader from '@/components/Loader';
 import ErrorView from '@/components/ErrorView';
+import EmptyCardScreen from '@/components/EmptyCart';
 import { showToast } from '@/utils/toast';
 
 export default function FavoritesScreen() {
@@ -50,50 +51,48 @@ export default function FavoritesScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>My Favorites</Text>
-        <Text style={styles.subtitle}>{favorites.length} items</Text>
-      </View>
+      {favorites.length === 0 ? (
+        <EmptyCardScreen />
+      ) : (
+        <>
+          <View style={styles.header}>
+            <Text style={styles.title}>My Favorites</Text>
+            <Text style={styles.subtitle}>{favorites.length} items</Text>
+          </View>
 
-      <ScrollView
-        style={styles.itemsContainer}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      >
-        {favorites.map((item: any) => (
-          <TouchableOpacity key={item._id} style={styles.favoriteItem} onPress={() => showToast('info', 'Product Details')}>
-            <Image source={{ uri: item.imageCover }} style={styles.itemImage} />
-            <View style={styles.itemDetails}>
-              <Text style={styles.itemName}>{item.title}</Text>
-              <Text style={styles.itemPrice}>${item.price}</Text>
-            </View>
-            <View style={styles.itemActions}>
-              <TouchableOpacity style={styles.actionButton} onPress={() => handleAddToCart(item._id)} disabled={addToCartMutation.isPending}>
-                {addToCartMutation.isPending ? (
-                  <ActivityIndicator size="small" color="#1A1A1A" />
-                ) : (
-                  <Ionicons name="bag-add-outline" size={20} color="#1A1A1A" />
-                )}
+          <ScrollView
+            style={styles.itemsContainer}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+          >
+            {favorites.map((item: any) => (
+              <TouchableOpacity key={item._id} style={styles.favoriteItem} onPress={() => showToast('info', 'Product Details')}>
+                <Image source={{ uri: item.imageCover }} style={styles.itemImage} />
+                <View style={styles.itemDetails}>
+                  <Text style={styles.itemName}>{item.title}</Text>
+                  <Text style={styles.itemPrice}>${item.price}</Text>
+                </View>
+                <View style={styles.itemActions}>
+                  <TouchableOpacity style={styles.actionButton} onPress={() => handleAddToCart(item._id)} disabled={addToCartMutation.isPending}>
+                    {addToCartMutation.isPending ? (
+                      <ActivityIndicator size="small" color="#1A1A1A" />
+                    ) : (
+                      <Ionicons name="bag-add-outline" size={20} color="#1A1A1A" />
+                    )}
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.actionButton} onPress={() => handleRemoveFromFavorites(item._id)} disabled={removeFromWishlistMutation.isPending}>
+                    {removeFromWishlistMutation.isPending ? (
+                      <ActivityIndicator size="small" color="#FF3B30" />
+                    ) : (
+                      <Ionicons name="heart-dislike-outline" size={20} color="#FF3B30" />
+                    )}
+                  </TouchableOpacity>
+                </View>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.actionButton} onPress={() => handleRemoveFromFavorites(item._id)} disabled={removeFromWishlistMutation.isPending}>
-                {removeFromWishlistMutation.isPending ? (
-                  <ActivityIndicator size="small" color="#FF3B30" />
-                ) : (
-                  <Ionicons name="heart-dislike-outline" size={20} color="#FF3B30" />
-                )}
-              </TouchableOpacity>
-            </View>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
-
-      {favorites.length === 0 && (
-        <View style={styles.emptyState}>
-          <Ionicons name="heart-outline" size={64} color="#ccc" />
-          <Text style={styles.emptyTitle}>No favorites yet</Text>
-          <Text style={styles.emptySubtitle}>Start adding items to your favorites</Text>
-        </View>
+            ))}
+          </ScrollView>
+        </>
       )}
     </View>
   );
