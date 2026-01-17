@@ -1,6 +1,7 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View, Image } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
+import LottieView from 'lottie-react-native';
 
 type Message = {
   text: string;
@@ -24,18 +25,40 @@ export default function MessageItem({ message }: MessageItemProps) {
         message.sender === "user" ? styles.userMessageWrapper : styles.aiMessageWrapper
       ]}
     >
-      <View
-        style={[
-          styles.messageContainer,
-          message.sender === "user" ? styles.userMessage : styles.aiMessage,
-        ]}
-      >
-        <Text style={[
-          styles.messageText,
-          message.sender === "user" ? styles.userMessageText : styles.aiMessageText
-        ]}>
-          {message.text}
-        </Text>
+      <View style={[
+        styles.messageRow,
+        message.sender === "user" ? styles.userMessageRow : styles.aiMessageRow
+      ]}>
+        <View style={styles.avatarContainer}>
+          {message.sender === "user" ? (
+            <LottieView
+              source={require('../assets/jsonIcons/Profile_Avatar.json')}
+              autoPlay
+              loop
+              style={styles.avatar}
+            />
+          ) : (
+            <LottieView
+              source={require('../assets/jsonIcons/AI_logo.json')}
+              autoPlay
+              loop
+              style={styles.avatar}
+            />
+          )}
+        </View>
+        <View
+          style={[
+            styles.messageContainer,
+            message.sender === "user" ? styles.userMessage : styles.aiMessage,
+          ]}
+        >
+          <Text style={[
+            styles.messageText,
+            message.sender === "user" ? styles.userMessageText : styles.aiMessageText
+          ]}>
+            {message.text}
+          </Text>
+        </View>
       </View>
       <View
         style={[
@@ -43,22 +66,28 @@ export default function MessageItem({ message }: MessageItemProps) {
           message.sender === "user" ? styles.userMeta : styles.aiMeta,
         ]}
       >
-        <Text style={styles.timestamp}>{formatTime(message.timestamp)}</Text>
-        <View
-          style={styles.actionsContainer}
-        >
-          <TouchableOpacity
-            style={styles.actionButton}
-            onPress={() => console.log("Like pressed")}
-          >
-            <Ionicons name="thumbs-up-outline" size={14} color="#4a5568" />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.actionButton}
-            onPress={() => console.log("Copy pressed")}
-          >
-            <Ionicons name="copy-outline" size={14} color="#4a5568" />
-          </TouchableOpacity>
+        <View style={styles.timestampActionsContainer}>
+          <Text style={styles.timestamp}>{formatTime(message.timestamp)}</Text>
+          <View style={styles.actionsContainer}>
+            <TouchableOpacity
+              style={styles.actionButton}
+              onPress={() => console.log("Like pressed")}
+            >
+              <Ionicons name="thumbs-up-outline" size={14} color="#4a5568" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.actionButton}
+              onPress={() => console.log("Copy pressed")}
+            >
+              <Ionicons name="copy-outline" size={14} color="#4a5568" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.actionButton}
+              onPress={() => console.log("Share pressed")}
+            >
+              <Ionicons name="share-outline" size={14} color="#4a5568" />
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </View>
@@ -78,10 +107,31 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     marginLeft: 16,
   },
+  messageRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
+  userMessageRow: {
+    flexDirection: 'row-reverse', // Reverse order for user messages (avatar on right)
+  },
+  aiMessageRow: {
+    flexDirection: 'row', // Normal order for AI messages (avatar on left)
+  },
+  avatarContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 4,
+    marginHorizontal: 8,
+    alignSelf: 'flex-start',
+  },
+  avatar: {
+    width: 50,
+    height: 50,
+  },
   messageContainer: {
     padding: 14,
     borderRadius: 18,
-    maxWidth: '100%',
+    maxWidth: '80%',
   },
   userMessage: {
     backgroundColor: '#667eea',
@@ -112,9 +162,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 6,
     paddingHorizontal: 4,
+    width: '100%',
+  },
+  timestampActionsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   userMeta: {
     alignSelf: 'flex-end',
+    flexDirection: 'row-reverse',
   },
   aiMeta: {
     alignSelf: 'flex-start',
