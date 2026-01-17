@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
         left: 16,
         right: 16,
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent: 'flex-end',
         alignItems: 'center',
     },
     overlayButton: {
@@ -361,9 +361,6 @@ export default function ProductDetailsScreen() {
                 <View style={styles.imageContainer}>
                     <ProductImageGallery images={productImages} />
                     <View style={styles.overlayIcons}>
-                        <TouchableOpacity style={styles.overlayButton} onPress={() => router.back()}>
-                            <Ionicons name="chevron-back" size={24} color="#fff" />
-                        </TouchableOpacity>
                         <TouchableOpacity style={[styles.overlayButton, isUpdatingWishlist && { opacity: 0.5 }]} disabled={isUpdatingWishlist} onPress={async () => {
                             setIsUpdatingWishlist(true);
                             try {
