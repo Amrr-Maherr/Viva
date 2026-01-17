@@ -116,7 +116,12 @@ A comprehensive e-commerce mobile application built with React Native and Expo, 
 
 1. Clone the repository
 2. Install dependencies: `npm install`
-3. Start the development server: `npm start`
+3. Copy the `.env.example` file to `.env` and add your API keys:
+   ```bash
+   cp .env.example .env
+   ```
+   Then edit `.env` and replace `your_gemini_api_key_here` with your actual Google Gemini API key
+4. Start the development server: `npm start`
 
 ## Usage
 
@@ -126,6 +131,25 @@ A comprehensive e-commerce mobile application built with React Native and Expo, 
 4. Add products to cart or wishlist
 5. Manage cart and favorites from respective tabs
 6. Update profile information
+
+## Setting up Google Gemini API Key
+
+To use the AI chat assistant feature, you need to obtain a Google Gemini API key:
+
+1. Go to [Google AI Studio](https://aistudio.google.com/app/apikey)
+2. Create an account or sign in
+3. Click on "Get API Key" or "Create API Key"
+4. Follow the instructions to create a new API key
+5. Make sure the API key has permissions for the Gemini API
+6. Add the API key to your `.env` file as `EXPO_PUBLIC_GEMINI_API_KEY=your_actual_api_key`
+
+## Troubleshooting API Errors
+
+If you encounter "Access forbidden. Please check your API key permissions." error:
+1. Verify that your API key is correctly set in the environment variables
+2. Check that your API key has the necessary permissions for the Gemini API
+3. Ensure you're using the correct API endpoint
+4. Confirm that your API key hasn't exceeded usage limits
 
 ## Project Structure
 

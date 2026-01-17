@@ -48,7 +48,7 @@ const FetchChat = async (chatMessage: string): Promise<GeminiResponse | { error:
             } else if (error.response.status === 401) {
                 return { error: 'Unauthorized. Please check your API key.' };
             } else if (error.response.status === 403) {
-                return { error: 'Access forbidden. Please check your API key permissions.' };
+                return { error: 'Access forbidden. Please check your API key permissions. Make sure your Google Gemini API key is properly configured and has the necessary permissions.' };
             } else if (error.response.status >= 500) {
                 return { error: 'Server error. Please try again later.' };
             }
