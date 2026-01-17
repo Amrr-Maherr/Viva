@@ -13,6 +13,7 @@ import React, { useCallback, useState } from "react";
 import { RefreshControl, ScrollView, StyleSheet, Text, View, TouchableOpacity, Animated } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import LottieView from 'lottie-react-native';
 
 export default function HomeScreen() {
   const { category } = useLocalSearchParams();
@@ -107,12 +108,17 @@ export default function HomeScreen() {
         {/* </View> */}
       </ScrollView>
 
-      {/* Floating Chat Button */}
+      {/* Floating AI Chat Button */}
       <TouchableOpacity
         style={styles.fab}
         onPress={() => router.push('/chat')}
       >
-        <Ionicons name="chatbubble-ellipses" size={24} color="#fff" />
+        <LottieView
+          source={require('../../assets/jsonIcons/AI_logo.json')}
+          autoPlay
+          loop
+          style={styles.aiLogo}
+        />
       </TouchableOpacity>
     </View>
   );
@@ -146,13 +152,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     right: 20,
     bottom: 20,
-    backgroundColor: '#667eea',
+    // backgroundColor: '#667eea',
     borderRadius: 30,
-    elevation: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
+    // elevation: 8,
+    // shadowColor: '#000',
+    // shadowOffset: { width: 0, height: 2 },
+    // shadowOpacity: 0.3,
+    // shadowRadius: 4,
     zIndex: 999,
+  },
+  aiLogo: {
+    width: 100,
+    height: 100,
   },
 });

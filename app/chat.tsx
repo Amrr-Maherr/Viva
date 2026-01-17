@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import MessageInput from '@/components/MessageInput';
 import ChatList, { ChatListRef } from '@/components/ChatList';
 import useFetchChat from '@/hooks/useFetchChat';
+import LottieView from 'lottie-react-native';
 
 type Message = {
   text: string;
@@ -56,7 +57,12 @@ console.log(isError);
         <View style={styles.chatContainer}>
           {chatMessages.length === 0 ? (
             <View style={styles.welcomeContainer}>
-              <Ionicons name="chatbubble-ellipses-outline" size={64} color="#667eea" style={styles.welcomeIcon} />
+              <LottieView
+                source={require('../assets/jsonIcons/AI_logo.json')}
+                autoPlay
+                loop
+                style={styles.aiLogo}
+              />
               <Text style={styles.welcomeTitle}>Welcome to Viva Assistant!</Text>
               <Text style={styles.welcomeSubtitle}>I'm here to help you with products, orders, and shopping tips.</Text>
               <View style={styles.welcomeFeatures}>
@@ -110,9 +116,10 @@ const styles = StyleSheet.create({
     paddingTop: 40,
     paddingBottom: 20,
   },
-  welcomeIcon: {
+  aiLogo: {
+    width: 120,
+    height: 120,
     marginBottom: 20,
-    opacity: 0.8,
   },
   welcomeTitle: {
     fontSize: 24,
