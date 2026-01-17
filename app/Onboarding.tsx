@@ -100,12 +100,19 @@ export default function Onboarding() {
           ]}
         >
           <TouchableOpacity
-            style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center' }}
+            style={{
+              width: "100%",
+              height: "100%",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
             accessible
             accessibilityLabel="Next"
             onPress={handleButtonPress}
           >
-            {isArrowVisible && <MaterialIcons name="navigate-next" size={24} color="#fff" />}
+            {isArrowVisible && (
+              <MaterialIcons name="navigate-next" size={24} color="#fff" />
+            )}
           </TouchableOpacity>
         </Animated.View>
 
@@ -120,7 +127,9 @@ export default function Onboarding() {
         >
           <Image
             style={style.fullImage}
-            source={require("../assets/images/Element.png")}
+            source={{
+              uri: "https://ik.imagekit.io/pieg1rcfk/Viva%20Assests/Element.png",
+            }}
           />
         </Animated.View>
 
@@ -135,7 +144,9 @@ export default function Onboarding() {
         >
           <Image
             style={style.fullImage}
-            source={require("../assets/images/Image.png")}
+            source={{
+              uri: "https://ik.imagekit.io/pieg1rcfk/Viva%20Assests/Onboarding_Image",
+            }}
           />
         </Animated.View>
       </SafeAreaView>
