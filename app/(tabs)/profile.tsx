@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, ScrollView, TouchableOpacity, Alert, Text, View } from 'react-native';
+import { StyleSheet, ScrollView, TouchableOpacity, Alert, Text, View, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import LottieView from 'lottie-react-native';
 
 export default function ProfileScreen() {
   const [user, setUser] = useState<{ name: string; email: string } | null>(null);
@@ -25,7 +26,12 @@ export default function ProfileScreen() {
     <ScrollView style={styles.container}>
       <View style={styles.header}>
         <View style={styles.avatar}>
-          <Ionicons name="person" size={50} color="#666" />
+          <LottieView
+            source={require('../../assets/jsonIcons/Profile_Avatar.json')}
+            autoPlay
+            loop
+            style={styles.lottieAvatar}
+          />
         </View>
         <Text style={styles.name}>{user?.name || 'User'}</Text>
         <Text style={styles.email}>{user?.email || 'user@example.com'}</Text>
@@ -133,13 +139,18 @@ const styles = StyleSheet.create({
     backgroundColor: '#f8f8f8',
   },
   avatar: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
+    width: 200,
+    height: 200,
+    borderRadius: "100%",
     backgroundColor: '#e0e0e0',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 10,
+    overflow: 'hidden',
+  },
+  lottieAvatar: {
+    width: '100%',
+    height: '100%',
   },
   name: {
     fontSize: 24,
