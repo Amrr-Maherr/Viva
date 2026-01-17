@@ -82,7 +82,7 @@ export default function HomeScreen() {
           />
         </View>
         <BannerAd
-          source={require("../../assets/images/Gemini_Generated_Image_77eo7777eo7777eo.png")}
+          source={{uri: "https://ik.imagekit.io/pieg1rcfk/Viva%20Assests/Gemini_Generated_Image_77eo7777eo7777eo.png"}}
         />
         <View style={{ paddingHorizontal: 20 }}>
           <SectionTitle title="Best Sellers" />
@@ -93,7 +93,7 @@ export default function HomeScreen() {
           />
         </View>
         <BannerAd
-          source={require("../../assets/images/Gemini_Generated_Image_ulbru1ulbru1ulbr.png")}
+          source={{uri: "https://ik.imagekit.io/pieg1rcfk/Viva%20Assests/Gemini_Generated_Image_ulbru1ulbru1ulbr.png"}}
         />
         <FeaturedProducts products={allProducts.slice(1, 2)} title="Hot Deal" />
         <View style={{ paddingHorizontal: 20 }}>

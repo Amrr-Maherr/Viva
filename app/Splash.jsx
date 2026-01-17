@@ -53,30 +53,7 @@ export default function Splash() {
       delay: 1000,
       useNativeDriver: true,
     }).start();
-
-    // const checkTokenAndNavigate = async () => {
-    //   try {
-    //     const token = await AsyncStorage.getItem('token');
-    //     const hasSeenOnboarding = await AsyncStorage.getItem('hasSeenOnboarding');
-
-    //     setTimeout(() => {
-    //       if (token) {
-    //         router.push("/(tabs)");
-    //       } else if (!hasSeenOnboarding) {
-    //         router.push("/Onboarding");
-    //       } else {
-    //         router.push("/login");
-    //       }
-    //     }, 3000);
-    //   } catch (error) {
-    //     console.log('Error checking token:', error);
-    //     setTimeout(() => {
-    //       router.push("/Onboarding");
-    //     }, 3000);
-    //   }
-    // };
-
-    // checkTokenAndNavigate();
+    
   setTimeout(() => {
     router.push("/Onboarding");
   }, 3000);

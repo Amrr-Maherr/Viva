@@ -6,7 +6,7 @@ import { router } from 'expo-router';
 const { width } = Dimensions.get('window');
 
 const HeroSection = () => {
-  const player = useVideoPlayer(require('../assets/Videos/9510023-uhd_4096_2160_25fps.mp4'), (player) => {
+  const player = useVideoPlayer('https://ik.imagekit.io/pieg1rcfk/Viva%20Assests/9510023-uhd_4096_2160_25fps.mp4', (player) => {
     player.loop = true;
     player.muted = true;
     player.play();
