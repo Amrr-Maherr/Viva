@@ -54,29 +54,10 @@ export default function Splash() {
       useNativeDriver: true,
     }).start();
 
-    // Check if user has completed onboarding before
-    const checkOnboardingStatus = async () => {
-      try {
-        const hasOnboarded = await AsyncStorage.getItem('@has_onboarded');
-        if (hasOnboarded) {
-          // If user has completed onboarding, navigate to tabs
-          router.replace("/(tabs)");
-        } else {
-          // If user hasn't completed onboarding, stay on splash and navigate after animation
-          setTimeout(() => {
-            router.replace("/Onboarding");
-          }, 3000);
-        }
-      } catch (error) {
-        console.log("Error checking onboarding status:", error);
-        // Default behavior if there's an error
-        setTimeout(() => {
-          router.replace("/Onboarding");
-        }, 3000);
-      }
-    };
-
-    checkOnboardingStatus();
+    // Always navigate to Onboarding after animation
+    setTimeout(() => {
+      router.replace("/Onboarding");
+    }, 3000);
   }, []);
   return (
     <>

@@ -1,14 +1,7 @@
 import React from 'react';
 import { FlatList, StyleSheet, ActivityIndicator } from 'react-native';
 import ProductCard from './ProductCard';
-
-interface Product {
-    _id: string;
-    title: string;
-    price: number;
-    imageCover: string;
-    // add other properties as needed
-}
+import { Product } from '@/types/product';
 
 interface ProductsListProps {
     products: Product[] | undefined;

@@ -110,6 +110,14 @@ export default function SearchScreen() {
                   <Text style={styles.resultsCount}>{searchResults.data.length} items</Text>
                 </View>
                 <ProductsList products={searchResults.data} />
+                {searchResults.data.length > 10 && (
+                  <TouchableOpacity
+                    style={styles.viewAllButton}
+                    onPress={() => router.push('/all-products')}
+                  >
+                    <Text style={styles.viewAllText}>View All Products</Text>
+                  </TouchableOpacity>
+                )}
               </View>
             )}
             {!isLoading && !isError && searchResults?.data && searchResults.data.length === 0 && (
@@ -319,5 +327,22 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#666',
     textAlign: 'center',
+  },
+  viewAllButton: {
+    marginTop: 15,
+    padding: 15,
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 1,
+  },
+  viewAllText: {
+    fontSize: 16,
+    color: '#007AFF',
+    fontWeight: '500',
   },
 });

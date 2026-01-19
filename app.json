@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Viva",
-    "slug": "viva",
+    "slug": "my-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/Vectorr.png",

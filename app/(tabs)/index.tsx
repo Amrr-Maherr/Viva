@@ -98,7 +98,12 @@ export default function HomeScreen() {
         />
         <FeaturedProducts products={allProducts.slice(1, 2)} title="Hot Deal" />
         <View style={{ paddingHorizontal: 20 }}>
-          <SectionTitle title="Recommended Products" />
+          <View style={styles.sectionHeader}>
+            <SectionTitle title="Recommended Products" />
+            <TouchableOpacity onPress={() => router.push('/all-products')}>
+              <Text style={styles.seeAllText}>See All</Text>
+            </TouchableOpacity>
+          </View>
           <ProductsList
             products={allProducts.slice(10, 15)}
             onLoadMore={loadMore}
@@ -143,6 +148,17 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     color: "#007aff",
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  seeAllText: {
+    fontSize: 14,
+    color: '#007AFF',
+    fontWeight: '500',
   },
   fab: {
     position: 'absolute',

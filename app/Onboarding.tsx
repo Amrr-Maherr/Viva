@@ -3,7 +3,6 @@ import { Image, StyleSheet, Text, TouchableOpacity, View, Animated } from "react
 import { SafeAreaView } from "react-native-safe-area-context";
 import {router} from "expo-router";
 import { useEffect, useRef, useState } from "react";
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Onboarding() {
   const [isArrowVisible, setIsArrowVisible] = useState(true);
@@ -30,12 +29,6 @@ export default function Onboarding() {
         useNativeDriver: true,
       }),
     ]).start(async () => {
-      // Save onboarding status
-      try {
-        await AsyncStorage.setItem('@has_onboarded', 'true');
-      } catch (error) {
-        console.log('Error saving onboarding status:', error);
-      }
       // Navigate after animation
       router.push("/login");
     });

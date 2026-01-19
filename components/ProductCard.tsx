@@ -5,14 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useAddToCartMutation } from '@/api/cart';
 import { useAddToWishlistMutation, useRemoveFromWishlistMutation } from '@/api/wishlist';
 import { showToast } from '@/utils/toast';
-
-interface Product {
-    _id: string;
-    title: string;
-    price: number;
-    imageCover: string;
-    // add other properties as needed
-}
+import { Product } from '@/types/product';
 
 interface ProductCardProps {
     product: Product;
