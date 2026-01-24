@@ -73,7 +73,7 @@ function RootLayoutNav() {
           options={{ title: "Change Password" }}
         />
         <Stack.Screen name="contact" options={{ title: "Contact Us" }} />
-        <Stack.Screen name="chat" options={{ title: "Viva AI Assistant" }} />
+        <Stack.Screen name="chat" options={{ title: "Viva AI Assistant",headerShown:true }} />
         <Stack.Screen name="modal" options={{ presentation: "modal" }} />
         <Stack.Screen name="+not-found" options={{ headerShown: false }} />
       </Stack>
