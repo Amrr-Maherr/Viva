@@ -1,12 +1,13 @@
 
 import axios from "axios";
 import { GeminiResponse } from '@/types/RequsetType';
+import Constants from 'expo-constants';
 
-const API_KEY = process.env.EXPO_PUBLIC_GEMINI_API_KEY;
+const API_KEY = Constants.expoConfig?.extra?.expoPublicGeminiApiKey || process.env.EXPO_PUBLIC_GEMINI_API_KEY;
 
 const FetchChat = async (chatMessage: string): Promise<GeminiResponse | { error: string } | null> => {
     if (!API_KEY) {
-        console.error('Gemini API key is not set. Please set EXPO_PUBLIC_GEMINI_API_KEY in your environment variables.');
+        console.error('Gemini API key is not set. Please set EXPO_PUBLIC_GEMINI_API_KEY in your environment variables or EAS secrets.');
         return { error: 'API key not configured. Please contact the administrator.' };
     }
 

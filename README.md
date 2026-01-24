@@ -136,12 +136,41 @@ A comprehensive e-commerce mobile application built with React Native and Expo, 
 
 To use the AI chat assistant feature, you need to obtain a Google Gemini API key:
 
+### For Development (Expo Go)
 1. Go to [Google AI Studio](https://aistudio.google.com/app/apikey)
 2. Create an account or sign in
 3. Click on "Get API Key" or "Create API Key"
 4. Follow the instructions to create a new API key
 5. Make sure the API key has permissions for the Gemini API
-6. Add the API key to your `.env` file as `EXPO_PUBLIC_GEMINI_API_KEY=your_actual_api_key`
+6. Copy the `.env.example` file to `.env` and add your API key:
+   ```bash
+   cp .env.example .env
+   ```
+   Then edit `.env` and replace `your_gemini_api_key_here` with your actual Google Gemini API key
+
+### For Production Builds (EAS Build)
+For production builds, you need to configure the API key using EAS secrets:
+
+1. Follow steps 1-5 above to get your API key
+2. Configure the secret using EAS CLI:
+   ```bash
+   eas secret:create --scope project --env-var EXPO_PUBLIC_GEMINI_API_KEY
+   ```
+3. When prompted, enter your actual Google Gemini API key
+4. Update your build profile in `eas.json` to include the secret:
+   ```json
+   {
+     "build": {
+       "production": {
+         "env": {
+           "EXPO_PUBLIC_GEMINI_API_KEY": "your_secret_value_here"
+         }
+       }
+     }
+   }
+   ```
+
+Alternatively, you can set the environment variable in your EAS project dashboard.
 
 ## Troubleshooting API Errors
 

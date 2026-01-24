@@ -5,13 +5,22 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_GEMINI_API_KEY": "development_key_placeholder"
+      }
     },
     "preview": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_GEMINI_API_KEY": "preview_key_placeholder"
+      }
     },
     "production": {
-      "channel": "production"
+      "channel": "production",
+      "env": {
+        "EXPO_PUBLIC_GEMINI_API_KEY": "production_key_placeholder"
+      }
     }
   },
   "submit": {
