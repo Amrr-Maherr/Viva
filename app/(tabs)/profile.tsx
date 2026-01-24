@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LottieView from 'lottie-react-native';
+import { logout } from '@/api/auth';
 
 export default function ProfileScreen() {
   const [user, setUser] = useState<{ name: string; email: string } | null>(null);
@@ -111,10 +112,10 @@ export default function ProfileScreen() {
               style: 'destructive',
               onPress: async () => {
                 try {
-                  await AsyncStorage.removeItem('token');
-                  router.replace('/login');
+                  await logout();
+                  router.replace('/Splash');
                 } catch (error) {
-                  console.log('Error removing token:', error);
+                  console.log('Error during logout:', error);
                   Alert.alert('Error', 'Failed to logout');
                 }
               },

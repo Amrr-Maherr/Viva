@@ -41,13 +41,14 @@ function RootLayoutNav() {
   return (
     <Provider>
       <Stack
-        initialRouteName="Splash"
+        initialRouteName="splash"
         screenOptions={{
           headerTitleAlign: "center",
+          headerShown:false
         }}
       >
-        <Stack.Screen name="Onboarding" options={{ headerShown: false }} />
-        <Stack.Screen name="Splash" options={{ headerShown: false }} />
+        <Stack.Screen name="onboarding" options={{ headerShown: false }} />
+        <Stack.Screen name="splash" options={{ headerShown: false }} />
         <Stack.Screen name="login" options={{ headerShown: false }} />
         <Stack.Screen name="register" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />

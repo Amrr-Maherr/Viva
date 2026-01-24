@@ -71,3 +71,14 @@ export const resetPassword = async (email: string, newPassword: string) => {
         throw error;
     }
 };
+
+export const logout = async () => {
+    try {
+        await AsyncStorage.clear();
+        console.log('✅ All AsyncStorage data cleared');
+        return { success: true, message: 'Logged out successfully' };
+    } catch (error) {
+        console.log('❌ Failed to clear AsyncStorage', error);
+        throw error;
+    }
+};
