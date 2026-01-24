@@ -43,46 +43,36 @@ function RootLayoutNav() {
       <Stack
         initialRouteName="Splash"
         screenOptions={{
-          headerTitleAlign: 'center',
+          headerTitleAlign: "center",
         }}
       >
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="Splash" options={{ headerShown: false }} />
         <Stack.Screen name="Onboarding" options={{ headerShown: false }} />
+        <Stack.Screen name="Splash" options={{ headerShown: false }} />
         <Stack.Screen name="login" options={{ headerShown: false }} />
         <Stack.Screen name="register" options={{ headerShown: false }} />
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen
           name="notifications"
           options={{ title: "Notifications" }}
         />
-        <Stack.Screen name="faqs" options={{ title: "FAQs" }}
-        />
-        <Stack.Screen name="help-center" options={{ title: "Help Center" }}
-        />
-        <Stack.Screen name="my-orders" options={{ title: "My Orders" }}
-        />
-        <Stack.Screen name="checkout" options={{ title: "Checkout" }}
-        />
-        <Stack.Screen name="address" options={{ title: "My Addresses" }}
-        />
-        <Stack.Screen name="new-address" options={{ title: "Add Address" }}
-        />
+        <Stack.Screen name="faqs" options={{ title: "FAQs" }} />
+        <Stack.Screen name="help-center" options={{ title: "Help Center" }} />
+        <Stack.Screen name="my-orders" options={{ title: "My Orders" }} />
+        <Stack.Screen name="checkout" options={{ title: "Checkout" }} />
+        <Stack.Screen name="address" options={{ title: "My Addresses" }} />
+        <Stack.Screen name="new-address" options={{ title: "Add Address" }} />
         <Stack.Screen
           name="payment-method"
           options={{ title: "Payment Methods" }}
         />
-        <Stack.Screen name="new-card" options={{ title: "Add Card" }}
-        />
-        <Stack.Screen name="edit-profile" options={{ title: "Edit Profile" }}
-        />
+        <Stack.Screen name="new-card" options={{ title: "Add Card" }} />
+        <Stack.Screen name="edit-profile" options={{ title: "Edit Profile" }} />
         <Stack.Screen
           name="change-password"
           options={{ title: "Change Password" }}
         />
-        <Stack.Screen name="contact" options={{ title: "Contact Us" }}
-        />
-        <Stack.Screen name="chat" options={{ title: "Viva AI Assistant" }}
-        />
+        <Stack.Screen name="contact" options={{ title: "Contact Us" }} />
+        <Stack.Screen name="chat" options={{ title: "Viva AI Assistant" }} />
         <Stack.Screen name="modal" options={{ presentation: "modal" }} />
         <Stack.Screen name="+not-found" options={{ headerShown: false }} />
       </Stack>

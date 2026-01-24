@@ -120,20 +120,19 @@ const AllProductsScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: "#f8f8f8",
+    backgroundColor: "#f8f9fa",
   },
   content: {
     flex: 1,
     paddingHorizontal: 12,
   },
   listContent: {
-    // paddingTop: 16,
-    // paddingBottom: 20,
+    paddingBottom: 10,
+    gap: 16,
   },
   columnWrapper: {
-    justifyContent: "space-evenly",
-    // gap: 12,
-    // paddingHorizontal: 6,
+    justifyContent: "space-between",
+    gap: 16,
   },
   footerLoader: {
     marginVertical: 20,
@@ -143,7 +142,8 @@ const styles = StyleSheet.create({
     textAlign: "center",
     paddingVertical: 20,
     fontSize: 14,
-    color: "#888888",
+    color: "#6c757d",
+    fontStyle: "italic",
   },
 });
 
