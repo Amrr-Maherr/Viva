@@ -1,293 +1,296 @@
-# Viva - React Native E-commerce App
+# Viva E-commerce Mobile App
 
 ## Project Overview
 
-Viva is a React Native e-commerce application built with Expo Router and TypeScript. The app features product browsing, cart management, wishlist functionality, user authentication, and an AI chat assistant. It uses React Query for data fetching and AsyncStorage for local data persistence.
+Viva is a cross-platform e-commerce mobile application built with React Native and Expo. The app provides a complete shopping experience with product browsing, cart management, user authentication, and an integrated AI assistant powered by Google Gemini. It targets mobile users looking for a modern, intuitive shopping experience with intelligent product recommendations and customer support.
 
-## Architecture & Technology Stack
+The main problem it solves is providing a seamless mobile shopping experience with AI-powered assistance, allowing users to browse products, manage their cart, track orders, and get instant help through an intelligent chat assistant.
 
-- **Framework**: React Native with Expo SDK 54
-- **Navigation**: Expo Router (file-based routing)
-- **State Management**: React Query (@tanstack/react-query) for server state
-- **Local Storage**: AsyncStorage for authentication tokens and user data
-- **Styling**: StyleSheet API (no external styling libraries)
-- **Forms**: React Hook Form for form validation
-- **HTTP Client**: Axios for API requests
-- **Animations**: Lottie React Native for animations
-- **Icons**: Expo Vector Icons (Ionicons)
-- **Toast Notifications**: React Native Toast Message
+## Tech Stack
+
+### Frameworks & Runtime
+- **React Native** (0.81.5) - Cross-platform mobile development
+- **Expo** (~54.0.30) - Development platform and build tooling
+- **Expo Router** (~6.0.21) - File-based routing system
+- **TypeScript** (~5.9.2) - Type safety and development experience
+
+### State Management & Data Fetching
+- **TanStack React Query** (^5.90.16) - Server state management and caching
+- **Axios** (^1.13.2) - HTTP client for API requests
+- **AsyncStorage** (^2.2.0) - Local storage for user data and app state
+
+### UI & Styling
+- **React Native Reanimated** (~4.1.1) - Advanced animations
+- **Expo Vector Icons** (^15.0.3) - Icon library
+- **Lottie React Native** (~7.3.1) - Complex animations and micro-interactions
+- **React Native Safe Area Context** (~5.6.0) - Safe area handling
+
+### Form Management & Validation
+- **React Hook Form** (^7.69.0) - Form state management and validation
+
+### Build & Deployment
+- **EAS Build** - Expo Application Services for building and deployment
+- **Metro** - JavaScript bundler for React Native
 
 ## Project Structure
 
 ```
-├── api/                    # API service functions
-├── app/                    # Expo Router screens (file-based routing)
-│   ├── (tabs)/            # Tab navigation screens
-│   └── product/           # Dynamic product routes
-├── assets/                # Static assets (images, fonts, animations)
+├── api/                    # API service layer
+│   ├── auth.ts            # Authentication endpoints
+│   ├── cart.ts            # Cart management endpoints
+│   ├── fetchProducts.ts   # Product fetching logic
+│   ├── FetchChat.ts       # AI chat integration
+│   └── ...                # Other API services
+├── app/                   # File-based routing (Expo Router)
+│   ├── (tabs)/           # Tab navigation screens
+│   │   ├── index.tsx     # Home screen
+│   │   ├── search.tsx    # Search functionality
+│   │   ├── cart.tsx      # Shopping cart
+│   │   ├── favorites.tsx # Wishlist
+│   │   └── profile.tsx   # User profile
+│   ├── login.tsx         # Authentication screens
+│   ├── onboarding.tsx    # First-time user experience
+│   ├── chat.tsx          # AI assistant interface
+│   └── _layout.tsx       # Root navigation layout
 ├── components/            # Reusable UI components
-├── constants/             # App constants (Colors, etc.)
-├── data/                  # Static data files
-├── hooks/                 # Custom React hooks
-├── provider/              # Context providers
-├── queries/               # React Query hooks
-├── types/                 # TypeScript type definitions
-└── utils/                 # Utility functions
+│   ├── ProductCard.tsx   # Product display component
+│   ├── ChatList.tsx      # Chat message list
+│   ├── MessageInput.tsx  # Chat input component
+│   └── ...               # Other shared components
+├── queries/              # React Query hooks
+│   ├── useFetchProducts.ts
+│   ├── useFetchCart.ts
+│   └── ...
+├── hooks/                # Custom React hooks
+├── types/                # TypeScript type definitions
+├── utils/                # Utility functions
+├── constants/            # App constants and configuration
+├── provider/             # Context providers
+└── assets/               # Static assets (images, fonts, animations)
 ```
 
-## Folder Responsibilities
+### Folder Responsibilities
 
-### `/api`
-Contains service functions for API communication. Each file represents a domain:
-- `auth.ts` - Authentication services (login, signup, logout)
-- `cart.ts` - Cart operations with React Query mutations
-- `fetchProducts.ts` - Product fetching with pagination
-- `wishlist.ts` - Wishlist management
-- All API functions use axios and handle AsyncStorage token management
+- **api/**: Contains all HTTP request logic and API endpoint definitions
+- **app/**: File-based routing structure with screens and navigation
+- **components/**: Reusable UI components used across multiple screens
+- **queries/**: React Query hooks for data fetching and caching
+- **hooks/**: Custom React hooks for shared logic
+- **types/**: TypeScript interfaces and type definitions
+- **utils/**: Helper functions and utilities
+- **provider/**: React context providers for global state
 
-### `/app`
-Expo Router screens following file-based routing:
-- Root level files are stack screens
-- `(tabs)/` folder creates tab navigation
-- `[id].tsx` creates dynamic routes
-- `_layout.tsx` files define navigation structure
-- Authentication flow: splash → onboarding → login → (tabs)
+## Application Flow
 
-### `/components`
-Reusable UI components with consistent patterns:
-- Each component is a default export
-- Uses StyleSheet.create for styling
-- Props interfaces defined inline or imported from types
-- Loading states handled with ActivityIndicator
-- Error states handled with custom ErrorView component
+### App Initialization
+1. **Splash Screen**: Initial loading with brand animation
+2. **Route Determination**: Checks AsyncStorage for authentication and onboarding status
+3. **Navigation**: Routes to appropriate screen (onboarding → login → main app)
 
-### `/queries`
-React Query hooks for data fetching:
-- One hook per API endpoint
-- Uses `useQuery` for GET requests
-- Uses `useInfiniteQuery` for paginated data
-- Consistent naming: `useFetch[EntityName]`
-- Query keys follow pattern: `['entityName', ...params]`
+### Data Flow
+1. **API Layer**: Axios-based HTTP client handles all backend communication
+2. **React Query**: Manages server state, caching, and background updates
+3. **Local Storage**: AsyncStorage persists user tokens and app preferences
+4. **Component State**: Local React state for UI interactions
 
-### `/types`
-TypeScript definitions:
-- API response types match backend structure exactly
-- Component prop interfaces
-- Utility types for request/response handling
+### State Management
+- **Server State**: Managed by TanStack React Query with automatic caching
+- **Authentication State**: Stored in AsyncStorage, checked on app launch
+- **UI State**: Local component state using React hooks
+- **Global State**: Minimal global state through React Context (QueryClient)
 
-## Component Architecture
+### Routing
+- **File-based Routing**: Expo Router provides automatic route generation
+- **Tab Navigation**: Bottom tab bar for main app sections
+- **Stack Navigation**: Modal and push navigation for detailed views
+- **Protected Routes**: Authentication checks in root layout
 
-### Component Structure Pattern
+## Core Features
+
+### Authentication System
+- **User Registration**: Email/password signup with validation
+- **Login/Logout**: Secure authentication with token storage
+- **Password Recovery**: Forgot password flow with email verification
+- **Persistent Sessions**: Automatic login on app restart
+
+### Product Catalog
+- **Product Browsing**: Infinite scroll product listing with pagination
+- **Category Filtering**: Filter products by categories and subcategories
+- **Search Functionality**: Real-time product search with query optimization
+- **Product Details**: Comprehensive product information with image galleries
+
+### Shopping Cart
+- **Add/Remove Items**: Cart management with quantity updates
+- **Persistent Cart**: Cart state maintained across app sessions
+- **Checkout Process**: Multi-step checkout with address and payment
+
+### AI Assistant (Viva Chat)
+- **Google Gemini Integration**: AI-powered customer support
+- **Product Recommendations**: Intelligent product suggestions
+- **Shopping Assistance**: Help with orders, payments, and general queries
+- **Real-time Chat**: Instant responses with typing indicators
+
+### User Profile Management
+- **Profile Editing**: Update personal information and preferences
+- **Order History**: View past orders and tracking information
+- **Address Management**: Multiple shipping addresses
+- **Payment Methods**: Saved payment options
+
+## API / Data Handling
+
+### Backend Integration
+- **Base URL**: `https://ecommerce.routemisr.com/api/v1/`
+- **Authentication**: Bearer token-based authentication
+- **Error Handling**: Centralized error handling with user-friendly messages
+
+### Key Endpoints
 ```typescript
-interface ComponentProps {
-  // Props definition
-}
+// Authentication
+POST /auth/signin          # User login
+POST /auth/signup          # User registration
+POST /auth/forgotPasswords # Password recovery
 
-const Component: React.FC<ComponentProps> = ({ prop1, prop2 }) => {
-  // State and hooks
-  // Event handlers
-  // Render logic
-  return (
-    <View style={styles.container}>
-      {/* JSX */}
-    </View>
-  );
-};
+// Products
+GET /products              # Product listing with pagination
+GET /products/:id          # Product details
 
-const styles = StyleSheet.create({
-  // Styles
-});
+// Cart Management
+GET /cart                  # Get user cart
+POST /cart                 # Add item to cart
+DELETE /cart/:id           # Remove item from cart
 
-export default Component;
+// AI Chat
+POST /generateContent      # Google Gemini API integration
 ```
 
-### Styling Conventions
-- All styles use StyleSheet.create
-- Style objects named `styles`
-- Container styles typically named `container`
-- Colors use hex values or named colors
-- Consistent spacing and typography patterns
-- No external styling libraries used
-
-## State Management
-
-### Server State (React Query)
-- All API data managed through React Query
-- Query keys follow consistent patterns
-- Mutations invalidate related queries
-- Error handling at hook level
-- Loading states exposed to components
-
-### Local State
-- Component state with useState
-- Form state with React Hook Form
-- No global state management library
-
-### Persistent State
-- AsyncStorage for authentication tokens
-- User data stored as JSON strings
-- onboarding completion flags
-- No state persistence library used
-
-## Data Flow
-
-### Authentication Flow
-1. Check AsyncStorage for existing token
-2. Route to appropriate screen (splash/login/tabs)
-3. Login stores token and user data
-4. Token included in API headers automatically
-5. Logout clears all AsyncStorage data
-
-### Product Data Flow
-1. Fetch products with pagination via React Query
-2. Cache responses automatically
-3. Infinite scroll loads more pages
-4. Category filtering refetches with new parameters
-5. Product details fetched individually by ID
-
-### Cart/Wishlist Flow
-1. Mutations update server state
-2. React Query invalidates and refetches related data
-3. Optimistic updates not implemented
-4. Toast notifications for user feedback
-
-## Navigation Structure
-
-### Stack Navigation (Root)
-- Splash screen with authentication check
-- onboarding flow
-- Authentication screens (login/register/forgot-password)
-- Tab navigation as nested navigator
-- Modal screens for specific flows
-
-### Tab Navigation
-- Home (index) - Product discovery
-- Search - Product search functionality
-- Cart - Shopping cart management
-- Favorites - Wishlist management
-- Profile - User account management
-
-### Dynamic Routes
-- `/product/[id]` - Product details
-- Parameters accessed via useLocalSearchParams()
-
-## API Integration
-
-### Base Configuration
-- Base URL: `https://ecommerce.routemisr.com/api/v1`
-- Authentication via token header
-- Error handling in each API function
-- Consistent response structure expected
-
-### Authentication Pattern
-```typescript
-const token = await AsyncStorage.getItem('token');
-const response = await axios.get(url, {
-  headers: { token }
-});
-```
+### Data Caching Strategy
+- **React Query**: Automatic caching with stale-while-revalidate
+- **Cache Keys**: Structured cache invalidation for related data
+- **Background Updates**: Automatic refetching on focus/reconnect
+- **Optimistic Updates**: Immediate UI updates for better UX
 
 ### Error Handling
-- Try-catch blocks in all API functions
-- Errors thrown to be caught by React Query
-- Toast notifications for user-facing errors
-- Console logging for debugging
+- **Network Errors**: Retry logic with exponential backoff
+- **API Errors**: Structured error responses with user messages
+- **Offline Support**: Cached data availability when offline
+- **Toast Notifications**: User feedback for all operations
 
-## Adding New Features
+## State Management Details
 
-### Adding a New Component
-1. Create file in `/components/ComponentName.tsx`
-2. Follow component structure pattern
-3. Define props interface
-4. Use StyleSheet.create for styles
-5. Export as default
-
-### Adding a New Screen
-1. Create file in `/app/screen-name.tsx`
-2. Use Expo Router conventions
-3. Add to navigation if needed
-4. Follow screen structure pattern
-5. Handle loading and error states
-
-### Adding a New API Service
-1. Create function in appropriate `/api/` file
-2. Use axios with consistent error handling
-3. Include authentication headers if needed
-4. Create corresponding React Query hook in `/queries/`
-5. Follow naming conventions
-
-### Adding a New Query Hook
-1. Create file in `/queries/useFetch[EntityName].ts`
-2. Use appropriate React Query hook (useQuery/useInfiniteQuery/useMutation)
-3. Define query key pattern
-4. Handle enabled conditions
-5. Export as default
-
-## Naming Conventions
-
-### Files and Folders
-- PascalCase for components: `ProductCard.tsx`
-- camelCase for utilities: `clearStorage.ts`
-- kebab-case for screens: `forgot-password.tsx`
-- Folder names lowercase with hyphens
-
-### Variables and Functions
-- camelCase for variables and functions
-- PascalCase for components and types
-- UPPER_CASE for constants
-- Descriptive names preferred over abbreviations
-
-### API and Query Keys
-- Query keys: `['entityName', ...params]`
-- API functions: `fetchEntityName` or `getEntityName`
-- Mutation functions: `addToCart`, `removeFromWishlist`
-
-## Important Constraints
-
-### DO NOT Rules
-- **DO NOT** use external state management libraries (Redux, Zustand, etc.)
-- **DO NOT** use external styling libraries (styled-components, NativeBase, etc.)
-- **DO NOT** modify the authentication flow without updating AsyncStorage logic
-- **DO NOT** bypass React Query for API calls
-- **DO NOT** use class components (functional components only)
-- **DO NOT** use inline styles (use StyleSheet.create)
-- **DO NOT** hardcode API URLs (use the established base URL pattern)
-
-### Required Patterns
-- **MUST** use React Query for all server state
-- **MUST** handle loading and error states in components
-- **MUST** use AsyncStorage for authentication persistence
-- **MUST** follow the established folder structure
-- **MUST** use TypeScript for all new code
-- **MUST** use Expo Router conventions for navigation
-- **MUST** include toast notifications for user actions
-
-## Development Workflow
-
-### Running the App
-```bash
-npm start          # Start Expo development server
-npm run android    # Run on Android
-npm run ios        # Run on iOS
-npm run web        # Run on web
+### React Query Configuration
+```typescript
+// Provider setup with QueryClient
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      retry: 1,
+    },
+  },
+});
 ```
 
-### Key Dependencies
-- `expo-router` - File-based navigation
-- `@tanstack/react-query` - Server state management
-- `axios` - HTTP client
-- `react-hook-form` - Form handling
-- `@react-native-async-storage/async-storage` - Local storage
-- `react-native-toast-message` - Toast notifications
-- `lottie-react-native` - Animations
+### Query Patterns
+- **Infinite Queries**: Product listing with pagination
+- **Dependent Queries**: Cart data dependent on authentication
+- **Mutations**: Cart operations with optimistic updates
+- **Cache Invalidation**: Automatic cache updates after mutations
 
-## Authentication System
+### Local Storage Schema
+```typescript
+// AsyncStorage keys and data structure
+'token': string              # JWT authentication token
+'user': JSON                 # User profile data
+'onboardingCompleted': 'true' # Onboarding completion flag
+```
 
-The app uses a token-based authentication system:
-- Tokens stored in AsyncStorage
-- Automatic routing based on authentication state
-- Token included in API headers
-- Logout clears all local data
-- onboarding flow for first-time users
+## Configuration & Environment
 
-This README serves as the single source of truth for the Viva project architecture and development patterns. All future development should follow these established conventions and constraints.
+### Environment Variables
+```bash
+EXPO_PUBLIC_GEMINI_API_KEY=your_gemini_api_key_here
+```
+
+### Key Configuration Files
+
+#### app.json
+- **App Metadata**: Name, version, icons, splash screen
+- **Platform Settings**: iOS and Android specific configurations
+- **Expo Plugins**: Router, video, and other integrations
+- **EAS Integration**: Project ID and update configuration
+
+#### eas.json
+- **Build Profiles**: Development, preview, and production builds
+- **Environment Variables**: API keys per build environment
+- **Distribution**: Internal and store distribution settings
+
+#### tsconfig.json
+- **TypeScript Configuration**: Strict mode enabled
+- **Path Mapping**: Absolute imports with `@/` prefix
+- **Expo Integration**: Extended from Expo's base configuration
+
+## Scripts & Commands
+
+### Installation
+```bash
+npm install
+# or
+yarn install
+```
+
+### Development
+```bash
+# Start development server
+npm start
+# or
+expo start
+
+# Run on specific platforms
+npm run android    # Android emulator/device
+npm run ios        # iOS simulator/device
+npm run web        # Web browser
+```
+
+### Available Scripts
+- **start**: Launch Expo development server
+- **android**: Run on Android platform
+- **ios**: Run on iOS platform  
+- **web**: Run in web browser
+
+### Build & Deployment
+```bash
+# Build for production (requires EAS CLI)
+eas build --platform android
+eas build --platform ios
+
+# Submit to app stores
+eas submit --platform android
+eas submit --platform ios
+```
+
+## Notes & Constraints
+
+### Implementation Decisions
+- **File-based Routing**: Chosen for better developer experience and automatic route generation
+- **React Query**: Selected for robust server state management and caching capabilities
+- **Expo Managed Workflow**: Provides faster development cycle with easy deployment
+- **TypeScript**: Ensures type safety and better development experience
+
+### Current Limitations
+- **Offline Functionality**: Limited offline support, requires network for most operations
+- **Payment Integration**: Payment methods UI exists but actual payment processing not implemented
+- **Push Notifications**: Notification UI present but push notification service not configured
+- **Image Optimization**: Product images loaded directly without optimization
+
+### Development Considerations
+- **API Key Security**: Gemini API key must be configured in environment variables
+- **Authentication Flow**: Token expiration handling needs monitoring in production
+- **Performance**: Large product catalogs may require additional optimization
+- **Platform Differences**: Some animations may behave differently on iOS vs Android
+
+### New Developer Onboarding
+1. **Environment Setup**: Configure Expo CLI and development environment
+2. **API Keys**: Obtain and configure Google Gemini API key
+3. **Backend Understanding**: Familiarize with RouteEgypt e-commerce API
+4. **State Management**: Understand React Query patterns used throughout the app
+5. **Navigation**: Learn Expo Router file-based routing conventions
