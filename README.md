@@ -1,259 +1,293 @@
-# Viva - E-Commerce Mobile App
+# Viva - React Native E-commerce App
 
-A comprehensive e-commerce mobile application built with React Native and Expo, offering a seamless shopping experience with advanced features and modern UI/UX design.
+## Project Overview
 
-## Features
+Viva is a React Native e-commerce application built with Expo Router and TypeScript. The app features product browsing, cart management, wishlist functionality, user authentication, and an AI chat assistant. It uses React Query for data fetching and AsyncStorage for local data persistence.
 
-### Authentication
-- **User Registration**: Register with name, email, password, confirm password, and phone
-- **User Login**: Login with email and password
-- **Password Reset**: Forgot password flow with email verification and reset
-- **Profile Management**: View and edit user profile (name, email, phone)
-- **Logout**: Secure logout with token removal
-- **Persistence**: Automatic login if token exists
+## Architecture & Technology Stack
 
-### Product Browsing
-- **Home Screen**: Featured products and categories
-- **Search**: Search for products
-- **Categories**: Browse products by categories
-- **Brands**: Browse products by brands
-- **Product Details**: Detailed view with images, specs, and actions
-
-### Cart Management
-- **Add to Cart**: Add products to cart from product cards or details
-- **View Cart**: Display cart items with quantities and total price
-- **Remove from Cart**: Remove items from cart
-- **Cart Persistence**: Cart data synced with server
-
-### Wishlist (Favorites)
-- **Add to Wishlist**: Favorite products from cards or details
-- **View Wishlist**: Display favorite items
-- **Remove from Wishlist**: Unfavorite items
-- **Add to Cart from Wishlist**: Quick add to cart
-
-### AI Chat Assistant
-- **Viva Assistant**: Intelligent e-commerce assistant for product and order support
-- **Floating Chat Button**: Accessible from home screen with floating action button
-- **Welcome Screen**: Attractive welcome view when no messages exist
-- **E-commerce Support**: Answers questions about products, prices, discounts, orders, shipping, and returns
-- **Real-time Interaction**: Instant responses with typing indicators
-- **Message History**: Persistent chat history with timestamps
-- **Action Buttons**: Like and copy functionality for messages
-
-### User Interface
-- **Tab Navigation**: Bottom tabs for Home, Search, Cart, Favorites, Profile
-- **Active Tab Styling**: Black active tab icons
-- **Loaders**: Loading indicators on buttons and icons during operations
-- **Toast Notifications**: Success and error toasts instead of alerts
-- **Responsive Design**: Optimized for mobile screens
-- **Pull-to-Refresh**: Refresh functionality across all screens for real-time data updates
-
-### Technical Features
-- **API Integration**: RESTful API calls with Axios
-- **State Management**: React Query for server state
-- **Local Storage**: AsyncStorage for token and user data
-- **Navigation**: Expo Router for file-based routing
-- **Icons**: Ionicons for UI elements
-- **Forms**: React Hook Form for form handling
-- **Validation**: Form validation with error messages
-
-### API Endpoints Used
-- Authentication: login, register, forgot password, verify code, reset password
-- Users: update profile, change password
-- Products: fetch products, product details, categories, brands
-- Cart: add to cart, get cart, remove from cart
-- Wishlist: add to wishlist, get wishlist, remove from wishlist
-
-## Technologies Used
-- **React Native**: Mobile app framework
-- **Expo**: Development platform
-- **TypeScript**: Type-safe JavaScript
-- **React Query**: Data fetching and caching
-- **Expo Router**: Navigation
-- **AsyncStorage**: Local storage
-- **Axios**: HTTP client
-- **React Hot Toast**: Notifications (web version adapted)
-- **React Hook Form**: Form management
-- **Google Gemini API**: AI-powered chat assistant
-- **Environment Variables**: Secure API key management
-
-## Screenshots
-
-### Home Screen
-- Product browsing with category selection
-- Pull-to-refresh functionality for real-time updates
-
-### Shopping Experience
-- Detailed product pages with image galleries
-- Add to cart and wishlist functionality
-- Seamless navigation between screens
-
-### User Management
-- Complete authentication flow
-- Profile management and order history
-- Secure data persistence
-
-## What's New (Latest Updates)
-
-### v1.2.0 - AI Chat Assistant
-- **Viva Assistant**: Integrated intelligent e-commerce assistant using Google Gemini API
-- **Floating Chat Button**: Added floating action button on home screen for quick access
-- **Welcome View**: Attractive welcome screen when no messages exist
-- **E-commerce Support**: AI assistant provides product, order, and shopping support
-- **Secure API Management**: Environment variables for secure API key handling
-
-### v1.1.0 - Enhanced User Experience
-- **Pull-to-Refresh**: Added refresh functionality to Cart and Favorites screens for real-time data updates
-- **Improved Architecture**: Separated React Query hooks into dedicated `queries/` folder for better code organization
-- **UI Enhancements**: Better loading states and user feedback across all screens
-
-### v1.0.0 - Initial Release
-- Complete e-commerce functionality with authentication, product browsing, cart, and wishlist
-- Modern React Native architecture with TypeScript
-- Responsive design optimized for mobile devices
-
-## Installation
-
-1. Clone the repository
-2. Install dependencies: `npm install`
-3. Copy the `.env.example` file to `.env` and add your API keys:
-   ```bash
-   cp .env.example .env
-   ```
-   Then edit `.env` and replace `your_gemini_api_key_here` with your actual Google Gemini API key
-4. Start the development server: `npm start`
-
-## Usage
-
-1. Register or login to access the app
-2. Browse products on the home screen
-3. Use search and filters to find products
-4. Add products to cart or wishlist
-5. Manage cart and favorites from respective tabs
-6. Update profile information
-
-## Setting up Google Gemini API Key
-
-To use the AI chat assistant feature, you need to obtain a Google Gemini API key:
-
-### For Development (Expo Go)
-1. Go to [Google AI Studio](https://aistudio.google.com/app/apikey)
-2. Create an account or sign in
-3. Click on "Get API Key" or "Create API Key"
-4. Follow the instructions to create a new API key
-5. Make sure the API key has permissions for the Gemini API
-6. Copy the `.env.example` file to `.env` and add your API key:
-   ```bash
-   cp .env.example .env
-   ```
-   Then edit `.env` and replace `your_gemini_api_key_here` with your actual Google Gemini API key
-
-### For Production Builds (EAS Build)
-For production builds, you need to configure the API key using EAS secrets:
-
-1. Follow steps 1-5 above to get your API key
-2. Configure the secret using EAS CLI:
-   ```bash
-   eas secret:create --scope project --env-var EXPO_PUBLIC_GEMINI_API_KEY
-   ```
-3. When prompted, enter your actual Google Gemini API key
-4. Update your build profile in `eas.json` to include the secret:
-   ```json
-   {
-     "build": {
-       "production": {
-         "env": {
-           "EXPO_PUBLIC_GEMINI_API_KEY": "your_secret_value_here"
-         }
-       }
-     }
-   }
-   ```
-
-Alternatively, you can set the environment variable in your EAS project dashboard.
-
-## Troubleshooting API Errors
-
-If you encounter "Access forbidden. Please check your API key permissions." error:
-1. Verify that your API key is correctly set in the environment variables
-2. Check that your API key has the necessary permissions for the Gemini API
-3. Ensure you're using the correct API endpoint
-4. Confirm that your API key hasn't exceeded usage limits
+- **Framework**: React Native with Expo SDK 54
+- **Navigation**: Expo Router (file-based routing)
+- **State Management**: React Query (@tanstack/react-query) for server state
+- **Local Storage**: AsyncStorage for authentication tokens and user data
+- **Styling**: StyleSheet API (no external styling libraries)
+- **Forms**: React Hook Form for form validation
+- **HTTP Client**: Axios for API requests
+- **Animations**: Lottie React Native for animations
+- **Icons**: Expo Vector Icons (Ionicons)
+- **Toast Notifications**: React Native Toast Message
 
 ## Project Structure
 
 ```
-app/
-  _layout.tsx          # Root layout with navigation and providers
-  (tabs)/              # Tab screens
-    _layout.tsx        # Tab navigation setup
-    index.tsx          # Home screen with products and floating chat button
-    search.tsx         # Search screen
-    cart.tsx           # Cart screen with pull-to-refresh
-    favorites.tsx      # Favorites screen with pull-to-refresh
-    profile.tsx        # Profile screen
-  login.tsx            # Authentication screens
-  register.tsx
-  edit-profile.tsx
-  forgot-password.tsx
-  verify-reset-code.tsx
-  reset-password.tsx
-  product/[id].tsx     # Product details screen
-  brands.tsx           # Brand listing screen
-  categories.tsx       # Category listing screen
-  chat.tsx             # AI chat assistant screen with welcome view
-
-api/
-  auth.ts              # Authentication API functions
-  users.ts             # User management APIs
-  cart.ts              # Shopping cart operations
-  wishlist.ts          # Wishlist/favorites operations
-  fetchProducts.ts     # Product data fetching
-  fetchCategories.ts   # Categories data
-  fetchBrands.ts       # Brands data
-  FetchChat.ts         # Google Gemini API integration for chat assistant
-
-hooks/
-  useFetchChat.ts      # React Query hook for chat functionality
-
-components/
-  ProductCard.tsx      # Product display component
-  ProductImageGallery.tsx # Image carousel component
-  CategoryButtons.tsx  # Category selection buttons
-  EmptyState.tsx       # Empty state component
-  HeroSection.tsx      # Hero section with video background
-  Loader.tsx           # Loading indicators
-  ErrorView.tsx        # Error display with retry
-  StyledText.tsx       # Custom text component
-  ChatHeader.tsx       # Chat screen header component
-  ChatList.tsx         # Chat message list component
-  MessageInput.tsx     # Chat message input component
-  MessageItem.tsx      # Individual chat message component
-
-provider/
-  Provider.tsx         # React Query provider setup
-
-constants/
-  Colors.ts            # App color palette
-
-types/
-  product.ts           # Product type definitions
-  Products.ts          # Products API types
-  Categories.ts        # Category types
-  RequsetType.ts       # Type definitions for chat API responses
-
-utils/
-  toast.ts             # Toast notification utilities
+├── api/                    # API service functions
+├── app/                    # Expo Router screens (file-based routing)
+│   ├── (tabs)/            # Tab navigation screens
+│   └── product/           # Dynamic product routes
+├── assets/                # Static assets (images, fonts, animations)
+├── components/            # Reusable UI components
+├── constants/             # App constants (Colors, etc.)
+├── data/                  # Static data files
+├── hooks/                 # Custom React hooks
+├── provider/              # Context providers
+├── queries/               # React Query hooks
+├── types/                 # TypeScript type definitions
+└── utils/                 # Utility functions
 ```
 
-## Contributing
+## Folder Responsibilities
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
+### `/api`
+Contains service functions for API communication. Each file represents a domain:
+- `auth.ts` - Authentication services (login, signup, logout)
+- `cart.ts` - Cart operations with React Query mutations
+- `fetchProducts.ts` - Product fetching with pagination
+- `wishlist.ts` - Wishlist management
+- All API functions use axios and handle AsyncStorage token management
 
-## License
+### `/app`
+Expo Router screens following file-based routing:
+- Root level files are stack screens
+- `(tabs)/` folder creates tab navigation
+- `[id].tsx` creates dynamic routes
+- `_layout.tsx` files define navigation structure
+- Authentication flow: splash → onboarding → login → (tabs)
 
-This project is licensed under the MIT License.
+### `/components`
+Reusable UI components with consistent patterns:
+- Each component is a default export
+- Uses StyleSheet.create for styling
+- Props interfaces defined inline or imported from types
+- Loading states handled with ActivityIndicator
+- Error states handled with custom ErrorView component
+
+### `/queries`
+React Query hooks for data fetching:
+- One hook per API endpoint
+- Uses `useQuery` for GET requests
+- Uses `useInfiniteQuery` for paginated data
+- Consistent naming: `useFetch[EntityName]`
+- Query keys follow pattern: `['entityName', ...params]`
+
+### `/types`
+TypeScript definitions:
+- API response types match backend structure exactly
+- Component prop interfaces
+- Utility types for request/response handling
+
+## Component Architecture
+
+### Component Structure Pattern
+```typescript
+interface ComponentProps {
+  // Props definition
+}
+
+const Component: React.FC<ComponentProps> = ({ prop1, prop2 }) => {
+  // State and hooks
+  // Event handlers
+  // Render logic
+  return (
+    <View style={styles.container}>
+      {/* JSX */}
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  // Styles
+});
+
+export default Component;
+```
+
+### Styling Conventions
+- All styles use StyleSheet.create
+- Style objects named `styles`
+- Container styles typically named `container`
+- Colors use hex values or named colors
+- Consistent spacing and typography patterns
+- No external styling libraries used
+
+## State Management
+
+### Server State (React Query)
+- All API data managed through React Query
+- Query keys follow consistent patterns
+- Mutations invalidate related queries
+- Error handling at hook level
+- Loading states exposed to components
+
+### Local State
+- Component state with useState
+- Form state with React Hook Form
+- No global state management library
+
+### Persistent State
+- AsyncStorage for authentication tokens
+- User data stored as JSON strings
+- onboarding completion flags
+- No state persistence library used
+
+## Data Flow
+
+### Authentication Flow
+1. Check AsyncStorage for existing token
+2. Route to appropriate screen (splash/login/tabs)
+3. Login stores token and user data
+4. Token included in API headers automatically
+5. Logout clears all AsyncStorage data
+
+### Product Data Flow
+1. Fetch products with pagination via React Query
+2. Cache responses automatically
+3. Infinite scroll loads more pages
+4. Category filtering refetches with new parameters
+5. Product details fetched individually by ID
+
+### Cart/Wishlist Flow
+1. Mutations update server state
+2. React Query invalidates and refetches related data
+3. Optimistic updates not implemented
+4. Toast notifications for user feedback
+
+## Navigation Structure
+
+### Stack Navigation (Root)
+- Splash screen with authentication check
+- onboarding flow
+- Authentication screens (login/register/forgot-password)
+- Tab navigation as nested navigator
+- Modal screens for specific flows
+
+### Tab Navigation
+- Home (index) - Product discovery
+- Search - Product search functionality
+- Cart - Shopping cart management
+- Favorites - Wishlist management
+- Profile - User account management
+
+### Dynamic Routes
+- `/product/[id]` - Product details
+- Parameters accessed via useLocalSearchParams()
+
+## API Integration
+
+### Base Configuration
+- Base URL: `https://ecommerce.routemisr.com/api/v1`
+- Authentication via token header
+- Error handling in each API function
+- Consistent response structure expected
+
+### Authentication Pattern
+```typescript
+const token = await AsyncStorage.getItem('token');
+const response = await axios.get(url, {
+  headers: { token }
+});
+```
+
+### Error Handling
+- Try-catch blocks in all API functions
+- Errors thrown to be caught by React Query
+- Toast notifications for user-facing errors
+- Console logging for debugging
+
+## Adding New Features
+
+### Adding a New Component
+1. Create file in `/components/ComponentName.tsx`
+2. Follow component structure pattern
+3. Define props interface
+4. Use StyleSheet.create for styles
+5. Export as default
+
+### Adding a New Screen
+1. Create file in `/app/screen-name.tsx`
+2. Use Expo Router conventions
+3. Add to navigation if needed
+4. Follow screen structure pattern
+5. Handle loading and error states
+
+### Adding a New API Service
+1. Create function in appropriate `/api/` file
+2. Use axios with consistent error handling
+3. Include authentication headers if needed
+4. Create corresponding React Query hook in `/queries/`
+5. Follow naming conventions
+
+### Adding a New Query Hook
+1. Create file in `/queries/useFetch[EntityName].ts`
+2. Use appropriate React Query hook (useQuery/useInfiniteQuery/useMutation)
+3. Define query key pattern
+4. Handle enabled conditions
+5. Export as default
+
+## Naming Conventions
+
+### Files and Folders
+- PascalCase for components: `ProductCard.tsx`
+- camelCase for utilities: `clearStorage.ts`
+- kebab-case for screens: `forgot-password.tsx`
+- Folder names lowercase with hyphens
+
+### Variables and Functions
+- camelCase for variables and functions
+- PascalCase for components and types
+- UPPER_CASE for constants
+- Descriptive names preferred over abbreviations
+
+### API and Query Keys
+- Query keys: `['entityName', ...params]`
+- API functions: `fetchEntityName` or `getEntityName`
+- Mutation functions: `addToCart`, `removeFromWishlist`
+
+## Important Constraints
+
+### DO NOT Rules
+- **DO NOT** use external state management libraries (Redux, Zustand, etc.)
+- **DO NOT** use external styling libraries (styled-components, NativeBase, etc.)
+- **DO NOT** modify the authentication flow without updating AsyncStorage logic
+- **DO NOT** bypass React Query for API calls
+- **DO NOT** use class components (functional components only)
+- **DO NOT** use inline styles (use StyleSheet.create)
+- **DO NOT** hardcode API URLs (use the established base URL pattern)
+
+### Required Patterns
+- **MUST** use React Query for all server state
+- **MUST** handle loading and error states in components
+- **MUST** use AsyncStorage for authentication persistence
+- **MUST** follow the established folder structure
+- **MUST** use TypeScript for all new code
+- **MUST** use Expo Router conventions for navigation
+- **MUST** include toast notifications for user actions
+
+## Development Workflow
+
+### Running the App
+```bash
+npm start          # Start Expo development server
+npm run android    # Run on Android
+npm run ios        # Run on iOS
+npm run web        # Run on web
+```
+
+### Key Dependencies
+- `expo-router` - File-based navigation
+- `@tanstack/react-query` - Server state management
+- `axios` - HTTP client
+- `react-hook-form` - Form handling
+- `@react-native-async-storage/async-storage` - Local storage
+- `react-native-toast-message` - Toast notifications
+- `lottie-react-native` - Animations
+
+## Authentication System
+
+The app uses a token-based authentication system:
+- Tokens stored in AsyncStorage
+- Automatic routing based on authentication state
+- Token included in API headers
+- Logout clears all local data
+- onboarding flow for first-time users
+
+This README serves as the single source of truth for the Viva project architecture and development patterns. All future development should follow these established conventions and constraints.

@@ -1,10 +1,11 @@
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { Image, StyleSheet, Text, TouchableOpacity, View, Animated } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import {router} from "expo-router";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { router } from "expo-router";
 import { useEffect, useRef, useState } from "react";
+import { Animated, Image, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function Onboarding() {
+export default function onboarding() {
   const [isArrowVisible, setIsArrowVisible] = useState(true);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(100)).current;
@@ -12,9 +13,16 @@ export default function Onboarding() {
   const titleSlideAnim = useRef(new Animated.Value(-100)).current;
   const imageOpacityAnim = useRef(new Animated.Value(0)).current;
 
-  const handleButtonPress = () => {
+  const handleButtonPress = async () => {
     // Hide arrow immediately
     setIsArrowVisible(false);
+
+    // Mark onboarding as completed
+    try {
+      await AsyncStorage.setItem('onboardingCompleted', 'true');
+    } catch (error) {
+      console.error('Error saving onboarding completion status:', error);
+    }
 
     // Bounce animation on button press
     Animated.sequence([
@@ -75,6 +83,22 @@ export default function Onboarding() {
   return (
     <>
       <SafeAreaView style={style.container}>
+        {/* Background Image - positioned first to be behind everything */}
+        <Animated.View
+          style={[
+            style.backgroundImageContainer,
+            {
+              transform: [{ translateX: slideAnim }],
+              opacity: imageOpacityAnim,
+            },
+          ]}
+        >
+          <Image
+            style={style.backgroundImage}
+            source={require("../assets/images/Element.png")}
+          />
+        </Animated.View>
+
         <Animated.View
           style={{
             opacity: fadeAnim,
@@ -120,26 +144,7 @@ export default function Onboarding() {
         >
           <Image
             style={style.fullImage}
-            source={{
-              uri: "https://ik.imagekit.io/pieg1rcfk/Viva%20Assests/Element.png",
-            }}
-          />
-        </Animated.View>
-
-        <Animated.View
-          style={[
-            style.rightImageContainer,
-            {
-              transform: [{ translateX: slideAnim }],
-              opacity: imageOpacityAnim,
-            },
-          ]}
-        >
-          <Image
-            style={style.fullImage}
-            source={{
-              uri: "https://ik.imagekit.io/pieg1rcfk/Viva%20Assests/Onboarding_Image",
-            }}
+            source={require("../assets/images/Image.png")}
           />
         </Animated.View>
       </SafeAreaView>
@@ -154,16 +159,30 @@ const style = StyleSheet.create({
     paddingLeft: 24,
     position: "relative",
   },
+  backgroundImageContainer: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: -1, // Behind all other elements
+  },
+  backgroundImage: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover", // or "contain" depending on how you want it to fit
+  },
   elementContainer: {
     position: "absolute",
-    top: 80,
+    bottom: 0,
+    right:0,
     width: 390,
     height: 745,
   },
   rightImageContainer: {
     position: "absolute",
-    top: 60,
-    zIndex: 100,
+    bottom: 0,
+    zIndex: 200,
     right: 0,
     width: 358,
     height: "100%",
@@ -192,7 +211,6 @@ const style = StyleSheet.create({
   title: {
     fontSize: 64,
     fontWeight: "bold",
-    lineHeight: 49,
     paddingTop: 25,
   },
 });

@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, ScrollView, TouchableOpacity, Alert, Text, View, Dimensions } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { router } from 'expo-router';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import LottieView from 'lottie-react-native';
 import { logout } from '@/api/auth';
+import DebugControls from '@/components/DebugControls';
+import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { router } from 'expo-router';
+import LottieView from 'lottie-react-native';
+import React, { useEffect, useState } from 'react';
+import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function ProfileScreen() {
   const [user, setUser] = useState<{ name: string; email: string } | null>(null);
@@ -37,7 +38,7 @@ export default function ProfileScreen() {
         <Text style={styles.name}>{user?.name || 'User'}</Text>
         <Text style={styles.email}>{user?.email || 'user@example.com'}</Text>
       </View>
-
+      <DebugControls/>
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Account Settings</Text>
         <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/edit-profile')}>
@@ -113,7 +114,7 @@ export default function ProfileScreen() {
               onPress: async () => {
                 try {
                   await logout();
-                  router.replace('/Splash');
+                  router.replace('/splash');
                 } catch (error) {
                   console.log('Error during logout:', error);
                   Alert.alert('Error', 'Failed to logout');

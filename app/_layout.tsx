@@ -1,8 +1,8 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
+import { Stack, useRouter } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import 'react-native-reanimated';
 import Toast from 'react-native-toast-message';
 
@@ -37,14 +37,47 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
+  const router = useRouter();
+  const [initialRoute, setInitialRoute] = useState('splash'); // Default to splash
+
+  useEffect(() => {
+    const determineInitialRoute = async () => {
+      try {
+        // Check if user is already authenticated
+        const token = await AsyncStorage.getItem('token');
+
+        if (token) {
+          // User is authenticated, go directly to main app
+          setInitialRoute('(tabs)');
+          return;
+        }
+
+        // Check if onboarding has been completed
+        const onboardingCompleted = await AsyncStorage.getItem('onboardingCompleted');
+
+        if (onboardingCompleted === 'true') {
+          // onboarding already completed, go to login
+          setInitialRoute('login');
+        } else {
+          // Show splash screen (which will navigate to onboarding)
+          setInitialRoute('splash');
+        }
+      } catch (error) {
+        console.error('Error determining initial route:', error);
+        // Default to splash screen if there's an error
+        setInitialRoute('splash');
+      }
+    };
+
+    determineInitialRoute();
+  }, []);
 
   return (
     <Provider>
       <Stack
-        initialRouteName="splash"
+        initialRouteName={initialRoute}
         screenOptions={{
           headerTitleAlign: "center",
-          headerShown:false
         }}
       >
         <Stack.Screen name="onboarding" options={{ headerShown: false }} />

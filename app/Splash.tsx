@@ -1,9 +1,7 @@
-import { useEffect, useRef } from "react";
-import { Image, Animated } from "react-native";
-import { View } from "react-native";
-import { StyleSheet, ActivityIndicator } from "react-native";
-import { router } from "expo-router";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { router } from "expo-router";
+import { useEffect, useRef } from "react";
+import { ActivityIndicator, Animated, Image, StyleSheet, View } from "react-native";
 
 export default function Splash() {
   const backgroundFadeAnim1 = useRef(new Animated.Value(0)).current;
@@ -54,11 +52,41 @@ export default function Splash() {
       useNativeDriver: true,
     }).start();
 
-    // Always navigate to Onboarding after animation
-    setTimeout(() => {
-      router.replace("/Onboarding");
-    }, 3000);
+    // Check authentication and onboarding status after animations start
+    const checkAuthAndNavigate = async () => {
+      try {
+        // Check if user is already authenticated
+        const token = await AsyncStorage.getItem('token');
+
+        if (token) {
+          // User is authenticated, go directly to main app
+          router.replace("/(tabs)");
+          return;
+        }
+
+        // Check if onboarding has been completed
+        const onboardingCompleted = await AsyncStorage.getItem('onboardingCompleted');
+
+        if (onboardingCompleted === 'true') {
+          // onboarding already completed, go to login
+          router.replace("/login");
+        } else {
+          // Show onboarding flow
+          router.replace("/onboarding");
+        }
+      } catch (error) {
+        console.error('Error checking auth/onboarding status:', error);
+        // Default to onboarding if there's an error
+        router.replace("/onboarding");
+      }
+    };
+
+    // Navigate after animation period (but ensure splash shows for minimum time)
+    const timer = setTimeout(checkAuthAndNavigate, 3000);
+
+    return () => clearTimeout(timer);
   }, []);
+
   return (
     <>
       <View style={style.container}>

@@ -1,7 +1,7 @@
-import { Link, Stack, router } from 'expo-router';
-import { StyleSheet, View, Text, Dimensions, TouchableOpacity } from 'react-native';
+import { Stack, router } from 'expo-router';
 import LottieView from 'lottie-react-native';
 import { useEffect } from 'react';
+import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
 
@@ -9,7 +9,7 @@ export default function NotFoundScreen() {
   // Automatically redirect to splash after 3 seconds
   useEffect(() => {
     const timer = setTimeout(() => {
-      router.replace('/Splash');
+      router.replace('/splash');
     }, 3000);
 
     return () => clearTimeout(timer);
@@ -28,7 +28,7 @@ export default function NotFoundScreen() {
         <Text style={styles.title}>Oops! Page Not Found</Text>
         <Text style={styles.subtitle}>The page you're looking for doesn't exist.</Text>
 
-        <TouchableOpacity onPress={() => router.replace('/Splash')} style={styles.button}>
+        <TouchableOpacity onPress={() => router.replace('/splash')} style={styles.button}>
           <Text style={styles.buttonText}>Go to Splash</Text>
         </TouchableOpacity>
       </View>

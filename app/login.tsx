@@ -53,7 +53,7 @@ export default function LoginScreen() {
           keyboardShouldPersistTaps="never"
         >
           <Text style={styles.title}>Login to your account</Text>
-          <Text style={styles.subtitle}>It’s great to see you again.</Text>
+          <Text style={styles.subtitle}>It's great to see you again.</Text>
 
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Email</Text>
