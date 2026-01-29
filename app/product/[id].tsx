@@ -9,6 +9,7 @@ import useFetchProduct from '@/queries/useFetchProduct';
 import { showToast } from '@/utils/toast';
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
+import * as Sharing from 'expo-sharing';
 import React, { useLayoutEffect, useState } from 'react';
 import { Dimensions, FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
@@ -292,6 +293,24 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: '600',
     },
+    shareButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#f0fff4',
+        borderWidth: 1,
+        borderColor: '#34c759',
+        paddingVertical: 12,
+        paddingHorizontal: 20,
+        borderRadius: 10,
+        gap: 8,
+        minWidth: 100,
+    },
+    shareText: {
+        color: '#34c759',
+        fontSize: 16,
+        fontWeight: '600',
+    },
 
     availability: {
         fontSize: 16,
@@ -370,6 +389,28 @@ export default function ProductDetailsScreen() {
     const [isFavorite, setIsFavorite] = useState(false);
     const [isAddingToCart, setIsAddingToCart] = useState(false);
     const [isUpdatingWishlist, setIsUpdatingWishlist] = useState(false);
+
+    // Share product function
+    const shareProduct = async () => {
+        if (!product) return;
+        
+        try {
+            const shareContent = `Check out this amazing product: ${product.title}\n\nPrice: $${product.price}\nBrand: ${product.brand?.name || 'Unknown'}\nRating: ${product.ratingsAverage}/5\n\nGet it now on Viva App!`;
+            
+            const isAvailable = await Sharing.isAvailableAsync();
+            if (isAvailable) {
+                await Sharing.shareAsync(shareContent, {
+                    dialogTitle: 'Share Product',
+                });
+                showToast('success', 'Product shared successfully!');
+            } else {
+                showToast('error', 'Sharing is not available on this device');
+            }
+        } catch (error) {
+            console.error('Error sharing product:', error);
+            showToast('error', 'Failed to share product');
+        }
+    };
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -586,6 +627,13 @@ export default function ProductDetailsScreen() {
                     >
                         <Ionicons name="chatbubble-ellipses" size={20} color="#667eea" />
                         <Text style={styles.askAIText}>Ask AI</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={styles.shareButton}
+                        onPress={shareProduct}
+                    >
+                        <Ionicons name="share-outline" size={20} color="#34c759" />
+                        <Text style={styles.shareText}>Share</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={[styles.addToBagButton, product.quantity === 0 && styles.disabledButton]}
