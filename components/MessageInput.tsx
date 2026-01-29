@@ -34,7 +34,7 @@ export default function MessageInput({
           styles.textInput,
           {
             backgroundColor: ColorScheme === "dark" ? "#2D3748" : "#FFFFFF",
-            color: "#FFFFFF"
+            color: "#000"
           }
         ]}
         placeholder={placeholder}

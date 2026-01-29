@@ -55,11 +55,6 @@ export default function FavoritesScreen() {
         <EmptyCardScreen />
       ) : (
         <>
-          <View style={styles.header}>
-            <Text style={styles.title}>My Favorites</Text>
-            <Text style={styles.subtitle}>{favorites.length} items</Text>
-          </View>
-
           <ScrollView
             style={styles.itemsContainer}
             refreshControl={

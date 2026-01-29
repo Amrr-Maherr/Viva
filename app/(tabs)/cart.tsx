@@ -47,11 +47,6 @@ export default function CartScreen() {
       {cartItems.length !== 0 ? (
         <>
           <View style={styles.container}>
-            <View style={styles.header}>
-              <Text style={styles.title}>Shopping Cart</Text>
-              <Text style={styles.subtitle}>{cartItems.length} items</Text>
-            </View>
-
             <ScrollView
               style={styles.itemsContainer}
               refreshControl={
