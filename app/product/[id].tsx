@@ -9,9 +9,8 @@ import useFetchProduct from '@/queries/useFetchProduct';
 import { showToast } from '@/utils/toast';
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
-import * as Sharing from 'expo-sharing';
 import React, { useLayoutEffect, useState } from 'react';
-import { Dimensions, FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, FlatList, Image, ScrollView, Share, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const { width } = Dimensions.get('window');
 
@@ -395,16 +394,15 @@ export default function ProductDetailsScreen() {
         if (!product) return;
         
         try {
-            const shareContent = `Check out this amazing product: ${product.title}\n\nPrice: $${product.price}\nBrand: ${product.brand?.name || 'Unknown'}\nRating: ${product.ratingsAverage}/5\n\nGet it now on Viva App!`;
+            const shareContent = {
+                message: `Check out this amazing product: ${product.title}\n\nPrice: $${product.price}\nBrand: ${product.brand?.name || 'Unknown'}\nRating: ${product.ratingsAverage}/5\n\nGet it now on Viva App!`,
+                title: `${product.title} - Viva App`,
+            };
             
-            const isAvailable = await Sharing.isAvailableAsync();
-            if (isAvailable) {
-                await Sharing.shareAsync(shareContent, {
-                    dialogTitle: 'Share Product',
-                });
+            const result = await Share.share(shareContent);
+            
+            if (result.action === Share.sharedAction) {
                 showToast('success', 'Product shared successfully!');
-            } else {
-                showToast('error', 'Sharing is not available on this device');
             }
         } catch (error) {
             console.error('Error sharing product:', error);
