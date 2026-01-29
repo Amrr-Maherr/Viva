@@ -1,16 +1,16 @@
-import React, { useState, useLayoutEffect } from 'react';
-import { View, Text, Image, ScrollView, TouchableOpacity, FlatList, StyleSheet, Dimensions } from 'react-native';
-import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
-import useFetchProduct from '@/queries/useFetchProduct';
-import useFetchBrands from '@/queries/useFetchBrands';
 import { addToCart } from '@/api/cart';
 import { addToWishlist, removeFromWishlist } from '@/api/wishlist';
-import ProductImageGallery from '@/components/ProductImageGallery';
-import Loader from '@/components/Loader';
 import ErrorView from '@/components/ErrorView';
+import Loader from '@/components/Loader';
+import ProductImageGallery from '@/components/ProductImageGallery';
 import Colors from '@/constants/Colors';
+import useFetchBrands from '@/queries/useFetchBrands';
+import useFetchProduct from '@/queries/useFetchProduct';
 import { showToast } from '@/utils/toast';
+import { Ionicons } from '@expo/vector-icons';
+import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
+import React, { useLayoutEffect, useState } from 'react';
+import { Dimensions, FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const { width } = Dimensions.get('window');
 
@@ -158,6 +158,28 @@ const styles = StyleSheet.create({
         textTransform: 'uppercase',
         letterSpacing: 0.5,
     },
+    sectionHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 16,
+    },
+    aiHelpButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#f8f9ff',
+        paddingHorizontal: 12,
+        paddingVertical: 6,
+        borderRadius: 16,
+        borderWidth: 1,
+        borderColor: '#667eea',
+        gap: 4,
+    },
+    aiHelpText: {
+        fontSize: 12,
+        color: '#667eea',
+        fontWeight: '600',
+    },
     specRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -247,6 +269,29 @@ const styles = StyleSheet.create({
         borderTopWidth: StyleSheet.hairlineWidth,
         borderTopColor: '#c6c6c8',
     },
+    ctaButtonsContainer: {
+        flexDirection: 'row',
+        gap: 12,
+        alignItems: 'center',
+    },
+    askAIButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#f8f9ff',
+        borderWidth: 1,
+        borderColor: '#667eea',
+        paddingVertical: 12,
+        paddingHorizontal: 20,
+        borderRadius: 10,
+        gap: 8,
+        minWidth: 100,
+    },
+    askAIText: {
+        color: '#667eea',
+        fontSize: 16,
+        fontWeight: '600',
+    },
 
     availability: {
         fontSize: 16,
@@ -259,7 +304,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#1A1A1A',
         paddingVertical: 12,
         borderRadius: 10,
-        width: '100%',
+        flex: 1,
         alignItems: 'center',
     },
     imagesGrid: {
@@ -417,7 +462,35 @@ export default function ProductDetailsScreen() {
 
                     {/* Product Specs */}
                     <View style={styles.section}>
-                        <Text style={styles.sectionTitle}>Product Details</Text>
+                        <View style={styles.sectionHeader}>
+                            <Text style={styles.sectionTitle}>Product Details</Text>
+                            <TouchableOpacity 
+                                style={styles.aiHelpButton}
+                                onPress={() => {
+                                    const productData = {
+                                        id: product._id,
+                                        title: product.title,
+                                        price: product.price,
+                                        brand: product.brand?.name || 'Unknown',
+                                        category: product.category?.name || 'Unknown',
+                                        description: product.description || '',
+                                        rating: product.ratingsAverage || 0,
+                                        stock: product.quantity || 0
+                                    };
+                                    
+                                    router.push({
+                                        pathname: '/chat',
+                                        params: { 
+                                            productContext: JSON.stringify(productData),
+                                            initialMessage: `Can you explain the details and specifications of ${product.title}?`
+                                        }
+                                    });
+                                }}
+                            >
+                                <Ionicons name="help-circle-outline" size={16} color="#667eea" />
+                                <Text style={styles.aiHelpText}>Ask AI</Text>
+                            </TouchableOpacity>
+                        </View>
                         <View style={styles.specRow}>
                             <Text style={styles.specLabel}>Subcategory:</Text>
                             <Text style={styles.specValue}>{product.subcategory?.[0]?.name}</Text>
@@ -487,25 +560,53 @@ export default function ProductDetailsScreen() {
 
             {/* Bottom Action Area */}
             <View style={styles.bottomCTA}>
-                <TouchableOpacity
-                    style={[styles.addToBagButton, product.quantity === 0 && styles.disabledButton]}
-                    disabled={product.quantity === 0 || isAddingToCart}
-                    onPress={async () => {
-                        setIsAddingToCart(true);
-                        try {
-                            await addToCart(product._id);
-                            showToast('success', `${product.title} added to cart!`);
-                        } catch (error: any) {
-                            showToast('error', error.response?.data?.message || "Failed to add to cart");
-                        } finally {
-                            setIsAddingToCart(false);
-                        }
-                    }}
-                >
-                    <Text style={styles.addToBagText}>
-                        {isAddingToCart ? 'Adding...' : 'Add to Bag'}
-                    </Text>
-                </TouchableOpacity>
+                <View style={styles.ctaButtonsContainer}>
+                    <TouchableOpacity
+                        style={styles.askAIButton}
+                        onPress={() => {
+                            const productData = {
+                                id: product._id,
+                                title: product.title,
+                                price: product.price,
+                                brand: product.brand?.name || 'Unknown',
+                                category: product.category?.name || 'Unknown',
+                                description: product.description || '',
+                                rating: product.ratingsAverage || 0,
+                                stock: product.quantity || 0
+                            };
+                            
+                            router.push({
+                                pathname: '/chat',
+                                params: { 
+                                    productContext: JSON.stringify(productData),
+                                    initialMessage: `Tell me more about this product: ${product.title}`
+                                }
+                            });
+                        }}
+                    >
+                        <Ionicons name="chatbubble-ellipses" size={20} color="#667eea" />
+                        <Text style={styles.askAIText}>Ask AI</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={[styles.addToBagButton, product.quantity === 0 && styles.disabledButton]}
+                        disabled={product.quantity === 0 || isAddingToCart}
+                        onPress={async () => {
+                            setIsAddingToCart(true);
+                            try {
+                                await addToCart(product._id);
+                                showToast('success', `${product.title} added to cart!`);
+                            } catch (error: any) {
+                                showToast('error', error.response?.data?.message || "Failed to add to cart");
+                            } finally {
+                                setIsAddingToCart(false);
+                            }
+                        }}
+                    >
+                        <Text style={styles.addToBagText}>
+                            {isAddingToCart ? 'Adding...' : 'Add to Bag'}
+                        </Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         </View>
     );

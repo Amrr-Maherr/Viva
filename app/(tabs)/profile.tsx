@@ -1,5 +1,4 @@
 import { logout } from '@/api/auth';
-import DebugControls from '@/components/DebugControls';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
@@ -38,7 +37,7 @@ export default function ProfileScreen() {
         <Text style={styles.name}>{user?.name || 'User'}</Text>
         <Text style={styles.email}>{user?.email || 'user@example.com'}</Text>
       </View>
-      <DebugControls/>
+      {/* <DebugControls/> */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Account Settings</Text>
         <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/edit-profile')}>
@@ -98,6 +97,11 @@ export default function ProfileScreen() {
         <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/contact')}>
           <Ionicons name="mail-outline" size={24} color="#1A1A1A" />
           <Text style={styles.menuText}>Contact Us</Text>
+          <Ionicons name="chevron-forward" size={24} color="#ccc" />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/map')}>
+          <Ionicons name="locate-outline" size={24} color="#1A1A1A" />
+          <Text style={styles.menuText}>Location</Text>
           <Ionicons name="chevron-forward" size={24} color="#ccc" />
         </TouchableOpacity>
       </View>

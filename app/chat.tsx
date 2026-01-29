@@ -1,10 +1,11 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { StyleSheet, KeyboardAvoidingView, Platform, View, Text } from "react-native";
-import { Ionicons } from '@expo/vector-icons';
-import MessageInput from '@/components/MessageInput';
 import ChatList, { ChatListRef } from '@/components/ChatList';
+import MessageInput from '@/components/MessageInput';
 import useFetchChat from '@/hooks/useFetchChat';
+import { Ionicons } from '@expo/vector-icons';
+import { useLocalSearchParams } from 'expo-router';
 import LottieView from 'lottie-react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { KeyboardAvoidingView, Platform, StyleSheet, Text, View } from "react-native";
 
 type Message = {
   text: string;
@@ -13,11 +14,58 @@ type Message = {
 };
 
 export default function ChatScreen() {
+  const { productContext, initialMessage } = useLocalSearchParams();
   const [message, setMessage] = useState('');
   const [messageToSend, setMessageToSend] = useState('');
   const [chatMessages, setChatMessages] = useState<Message[]>([]);
+  const [productInfo, setProductInfo] = useState<any>(null);
 
   const chatListRef = useRef<ChatListRef>(null);
+
+  // Parse product context if provided
+  useEffect(() => {
+    if (productContext) {
+      try {
+        const parsedProduct = JSON.parse(productContext as string);
+        setProductInfo(parsedProduct);
+        
+        // Add initial AI message about the product
+        const welcomeMessage = `Hi! I see you're interested in **${parsedProduct.title}** by ${parsedProduct.brand}. 
+
+This ${parsedProduct.category} is priced at $${parsedProduct.price} and has a ${parsedProduct.rating}/5 rating. 
+
+I can help you with:
+• Product details and specifications
+• Comparison with similar items
+• Availability and stock info
+• Styling tips and recommendations
+• Any questions about this product
+
+What would you like to know?`;
+
+        setChatMessages([{
+          text: welcomeMessage,
+          sender: 'ai',
+          timestamp: new Date()
+        }]);
+
+        // If there's an initial message, send it
+        if (initialMessage) {
+          setTimeout(() => {
+            setMessage(initialMessage as string);
+          }, 500);
+        }
+      } catch (error) {
+        console.error('Error parsing product context:', error);
+        // Add fallback message if parsing fails
+        setChatMessages([{
+          text: "Hi! I'm here to help you with any questions about products, orders, or shopping. What can I assist you with today?",
+          sender: 'ai',
+          timestamp: new Date()
+        }]);
+      }
+    }
+  }, [productContext, initialMessage]);
 
   const { data, isLoading, isError } = useFetchChat(messageToSend);
 console.log(data);
@@ -26,7 +74,16 @@ console.log(isError);
   const sendMessage = () => {
     if (message.trim()) {
       setChatMessages(prev => [...prev, { text: message, sender: 'user', timestamp: new Date() }]);
-      setMessageToSend(message);
+      
+      // Add product context to the message if available
+      let contextualMessage = message;
+      if (productInfo) {
+        contextualMessage = `Product Context: I'm asking about "${productInfo.title}" by ${productInfo.brand}, priced at $${productInfo.price}, in ${productInfo.category} category, with ${productInfo.rating}/5 rating and ${productInfo.stock} in stock. Product description: ${productInfo.description.substring(0, 200)}...
+
+User Question: ${message}`;
+      }
+      
+      setMessageToSend(contextualMessage);
       setMessage('');
     }
   };
@@ -55,7 +112,7 @@ console.log(isError);
         keyboardVerticalOffset={Platform.OS === "ios" ? 120 : 90}
       >
         <View style={styles.chatContainer}>
-          {chatMessages.length === 0 ? (
+          {chatMessages.length === 0 && !productInfo ? (
             <View style={styles.welcomeContainer}>
               <LottieView
                 source={require('../assets/jsonIcons/AI_logo.json')}
