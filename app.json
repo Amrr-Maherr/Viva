@@ -32,7 +32,13 @@
     },
     "plugins": [
       "expo-router",
-      "expo-video"
+      "expo-video",
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow Viva store to use your location."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

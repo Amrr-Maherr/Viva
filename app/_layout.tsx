@@ -1,20 +1,20 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useFonts } from 'expo-font';
-import { Stack, useRouter } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect, useState } from 'react';
-import 'react-native-reanimated';
-import Toast from 'react-native-toast-message';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFonts } from "expo-font";
+import { Stack, useRouter } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
+import { useEffect, useState } from "react";
+import "react-native-reanimated";
+import Toast from "react-native-toast-message";
 
-import { useColorScheme } from '@/components/useColorScheme';
-import Provider from '@/provider/Provider';
+import { useColorScheme } from "@/components/useColorScheme";
+import Provider from "@/provider/Provider";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
@@ -38,34 +38,36 @@ export default function RootLayout() {
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
   const router = useRouter();
-  const [initialRoute, setInitialRoute] = useState('splash'); // Default to splash
+  const [initialRoute, setInitialRoute] = useState("splash"); // Default to splash
 
   useEffect(() => {
     const determineInitialRoute = async () => {
       try {
         // Check if user is already authenticated
-        const token = await AsyncStorage.getItem('token');
+        const token = await AsyncStorage.getItem("token");
 
         if (token) {
           // User is authenticated, go directly to main app
-          setInitialRoute('(tabs)');
+          setInitialRoute("(tabs)");
           return;
         }
 
         // Check if onboarding has been completed
-        const onboardingCompleted = await AsyncStorage.getItem('onboardingCompleted');
+        const onboardingCompleted = await AsyncStorage.getItem(
+          "onboardingCompleted",
+        );
 
-        if (onboardingCompleted === 'true') {
+        if (onboardingCompleted === "true") {
           // onboarding already completed, go to login
-          setInitialRoute('login');
+          setInitialRoute("login");
         } else {
           // Show splash screen (which will navigate to onboarding)
-          setInitialRoute('splash');
+          setInitialRoute("splash");
         }
       } catch (error) {
-        console.error('Error determining initial route:', error);
+        console.error("Error determining initial route:", error);
         // Default to splash screen if there's an error
-        setInitialRoute('splash');
+        setInitialRoute("splash");
       }
     };
 
@@ -106,7 +108,11 @@ function RootLayoutNav() {
           options={{ title: "Change Password" }}
         />
         <Stack.Screen name="contact" options={{ title: "Contact Us" }} />
-        <Stack.Screen name="chat" options={{ title: "Viva AI Assistant",headerShown:true }} />
+        <Stack.Screen
+          name="chat"
+          options={{ title: "Viva AI Assistant", headerShown: true }}
+        />
+        <Stack.Screen name="map" options={{ headerShown: false }} />
         <Stack.Screen name="modal" options={{ presentation: "modal" }} />
         <Stack.Screen name="+not-found" options={{ headerShown: false }} />
       </Stack>

@@ -1,9 +1,9 @@
-import React, { useRef, useState } from "react";
-import { View, TouchableOpacity } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import * as Location from "expo-location";
+import { useRouter } from "expo-router";
+import React, { useEffect, useRef, useState } from "react";
+import { TouchableOpacity, View } from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
-import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
-
 export default function MapExample() {
   const mapRef = useRef(null);
   const router = useRouter();
@@ -18,6 +18,43 @@ export default function MapExample() {
   const handleGoBack = () => {
     router.back();
   };
+  const [location, setLocation] = useState<Location.LocationObject | null>(
+    null,
+  );
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  useEffect(() => {
+    async function getCurrentLocation() {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setErrorMsg("Permission to access location was denied");
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+    }
+
+    getCurrentLocation();
+  }, []);
+  useEffect(() => {
+    if (location) {
+      setRegion({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        latitudeDelta: 0.05,
+        longitudeDelta: 0.05,
+      });
+    }
+  }, [location]);
+
+  let text = "Waiting...";
+  if (errorMsg) {
+    text = errorMsg;
+  } else if (location) {
+    text = JSON.stringify(location);
+  }
+  const latitude = location?.coords?.latitude;
+  const longitude = location?.coords?.longitude;
 
   return (
     <View style={{ flex: 1 }}>
@@ -49,28 +86,27 @@ export default function MapExample() {
         }}
         /* ---------- LIMITS ---------- */
       >
-        <Marker
-          coordinate={{
-            latitude: region.latitude,
-            longitude: region.longitude,
-          }}
-          title="Title"
-          description="Desc"
-          draggable
-        />
+        {latitude && longitude && (
+          <Marker
+            coordinate={{ latitude, longitude }}
+            title={`Lat: ${latitude.toFixed(2)}, Lng: ${longitude.toFixed(2)}`}
+            description="Desc"
+            draggable
+          />
+        )}
       </MapView>
 
       {/* Subtle back button positioned in top-left corner */}
       <TouchableOpacity
         style={{
-          position: 'absolute',
-          top: 60,  // Adjusted to account for status bar
+          position: "absolute",
+          top: 60, // Adjusted to account for status bar
           left: 20,
           zIndex: 1000,
-          backgroundColor: 'rgba(255, 255, 255, 0.8)', // Semi-transparent white background
+          backgroundColor: "rgba(255, 255, 255, 0.8)", // Semi-transparent white background
           borderRadius: 20,
           padding: 10,
-          shadowColor: '#000',
+          shadowColor: "#000",
           shadowOffset: { width: 0, height: 2 },
           shadowOpacity: 0.2,
           shadowRadius: 4,
