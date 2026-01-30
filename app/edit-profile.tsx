@@ -1,24 +1,27 @@
-import React, { useState } from 'react';
-import {
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  Text,
-  View,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-} from "react-native";
-import { router } from 'expo-router';
-import { useForm, Controller } from "react-hook-form";
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { updateMe } from '@/api/users';
 import { showToast } from '@/utils/toast';
+import { router } from 'expo-router';
+import React from 'react';
+import { Controller, useForm } from "react-hook-form";
+import {
+    KeyboardAvoidingView,
+    Platform,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
+} from "react-native";
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function EditProfileScreen() {
+  const [currentProfileImage, setCurrentProfileImage] = useState<string | null>(null);
+  
   const {
     control,
     handleSubmit,
+    setValue,
     formState: { errors, isLoading },
   } = useForm({
     defaultValues: {
@@ -27,6 +30,71 @@ export default function EditProfileScreen() {
       phone: "",
     },
   });
+
+  useEffect(() => {
+    const loadUserData = async () => {
+      try {
+        const userData = await AsyncStorage.getItem('user');
+        const profileImage = await AsyncStorage.getItem('profileImage');
+        
+        if (userData) {
+          const user = JSON.parse(userData);
+          setValue('name', user.name || '');
+          setValue('email', user.email || '');
+          setValue('phone', user.phone || '');
+        }
+        
+        if (profileImage) {
+          setCurrentProfileImage(profileImage);
+        }
+      } catch (error) {
+        console.error('Error loading user data:', error);
+      }
+    };
+    
+    loadUserData();
+  }, [setValue]);
+
+  const handleImageChange = async (imageUri: string) => {
+    try {
+      await AsyncStorage.setItem('profileImage', imageUri);
+      setCurrentProfileImage(imageUri);
+      
+      // Update user data with new profile image
+      const userData = await AsyncStorage.getItem('user');
+      if (userData) {
+        const user = JSON.parse(userData);
+        const updatedUser = { ...user, profileImage: imageUri };
+        await AsyncStorage.setItem('user', JSON.stringify(updatedUser));
+      }
+      
+      showToast('success', 'Profile image updated!');
+    } catch (error) {
+      console.error('Error saving profile image:', error);
+      showToast('error', 'Failed to update profile image');
+    }
+  };
+
+  const handleImageClear = async () => {
+    try {
+      await AsyncStorage.removeItem('profileImage');
+      setCurrentProfileImage(null);
+      
+      // Update user data to remove profile image
+      const userData = await AsyncStorage.getItem('user');
+      if (userData) {
+        const user = JSON.parse(userData);
+        const updatedUser = { ...user };
+        delete updatedUser.profileImage;
+        await AsyncStorage.setItem('user', JSON.stringify(updatedUser));
+      }
+      
+      showToast('info', 'Profile image removed');
+    } catch (error) {
+      console.error('Error clearing profile image:', error);
+      showToast('error', 'Failed to remove profile image');
+    }
+  };
 
   const onSubmit = async (data: any) => {
     try {
@@ -53,6 +121,17 @@ export default function EditProfileScreen() {
         >
           <Text style={styles.title}>Edit Profile</Text>
           <Text style={styles.subtitle}>Update your personal information.</Text>
+
+          {/* Profile Image Section */}
+          <View style={styles.imageSection}>
+            <Text style={styles.sectionTitle}>Profile Picture</Text>
+            <ProfileImagePicker 
+              currentImage={currentProfileImage}
+              onImageChange={handleImageChange}
+              onImageClear={handleImageClear}
+              size={150}
+            />
+          </View>
 
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Full Name</Text>
@@ -173,14 +252,27 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: "semibold",
-    textAlign: "left",
+    textAlign: "center",
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 16,
     color: "#808080",
-    textAlign: "left",
+    textAlign: "center",
     marginBottom: 24,
+  },
+  imageSection: {
+    alignItems: 'center',
+    marginBottom: 30,
+    paddingVertical: 20,
+    backgroundColor: '#f8f9fa',
+    borderRadius: 15,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#1A1A1A',
+    marginBottom: 15,
   },
   inputContainer: {
     marginBottom: 20,

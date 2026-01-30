@@ -1,13 +1,13 @@
 import { logout } from '@/api/auth';
+import ProfileImagePicker from '@/components/ProfileImagePicker';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
-import LottieView from 'lottie-react-native';
 import React, { useEffect, useState } from 'react';
 import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function ProfileScreen() {
-  const [user, setUser] = useState<{ name: string; email: string } | null>(null);
+  const [user, setUser] = useState<{ name: string; email: string; profileImage?: string } | null>(null);
 
   useEffect(() => {
     const loadUser = async () => {
@@ -23,17 +23,44 @@ export default function ProfileScreen() {
     loadUser();
   }, []);
 
+  const handleImageChange = async (imageUri: string) => {
+    try {
+      await AsyncStorage.setItem('profileImage', imageUri);
+      // Update user data with new profile image
+      if (user) {
+        const updatedUser = { ...user, profileImage: imageUri };
+        setUser(updatedUser);
+        await AsyncStorage.setItem('user', JSON.stringify(updatedUser));
+      }
+    } catch (error) {
+      console.log('Error saving profile image:', error);
+    }
+  };
+
+  const handleImageClear = async () => {
+    try {
+      await AsyncStorage.removeItem('profileImage');
+      // Update user data to remove profile image
+      if (user) {
+        const updatedUser = { ...user };
+        delete updatedUser.profileImage;
+        setUser(updatedUser);
+        await AsyncStorage.setItem('user', JSON.stringify(updatedUser));
+      }
+    } catch (error) {
+      console.log('Error clearing profile image:', error);
+    }
+  };
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
-        <View style={styles.avatar}>
-          <LottieView
-            source={require('../../assets/jsonIcons/Profile_Avatar.json')}
-            autoPlay
-            loop
-            style={styles.lottieAvatar}
-          />
-        </View>
+        <ProfileImagePicker 
+          currentImage={user?.profileImage}
+          onImageChange={handleImageChange}
+          onImageClear={handleImageClear}
+          size={200}
+        />
         <Text style={styles.name}>{user?.name || 'User'}</Text>
         <Text style={styles.email}>{user?.email || 'user@example.com'}</Text>
       </View>
@@ -144,25 +171,12 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: '#f8f8f8',
   },
-  avatar: {
-    width: 200,
-    height: 200,
-    borderRadius: "100%",
-    backgroundColor: '#e0e0e0',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 10,
-    overflow: 'hidden',
-  },
-  lottieAvatar: {
-    width: '100%',
-    height: '100%',
-  },
   name: {
     fontSize: 24,
     fontWeight: 'bold',
     color: '#1A1A1A',
     marginBottom: 4,
+    marginTop: 15,
   },
   email: {
     fontSize: 16,

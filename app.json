@@ -47,6 +47,12 @@
           "defaultChannel": "default",
           "enableBackgroundRemoteNotifications": false
         }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Viva Store requests access to your photos so you can share products and deals with your friends."
+        }
       ]
     ],
     "experiments": {
