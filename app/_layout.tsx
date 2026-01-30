@@ -5,14 +5,27 @@ import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
 import "react-native-reanimated";
 import Toast from "react-native-toast-message";
-
 import { useColorScheme } from "@/components/useColorScheme";
 import Provider from "@/provider/Provider";
+import { useNotifications } from "../hooks/useNotifications";
+
+import * as Notifications from 'expo-notifications';
+
+// Set notification handler
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true, // Changed to false to avoid constant sounds during testing
+    shouldSetBadge: true,
+  }),
+});
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  useNotifications(); // Initialize notifications using the custom hook
+
   const [loaded, error] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
@@ -27,6 +40,7 @@ export default function RootLayout() {
       SplashScreen.hideAsync();
     }
   }, [loaded]);
+
 
   if (!loaded) {
     return null;
