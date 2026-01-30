@@ -1,22 +1,24 @@
 import { useEffect, useRef } from 'react';
 import * as Notifications from 'expo-notifications';
 import { Alert } from 'react-native';
-import { router } from 'expo-router';
 
 export const useNotifications = () => {
-  const responseListener = useRef<any>(null);
+  const notificationListener = useRef<any>(null);
+  const intervalId = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    setupNotificationListener();
+    setupNotifications();
 
     // Cleanup on unmount
     return () => {
+      if (intervalId.current) {
+        clearInterval(intervalId.current);
+      }
       // Note: Expo Notifications automatically handles cleanup of listeners
-      // No need to manually remove notification subscriptions
     };
   }, []);
 
-  const setupNotificationListener = async () => {
+  const setupNotifications = async () => {
     // Request notification permissions
     let { status } = await Notifications.getPermissionsAsync();
 
@@ -27,27 +29,29 @@ export const useNotifications = () => {
 
     if (status !== 'granted') {
       console.log('Notification permission denied');
-      Alert.alert('Notification Permission', 'Please enable notifications in your device settings to receive alerts.');
+      Alert.alert(
+        'Notification Permission',
+        'Please enable notifications in your device settings to receive alerts.'
+      );
       return;
     }
 
     console.log('Notification permission granted');
 
-    // Add notification response listener to handle when user taps on notification
-    responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
-      // Handle the notification tap - this is where the "link" functionality happens
-      const data = response.notification.request.content.data;
+    // Cancel any existing scheduled notifications to avoid duplicates
+    await Notifications.cancelAllScheduledNotificationsAsync();
 
-      // Navigate based on notification data or content
-      if (data && data.screen) {
-        // If notification has specific screen data, navigate to it
-        router.push(data.screen);
-      } else {
-        // Default navigation when notification is tapped
-        router.push('/(tabs)/index'); // Navigate to home screen
-      }
-    });
+    // Schedule repeating notifications using setInterval
+    intervalId.current = setInterval(async () => {
+      await Notifications.scheduleNotificationAsync({
+        content: {
+          title: "🤖 Meet Viva AI!",
+          body: "Need help picking the perfect product? Viva's AI Bot has you covered!"
+        },
+        trigger: null, // Immediate notification
+      });
+    }, 600000); // every 10 seconds
   };
 
-  return { setupNotificationListener };
+  return { setupNotifications };
 };

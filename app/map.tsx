@@ -1,12 +1,14 @@
 import { Ionicons } from "@expo/vector-icons";
-import * as Location from "expo-location";
 import { useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import { TouchableOpacity, View } from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import { useLocation } from "../hooks/useLocation";
+
 export default function MapExample() {
   const mapRef = useRef(null);
   const router = useRouter();
+  const { location, errorMsg, getCurrentLocation } = useLocation();
 
   const [region, setRegion] = useState({
     latitude: 31.04,
@@ -18,24 +20,7 @@ export default function MapExample() {
   const handleGoBack = () => {
     router.back();
   };
-  const [location, setLocation] = useState<Location.LocationObject | null>(
-    null,
-  );
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  useEffect(() => {
-    async function getCurrentLocation() {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        setErrorMsg("Permission to access location was denied");
-        return;
-      }
 
-      let location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
-    }
-
-    getCurrentLocation();
-  }, []);
   useEffect(() => {
     if (location) {
       setRegion({
@@ -47,12 +32,6 @@ export default function MapExample() {
     }
   }, [location]);
 
-  let text = "Waiting...";
-  if (errorMsg) {
-    text = errorMsg;
-  } else if (location) {
-    text = JSON.stringify(location);
-  }
   const latitude = location?.coords?.latitude;
   const longitude = location?.coords?.longitude;
 
