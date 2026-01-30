@@ -62,6 +62,8 @@ The main problem it solves is providing a seamless mobile shopping experience wi
 │   ├── useFetchCart.ts
 │   └── ...
 ├── hooks/                # Custom React hooks
+│   ├── useLocation.ts    # Location management and permissions
+│   └── useNotifications.ts # Notification handling and routing
 ├── types/                # TypeScript type definitions
 ├── utils/                # Utility functions
 ├── constants/            # App constants and configuration
@@ -135,6 +137,24 @@ The main problem it solves is providing a seamless mobile shopping experience wi
 - **Order History**: View past orders and tracking information
 - **Address Management**: Multiple shipping addresses
 - **Payment Methods**: Saved payment options
+
+### Map & Location Services
+- **Interactive Map Display**: Google Maps integration with hybrid view
+- **Location Tracking**: Real-time user location detection
+- **Marker Management**: Dynamic markers showing user position
+- **Navigation Controls**: Zoom, pan, rotation, and compass controls
+
+### Notification System
+- **Interactive Notifications**: Tap-to-navigate functionality
+- **Permission Handling**: Automatic permission requests and error handling
+- **Custom Actions**: Deep linking to specific app screens
+- **Response Management**: Custom handling for notification interactions
+
+### Custom Hooks Architecture
+- **useLocation Hook**: Centralized location management with error handling
+- **useNotifications Hook**: Unified notification handling and routing
+- **Reusable Logic**: Separation of concerns for better maintainability
+- **Type Safety**: Full TypeScript support for all custom hooks
 
 ## API / Data Handling
 
