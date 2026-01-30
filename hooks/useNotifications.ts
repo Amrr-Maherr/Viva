@@ -4,24 +4,19 @@ import { Alert } from 'react-native';
 import { router } from 'expo-router';
 
 export const useNotifications = () => {
-  const notificationListener = useRef<any>(null);
   const responseListener = useRef<any>(null);
-  const intervalId = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    setupNotifications();
+    setupNotificationListener();
 
     // Cleanup on unmount
     return () => {
-      if (intervalId.current) {
-        clearInterval(intervalId.current);
-      }
       // Note: Expo Notifications automatically handles cleanup of listeners
       // No need to manually remove notification subscriptions
     };
   }, []);
 
-  const setupNotifications = async () => {
+  const setupNotificationListener = async () => {
     // Request notification permissions
     let { status } = await Notifications.getPermissionsAsync();
 
@@ -52,24 +47,7 @@ export const useNotifications = () => {
         router.push('/(tabs)/index'); // Navigate to home screen
       }
     });
-
-    // Cancel any existing scheduled notifications to avoid duplicates
-    await Notifications.cancelAllScheduledNotificationsAsync();
-
-    // For true repeating notifications, we'll use setInterval instead
-    intervalId.current = setInterval(async () => {
-      await Notifications.scheduleNotificationAsync({
-        content: {
-          title: "🧪 Test Notification",
-          body: "This notification appears every 2 seconds - tap to go to home",
-          data: { screen: "/(tabs)/index" }, // Add data to specify where to navigate when tapped
-        },
-        trigger: null, // Immediate notification
-      });
-    }, 2000); // 2000ms = 2 seconds
-
-    console.log('Repeating notification scheduled successfully');
   };
 
-  return { setupNotifications };
+  return { setupNotificationListener };
 };
