@@ -3,6 +3,7 @@ import { Ionicons } from '@expo/vector-icons';
 import LottieView from 'lottie-react-native';
 import React, { useRef, useState } from 'react';
 import { Animated, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { showToast } from '@src/shared/utils/toast';
 
 type Message = {
   text: string;
@@ -43,6 +44,7 @@ export default function MessageItem({ message }: MessageItemProps) {
 
   const handleCopy = () => {
     Clipboard.setStringAsync(message.text);
+    showToast('success', 'Copied to clipboard');
   };
 
   return (
