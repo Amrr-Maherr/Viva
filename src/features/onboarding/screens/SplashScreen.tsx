@@ -1,7 +1,12 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from "expo-router";
 import { useEffect, useRef } from "react";
-import { ActivityIndicator, Animated, Image, StyleSheet, View } from "react-native";
+import {
+  ActivityIndicator,
+  Animated,
+  Image,
+  StyleSheet,
+  View,
+} from "react-native";
 
 export default function SplashScreen() {
   const backgroundFadeAnim1 = useRef(new Animated.Value(0)).current;
@@ -49,29 +54,9 @@ export default function SplashScreen() {
       useNativeDriver: true,
     }).start();
 
-    const checkAuthAndNavigate = async () => {
-      try {
-        const token = await AsyncStorage.getItem('token');
-
-        if (token) {
-          router.replace("/(tabs)");
-          return;
-        }
-
-        const onboardingCompleted = await AsyncStorage.getItem('onboardingCompleted');
-
-        if (onboardingCompleted === 'true') {
-          router.replace("/login");
-        } else {
-          router.replace("/onboarding");
-        }
-      } catch (error) {
-        console.error('Error checking auth/onboarding status:', error);
-        router.replace("/onboarding");
-      }
-    };
-
-    const timer = setTimeout(checkAuthAndNavigate, 3000);
+    const timer = setTimeout(() => {
+      router.replace("/onboarding");
+    }, 3000);
 
     return () => clearTimeout(timer);
   }, []);
@@ -81,29 +66,29 @@ export default function SplashScreen() {
       <View style={style.container}>
         <Animated.Image
           style={[
-            {position:"absolute", top:100},
-            {opacity: backgroundFadeAnim1}
+            { position: "absolute", top: 100 },
+            { opacity: backgroundFadeAnim1 },
           ]}
           source={require("../../../../assets/images/logo-background.png")}
         />
         <Animated.Image
           style={[
-            {position:"absolute", top:150},
-            {opacity: backgroundFadeAnim2}
+            { position: "absolute", top: 150 },
+            { opacity: backgroundFadeAnim2 },
           ]}
           source={require("../../../../assets/images/logo-background.png")}
         />
         <Animated.Image
           style={[
-            {position:"absolute", top:200},
-            {opacity: backgroundFadeAnim3}
+            { position: "absolute", top: 200 },
+            { opacity: backgroundFadeAnim3 },
           ]}
           source={require("../../../../assets/images/logo-background.png")}
         />
         <Animated.Image
           style={[
-            {position:"absolute", top:250},
-            {opacity: backgroundFadeAnim4}
+            { position: "absolute", top: 250 },
+            { opacity: backgroundFadeAnim4 },
           ]}
           source={require("../../../../assets/images/logo-background.png")}
         />
@@ -121,10 +106,7 @@ export default function SplashScreen() {
           />
         </Animated.View>
         <Animated.View
-          style={[
-            style.loaderContainer,
-            { opacity: loaderFadeAnim }
-          ]}
+          style={[style.loaderContainer, { opacity: loaderFadeAnim }]}
         >
           <ActivityIndicator size="large" color="#fff" />
         </Animated.View>
@@ -145,9 +127,9 @@ const style = StyleSheet.create({
     width: 133,
   },
   loaderContainer: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 100,
-    width: '100%',
-    alignItems: 'center',
+    width: "100%",
+    alignItems: "center",
   },
 });

@@ -1,15 +1,13 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNotifications } from "@src/features/notifications/hooks/useNotifications";
+import { AppProvider } from "@src/provider";
 import { useFonts } from "expo-font";
-import { Stack, useRouter } from "expo-router";
+import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import "react-native-reanimated";
 import Toast from "react-native-toast-message";
-import { useColorScheme } from "@src/shared/hooks/useColorScheme";
-import { AppProvider } from "@src/provider";
-import { useNotifications } from "@src/features/notifications/hooks/useNotifications";
 
-import * as Notifications from 'expo-notifications';
+import * as Notifications from "expo-notifications";
 
 // Set notification handler
 Notifications.setNotificationHandler({
@@ -41,7 +39,6 @@ export default function RootLayout() {
     }
   }, [loaded]);
 
-
   if (!loaded) {
     return null;
   }
@@ -50,44 +47,6 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-  const colorScheme = useColorScheme();
-  const router = useRouter();
-  const [initialRoute, setInitialRoute] = useState("splash"); // Default to splash
-
-  useEffect(() => {
-    const determineInitialRoute = async () => {
-      try {
-        // Check if user is already authenticated
-        const token = await AsyncStorage.getItem("token");
-
-        if (token) {
-          // User is authenticated, go directly to main app
-          setInitialRoute("(tabs)");
-          return;
-        }
-
-        // Check if onboarding has been completed
-        const onboardingCompleted = await AsyncStorage.getItem(
-          "onboardingCompleted",
-        );
-
-        if (onboardingCompleted === "true") {
-          // onboarding already completed, go to login
-          setInitialRoute("login");
-        } else {
-          // Show splash screen (which will navigate to onboarding)
-          setInitialRoute("splash");
-        }
-      } catch (error) {
-        console.error("Error determining initial route:", error);
-        // Default to splash screen if there's an error
-        setInitialRoute("splash");
-      }
-    };
-
-    determineInitialRoute();
-  }, []);
-
   return (
     <AppProvider>
       <Stack
@@ -134,4 +93,3 @@ function RootLayoutNav() {
     </AppProvider>
   );
 }
-
