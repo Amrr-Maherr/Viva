@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import React from 'react';
 import { StyleSheet, TouchableOpacity, Text, View } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
@@ -10,14 +11,14 @@ interface ChatHeaderProps {
 export default function ChatHeader({ title, onSearchPress }: ChatHeaderProps) {
   return (
     <View style={styles.header}>
-      <View style={styles.leftContainer}>
-        <TouchableOpacity style={styles.backButton}>
-          <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
+      <View style={styles.left}>
+        <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
+          <Ionicons name="arrow-back" size={24} color="#1A1A1A" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>{title}</Text>
+        <Text style={styles.title}>{title}</Text>
       </View>
-      <TouchableOpacity onPress={onSearchPress} style={styles.iconButton}>
-        <Ionicons name="search" size={24} color="#FFFFFF" />
+      <TouchableOpacity onPress={onSearchPress} style={styles.iconBtn}>
+        <Ionicons name="search" size={24} color="#1A1A1A" />
       </TouchableOpacity>
     </View>
   );
@@ -28,30 +29,26 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 16,
+    paddingHorizontal: 25,
     paddingVertical: 12,
-    backgroundColor: '#667eea',
-    elevation: 4,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    zIndex: 10,
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 1,
+    borderBottomColor: '#CCCCCC',
   },
-  leftContainer: {
+  left: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  backButton: {
+  backBtn: {
     marginRight: 12,
     padding: 4,
   },
-  headerTitle: {
-    fontSize: 20,
+  title: {
+    fontSize: 18,
     fontWeight: '600',
-    color: '#FFFFFF',
+    color: '#1A1A1A',
   },
-  iconButton: {
+  iconBtn: {
     padding: 4,
   },
 });

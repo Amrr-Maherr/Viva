@@ -1,7 +1,9 @@
-import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View, Image } from "react-native";
+import * as Clipboard from 'expo-clipboard';
 import { Ionicons } from '@expo/vector-icons';
 import LottieView from 'lottie-react-native';
+import React, { useRef, useState } from 'react';
+import { Animated, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { showToast } from '@src/shared/utils/toast';
 
 type Message = {
   text: string;
@@ -13,81 +15,88 @@ interface MessageItemProps {
   message: Message;
 }
 
+const formatBoldText = (text: string) => {
+  const parts = text.split(/(\*\*[^*]+\*\*)/g);
+  return parts.map((part, index) => {
+    if (part.startsWith('**') && part.endsWith('**')) {
+      return <Text key={index} style={styles.bold}>{part.slice(2, -2)}</Text>;
+    }
+    return <Text key={index}>{part}</Text>;
+  });
+};
+
+const formatTime = (date: Date) =>
+  date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
 export default function MessageItem({ message }: MessageItemProps) {
-  const formatTime = (date: Date) => {
-    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const isUser = message.sender === 'user';
+  const [liked, setLiked] = useState(false);
+  const [disliked, setDisliked] = useState(false);
+  const likeScale = useRef(new Animated.Value(1)).current;
+
+  const animate = (cb: () => void) => {
+    Animated.sequence([
+      Animated.spring(likeScale, { toValue: 1.35, useNativeDriver: true, friction: 3 }),
+      Animated.spring(likeScale, { toValue: 1, useNativeDriver: true, friction: 3 }),
+    ]).start();
+    cb();
+  };
+
+  const handleCopy = () => {
+    Clipboard.setStringAsync(message.text);
+    showToast('success', 'Copied to clipboard');
   };
 
   return (
-    <View
-      style={[
-        styles.messageWrapper,
-        message.sender === "user" ? styles.userMessageWrapper : styles.aiMessageWrapper
-      ]}
-    >
-      <View style={[
-        styles.messageRow,
-        message.sender === "user" ? styles.userMessageRow : styles.aiMessageRow
-      ]}>
-        <View style={styles.avatarContainer}>
-          {message.sender === "user" ? (
-            <LottieView
-              source={require('../../../../assets/jsonIcons/Profile_Avatar.json')}
-              autoPlay
-              loop
-              style={styles.avatar}
-            />
-          ) : (
+    <View style={[styles.wrapper, isUser ? styles.wrapperEnd : styles.wrapperStart]}>
+      {!isUser && (
+        <View style={styles.avatarCol}>
+          <View style={styles.avatarCircle}>
             <LottieView
               source={require('../../../../assets/jsonIcons/AI_logo.json')}
               autoPlay
               loop
-              style={styles.avatar}
+              style={styles.avatarIcon}
             />
-          )}
+          </View>
         </View>
-        <View
-          style={[
-            styles.messageContainer,
-            message.sender === "user" ? styles.userMessage : styles.aiMessage,
-          ]}
-        >
-          <Text style={[
-            styles.messageText,
-            message.sender === "user" ? styles.userMessageText : styles.aiMessageText
-          ]}>
-            {message.text}
+      )}
+      <View style={styles.bubbleCol}>
+        <View style={[styles.bubble, isUser ? styles.userBubble : styles.aiBubble]}>
+          <Text style={[styles.msgText, isUser && styles.userMsgText]}>
+            {formatBoldText(message.text)}
           </Text>
         </View>
-      </View>
-      <View
-        style={[
-          styles.metaContainer,
-          message.sender === "user" ? styles.userMeta : styles.aiMeta,
-        ]}
-      >
-        <View style={styles.timestampActionsContainer}>
-          <Text style={styles.timestamp}>{formatTime(message.timestamp)}</Text>
-          <View style={styles.actionsContainer}>
-            <TouchableOpacity
-              style={styles.actionButton}
-              onPress={() => console.log("Like pressed")}
-            >
-              <Ionicons name="thumbs-up-outline" size={14} color="#4a5568" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.actionButton}
-              onPress={() => console.log("Copy pressed")}
-            >
-              <Ionicons name="copy-outline" size={14} color="#4a5568" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.actionButton}
-              onPress={() => console.log("Share pressed")}
-            >
-              <Ionicons name="share-outline" size={14} color="#4a5568" />
-            </TouchableOpacity>
-          </View>
+        <View style={[styles.metaRow, isUser && styles.metaRowEnd]}>
+          <Text style={styles.time}>{formatTime(message.timestamp)}</Text>
+          {!isUser && (
+            <View style={styles.actions}>
+              <TouchableOpacity
+                style={styles.actionBtn}
+                hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                onPress={() => animate(() => setLiked(p => !p))}
+              >
+                <Animated.View style={{ transform: [{ scale: liked ? likeScale : 1 }] }}>
+                  <Ionicons name={liked ? "thumbs-up" : "thumbs-up-outline"} size={14} color={liked ? "#1A1A1A" : "#808080"} />
+                </Animated.View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.actionBtn}
+                hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                onPress={() => animate(() => setDisliked(p => !p))}
+              >
+                <Animated.View style={{ transform: [{ scale: disliked ? likeScale : 1 }] }}>
+                  <Ionicons name={disliked ? "thumbs-down" : "thumbs-down-outline"} size={14} color={disliked ? "#1A1A1A" : "#808080"} />
+                </Animated.View>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.actionBtn} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+                <Ionicons name="share-outline" size={14} color="#808080" />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleCopy} style={styles.actionBtn} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+                <Ionicons name="copy-outline" size={13} color="#808080" />
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
       </View>
     </View>
@@ -95,96 +104,83 @@ export default function MessageItem({ message }: MessageItemProps) {
 }
 
 const styles = StyleSheet.create({
-  messageWrapper: {
-    marginVertical: 6,
-    maxWidth: '85%',
-  },
-  userMessageWrapper: {
-    alignSelf: 'flex-end',
-    marginRight: 16,
-  },
-  aiMessageWrapper: {
-    alignSelf: 'flex-start',
-    marginLeft: 16,
-  },
-  messageRow: {
+  wrapper: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
+    marginVertical: 5,
+    paddingHorizontal: 25,
+    alignItems: 'flex-end',
   },
-  userMessageRow: {
-    flexDirection: 'row-reverse', // Reverse order for user messages (avatar on right)
+  wrapperEnd: {
+    justifyContent: 'flex-end',
   },
-  aiMessageRow: {
-    flexDirection: 'row', // Normal order for AI messages (avatar on left)
+  wrapperStart: {
+    justifyContent: 'flex-start',
   },
-  avatarContainer: {
+  avatarCol: {
+    marginRight: 8,
+    marginBottom: 18,
+  },
+  avatarCircle: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#F0F0F0',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 4,
-    marginHorizontal: 8,
-    alignSelf: 'flex-start',
   },
-  avatar: {
-    width: 50,
-    height: 50,
+  avatarIcon: {
+    width: 22,
+    height: 22,
   },
-  messageContainer: {
-    padding: 14,
-    borderRadius: 18,
-    maxWidth: '80%',
+  bubbleCol: {
+    maxWidth: '78%',
   },
-  userMessage: {
-    backgroundColor: '#667eea',
+  bubble: {
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: 10,
+  },
+  userBubble: {
+    backgroundColor: '#1A1A1A',
     borderBottomRightRadius: 4,
   },
-  aiMessage: {
+  aiBubble: {
     backgroundColor: '#FFFFFF',
     borderBottomLeftRadius: 4,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
+    borderWidth: 1,
+    borderColor: '#CCCCCC',
   },
-  messageText: {
+  msgText: {
     fontSize: 16,
     lineHeight: 22,
+    color: '#1A1A1A',
   },
-  userMessageText: {
+  userMsgText: {
     color: '#FFFFFF',
   },
-  aiMessageText: {
-    color: '#333333',
+  bold: {
+    fontWeight: '700',
   },
-  metaContainer: {
+  metaRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 6,
+    marginTop: 4,
     paddingHorizontal: 4,
-    width: '100%',
   },
-  timestampActionsContainer: {
+  metaRowEnd: {
+    justifyContent: 'flex-end',
+  },
+  time: {
+    fontSize: 11,
+    color: '#808080',
+  },
+  actions: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  userMeta: {
-    alignSelf: 'flex-end',
-    flexDirection: 'row-reverse',
-  },
-  aiMeta: {
-    alignSelf: 'flex-start',
-  },
-  actionsContainer: {
-    flexDirection: 'row',
-  },
-  actionButton: {
     marginLeft: 8,
-    padding: 4,
   },
-  timestamp: {
-    fontSize: 11,
-    color: '#888',
-    marginRight: 4,
+  actionBtn: {
+    padding: 3,
+    marginLeft: 6,
   },
 });

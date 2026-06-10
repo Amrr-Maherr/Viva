@@ -1,7 +1,6 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, TouchableOpacity, Image, useColorScheme } from 'react-native';
 import { Text, View } from '@src/shared/components/Themed';
-import { useColorScheme } from '@src/shared/hooks/useColorScheme';
 
 interface ConversationItemProps {
   item: {
