@@ -1,8 +1,8 @@
 import * as Clipboard from 'expo-clipboard';
 import { Ionicons } from '@expo/vector-icons';
 import LottieView from 'lottie-react-native';
-import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useRef, useState } from 'react';
+import { Animated, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 type Message = {
   text: string;
@@ -29,6 +29,17 @@ const formatTime = (date: Date) =>
 
 export default function MessageItem({ message }: MessageItemProps) {
   const isUser = message.sender === 'user';
+  const [liked, setLiked] = useState(false);
+  const [disliked, setDisliked] = useState(false);
+  const likeScale = useRef(new Animated.Value(1)).current;
+
+  const animate = (cb: () => void) => {
+    Animated.sequence([
+      Animated.spring(likeScale, { toValue: 1.35, useNativeDriver: true, friction: 3 }),
+      Animated.spring(likeScale, { toValue: 1, useNativeDriver: true, friction: 3 }),
+    ]).start();
+    cb();
+  };
 
   const handleCopy = () => {
     Clipboard.setStringAsync(message.text);
@@ -58,11 +69,23 @@ export default function MessageItem({ message }: MessageItemProps) {
           <Text style={styles.time}>{formatTime(message.timestamp)}</Text>
           {!isUser && (
             <View style={styles.actions}>
-              <TouchableOpacity style={styles.actionBtn} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
-                <Ionicons name="thumbs-up-outline" size={14} color="#808080" />
+              <TouchableOpacity
+                style={styles.actionBtn}
+                hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                onPress={() => animate(() => setLiked(p => !p))}
+              >
+                <Animated.View style={{ transform: [{ scale: liked ? likeScale : 1 }] }}>
+                  <Ionicons name={liked ? "thumbs-up" : "thumbs-up-outline"} size={14} color={liked ? "#1A1A1A" : "#808080"} />
+                </Animated.View>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.actionBtn} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
-                <Ionicons name="thumbs-down-outline" size={14} color="#808080" />
+              <TouchableOpacity
+                style={styles.actionBtn}
+                hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                onPress={() => animate(() => setDisliked(p => !p))}
+              >
+                <Animated.View style={{ transform: [{ scale: disliked ? likeScale : 1 }] }}>
+                  <Ionicons name={disliked ? "thumbs-down" : "thumbs-down-outline"} size={14} color={disliked ? "#1A1A1A" : "#808080"} />
+                </Animated.View>
               </TouchableOpacity>
               <TouchableOpacity style={styles.actionBtn} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
                 <Ionicons name="share-outline" size={14} color="#808080" />
