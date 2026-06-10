@@ -1,11 +1,11 @@
 import ChatList, { ChatListRef } from '@src/features/chat/components/ChatList';
 import MessageInput from '@src/features/chat/components/MessageInput';
+import TypingIndicator from '@src/features/chat/components/TypingIndicator';
+import WelcomeView from '@src/features/chat/components/WelcomeView';
 import useFetchChat from '@src/features/chat/hooks/useChat';
-import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams } from 'expo-router';
-import LottieView from 'lottie-react-native';
-import React, { useEffect, useRef, useState } from 'react';
-import { KeyboardAvoidingView, Platform, StyleSheet, Text, View } from "react-native";
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { KeyboardAvoidingView, Platform, StyleSheet, View } from "react-native";
 
 type Message = {
   text: string;
@@ -19,6 +19,7 @@ export default function ChatScreen() {
   const [messageToSend, setMessageToSend] = useState('');
   const [chatMessages, setChatMessages] = useState<Message[]>([]);
   const [productInfo, setProductInfo] = useState<any>(null);
+  const [isAiLoading, setIsAiLoading] = useState(false);
 
   const chatListRef = useRef<ChatListRef>(null);
 
@@ -27,7 +28,7 @@ export default function ChatScreen() {
       try {
         const parsedProduct = JSON.parse(productContext as string);
         setProductInfo(parsedProduct);
-        
+
         const welcomeMessage = `Hi! I see you're interested in **${parsedProduct.title}** by ${parsedProduct.brand}. 
 
 This ${parsedProduct.category} is priced at $${parsedProduct.price} and has a ${parsedProduct.rating}/5 rating. 
@@ -63,28 +64,27 @@ What would you like to know?`;
     }
   }, [productContext, initialMessage]);
 
-  const { data, isLoading, isError } = useFetchChat(messageToSend);
-console.log(data);
-console.log(isError);
+  const buildContextualMessage = useCallback((userMessage: string) => {
+    if (!productInfo) return userMessage;
+    return `Product Context: I'm asking about "${productInfo.title}" by ${productInfo.brand}, priced at $${productInfo.price}, in ${productInfo.category} category, with ${productInfo.rating}/5 rating and ${productInfo.stock} in stock. Product description: ${productInfo.description.substring(0, 200)}...
 
-  const sendMessage = () => {
-    if (message.trim()) {
-      setChatMessages(prev => [...prev, { text: message, sender: 'user', timestamp: new Date() }]);
-      
-      let contextualMessage = message;
-      if (productInfo) {
-        contextualMessage = `Product Context: I'm asking about "${productInfo.title}" by ${productInfo.brand}, priced at $${productInfo.price}, in ${productInfo.category} category, with ${productInfo.rating}/5 rating and ${productInfo.stock} in stock. Product description: ${productInfo.description.substring(0, 200)}...
+User Question: ${userMessage}`;
+  }, [productInfo]);
 
-User Question: ${message}`;
-      }
-      
-      setMessageToSend(contextualMessage);
-      setMessage('');
-    }
-  };
+  const { data, isLoading, isError, refetch } = useFetchChat(messageToSend);
+
+  const sendMessage = useCallback(() => {
+    if (!message.trim()) return;
+
+    setChatMessages(prev => [...prev, { text: message, sender: 'user', timestamp: new Date() }]);
+    setMessageToSend(buildContextualMessage(message));
+    setMessage('');
+    setIsAiLoading(true);
+  }, [message, buildContextualMessage]);
 
   useEffect(() => {
     if (data) {
+      setIsAiLoading(false);
       if ('error' in data) {
         setChatMessages(prev => [...prev, { text: data.error, sender: 'ai', timestamp: new Date() }]);
       } else if (data.candidates && data.candidates[0]?.content?.parts?.[0]?.text) {
@@ -97,109 +97,35 @@ User Question: ${message}`;
     }
   }, [data]);
 
+  const showWelcome = chatMessages.length === 0 && !productInfo;
+
   return (
-    <View style={styles.container}>
-      <KeyboardAvoidingView
-        style={styles.keyboardAvoidingContainer}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 120 : 90}
-      >
-        <View style={styles.chatContainer}>
-          {chatMessages.length === 0 && !productInfo ? (
-            <View style={styles.welcomeContainer}>
-              <LottieView
-                source={require('../../../../assets/jsonIcons/AI_logo.json')}
-                autoPlay
-                loop
-                style={styles.aiLogo}
-              />
-              <Text style={styles.welcomeTitle}>Welcome to Viva Assistant!</Text>
-              <Text style={styles.welcomeSubtitle}>I'm here to help you with products, orders, and shopping tips.</Text>
-              <View style={styles.welcomeFeatures}>
-                <View style={styles.featureItem}>
-                  <Ionicons name="pricetag-outline" size={20} color="#667eea" />
-                  <Text style={styles.featureText}>Find products & deals</Text>
-                </View>
-                <View style={styles.featureItem}>
-                  <Ionicons name="card-outline" size={20} color="#667eea" />
-                  <Text style={styles.featureText}>Payment & shipping info</Text>
-                </View>
-                <View style={styles.featureItem}>
-                  <Ionicons name="information-circle-outline" size={20} color="#667eea" />
-                  <Text style={styles.featureText}>Order tracking & support</Text>
-                </View>
-              </View>
-            </View>
-          ) : (
-            <ChatList ref={chatListRef} messages={chatMessages} />
-          )}
-          <MessageInput
-            value={message}
-            onChangeText={setMessage}
-            onSendPress={sendMessage}
-            isLoading={isLoading}
-          />
-        </View>
-      </KeyboardAvoidingView>
-    </View>
+    <KeyboardAvoidingView
+      style={styles.screen}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 120 : 90}
+    >
+      {showWelcome ? (
+        <WelcomeView />
+      ) : (
+        <>
+          <ChatList ref={chatListRef} messages={chatMessages} />
+          <TypingIndicator isTyping={isAiLoading} />
+        </>
+      )}
+      <MessageInput
+        value={message}
+        onChangeText={setMessage}
+        onSendPress={sendMessage}
+        isLoading={isLoading}
+      />
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  screen: {
     flex: 1,
-    backgroundColor: '#f0f4f8',
-  },
-  keyboardAvoidingContainer: {
-    flex: 1,
-    backgroundColor: '#f0f4f8',
-  },
-  chatContainer: {
-    flex: 1,
-    backgroundColor: '#f0f4f8',
-  },
-  welcomeContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 30,
-    paddingTop: 40,
-    paddingBottom: 20,
-  },
-  aiLogo: {
-    width: 120,
-    height: 120,
-    marginBottom: 20,
-  },
-  welcomeTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
-    textAlign: 'center',
-    marginBottom: 12,
-  },
-  welcomeSubtitle: {
-    fontSize: 16,
-    color: '#666',
-    textAlign: 'center',
-    marginBottom: 30,
-    lineHeight: 24,
-  },
-  welcomeFeatures: {
-    width: '100%',
-    alignItems: 'flex-start',
-    marginTop: 20,
-  },
-  featureItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 15,
-    width: '100%',
-    paddingLeft: 10,
-  },
-  featureText: {
-    fontSize: 16,
-    color: '#555',
-    marginLeft: 12,
+    backgroundColor: '#FFFFFF',
   },
 });

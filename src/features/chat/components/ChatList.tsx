@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, forwardRef, useImperativeHandle } from 'react';
-import { StyleSheet, FlatList, Keyboard, Platform } from 'react-native';
+import { StyleSheet, FlatList, Keyboard } from 'react-native';
 import MessageItem from './MessageItem';
 
 type Message = {
@@ -27,26 +27,16 @@ const ChatList = forwardRef<ChatListRef, ChatListProps>(({ messages }, ref) => {
   }));
 
   useEffect(() => {
-    const showSubscription = Keyboard.addListener('keyboardDidShow', (e) => {
-      if (Platform.OS === 'ios') {
-        setKeyboardHeight(e.endCoordinates.height);
-      } else {
-        setKeyboardHeight(0); // Android handles keyboard differently
-      }
+    const showSub = Keyboard.addListener('keyboardDidShow', (e) => {
+      setKeyboardHeight(e.endCoordinates.height);
     });
-
-    const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
+    const hideSub = Keyboard.addListener('keyboardDidHide', () => {
       setKeyboardHeight(0);
     });
-
-    return () => {
-      showSubscription?.remove();
-      hideSubscription?.remove();
-    };
+    return () => { showSub?.remove(); hideSub?.remove(); };
   }, []);
 
   useEffect(() => {
-    // Auto scroll to bottom when messages change
     setTimeout(() => {
       flatListRef.current?.scrollToEnd({ animated: true });
     }, 100);
@@ -57,9 +47,9 @@ const ChatList = forwardRef<ChatListRef, ChatListProps>(({ messages }, ref) => {
       ref={flatListRef}
       data={messages}
       renderItem={({ item }) => <MessageItem message={item} />}
-      keyExtractor={(item, index) => index.toString()}
-      style={styles.conversationList}
-      contentContainerStyle={{ paddingBottom: keyboardHeight ? keyboardHeight - 50 : 20 }}
+      keyExtractor={(_, i) => i.toString()}
+      style={styles.list}
+      contentContainerStyle={{ paddingTop: 16, paddingBottom: keyboardHeight ? keyboardHeight - 50 : 16 }}
       keyboardShouldPersistTaps="handled"
     />
   );
@@ -68,8 +58,8 @@ const ChatList = forwardRef<ChatListRef, ChatListProps>(({ messages }, ref) => {
 export default ChatList;
 
 const styles = StyleSheet.create({
-  conversationList: {
+  list: {
     flex: 1,
-    backgroundColor: '#f0f4f8',
+    backgroundColor: '#FFFFFF',
   },
 });
