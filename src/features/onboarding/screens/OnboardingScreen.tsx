@@ -33,9 +33,11 @@ export default function OnboardingScreen() {
         duration: 500,
         useNativeDriver: true,
       }),
-    ]).start(async () => {
-      router.push("/login");
-    });
+    ]).start();
+
+    setTimeout(() => {
+      router.replace("/login");
+    }, 700);
   };
 
   useEffect(() => {
