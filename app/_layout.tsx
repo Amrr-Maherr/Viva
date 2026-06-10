@@ -5,9 +5,9 @@ import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
 import "react-native-reanimated";
 import Toast from "react-native-toast-message";
-import { useColorScheme } from "@/components/useColorScheme";
-import Provider from "@/provider/Provider";
-import { useNotifications } from "../hooks/useNotifications";
+import { useColorScheme } from "@src/shared/hooks/useColorScheme";
+import { AppProvider } from "@src/provider";
+import { useNotifications } from "@src/features/notifications/hooks/useNotifications";
 
 import * as Notifications from 'expo-notifications';
 
@@ -89,9 +89,9 @@ function RootLayoutNav() {
   }, []);
 
   return (
-    <Provider>
+    <AppProvider>
       <Stack
-        initialRouteName={initialRoute}
+        initialRouteName={"splash"}
         screenOptions={{
           headerTitleAlign: "center",
         }}
@@ -131,6 +131,7 @@ function RootLayoutNav() {
         <Stack.Screen name="+not-found" options={{ headerShown: false }} />
       </Stack>
       <Toast />
-    </Provider>
+    </AppProvider>
   );
 }
+

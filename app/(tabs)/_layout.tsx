@@ -4,9 +4,9 @@ import { Link, Tabs } from 'expo-router';
 import { Pressable, View } from 'react-native';
 import { useRouter } from 'expo-router';
 
-import Colors from '@/constants/Colors';
-import { useColorScheme } from '@/components/useColorScheme';
-import { useClientOnlyValue } from '@/components/useClientOnlyValue';
+import Colors from '@src/shared/constants/colors';
+import { useColorScheme } from '@src/shared/hooks/useColorScheme';
+import { useClientOnlyValue } from '@src/shared/hooks/useClientOnlyValue';
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
@@ -145,3 +145,4 @@ export default function TabLayout() {
     </Tabs>
   );
 }
+
