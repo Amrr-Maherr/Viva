@@ -1,1 +1,1 @@
-export { NewCardScreen as default } from "@src/features/payment/screens/NewCardScreen";
+export { default } from "@src/features/payment/screens/NewCardScreen";

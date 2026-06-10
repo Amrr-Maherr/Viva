@@ -1,2 +1,1 @@
-export { ProductDetailsScreen as default } from "@src/features/products/screens/ProductDetailsScreen";
-
+export { default } from "@src/features/products/screens/ProductDetailsScreen";

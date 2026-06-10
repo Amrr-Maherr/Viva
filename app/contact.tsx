@@ -1,1 +1,1 @@
-export { ContactScreen as default } from "@src/features/support/screens/ContactScreen";
+export { default } from "@src/features/support/screens/ContactScreen";

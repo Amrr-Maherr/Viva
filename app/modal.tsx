@@ -1,2 +1,2 @@
-export { ModalScreen as default } from "@src/features/misc/screens/ModalScreen";
+export { default } from "@src/features/misc/screens/ModalScreen";
 

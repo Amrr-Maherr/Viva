@@ -1,1 +1,1 @@
-export { CategoriesScreen as default } from "@src/features/categories/screens/CategoriesScreen";
+export { default } from "@src/features/categories/screens/CategoriesScreen";

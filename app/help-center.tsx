@@ -1,1 +1,1 @@
-export { HelpCenterScreen as default } from "@src/features/support/screens/HelpCenterScreen";
+export { default } from "@src/features/support/screens/HelpCenterScreen";
