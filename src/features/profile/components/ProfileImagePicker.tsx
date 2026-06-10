@@ -94,7 +94,7 @@ export default function ProfileImagePicker({
             <Image source={{ uri: selectedImage }} style={[styles.profileImage, avatarStyle]} />
           ) : (
             <LottieView
-              source={require('../assets/jsonIcons/Profile_Avatar.json')}
+              source={require('../../../../assets/jsonIcons/Profile_Avatar.json')}
               autoPlay
               loop
               style={styles.lottieAvatar}

@@ -32,14 +32,14 @@ export default function MessageItem({ message }: MessageItemProps) {
         <View style={styles.avatarContainer}>
           {message.sender === "user" ? (
             <LottieView
-              source={require('../assets/jsonIcons/Profile_Avatar.json')}
+              source={require('../../../../assets/jsonIcons/Profile_Avatar.json')}
               autoPlay
               loop
               style={styles.avatar}
             />
           ) : (
             <LottieView
-              source={require('../assets/jsonIcons/AI_logo.json')}
+              source={require('../../../../assets/jsonIcons/AI_logo.json')}
               autoPlay
               loop
               style={styles.avatar}

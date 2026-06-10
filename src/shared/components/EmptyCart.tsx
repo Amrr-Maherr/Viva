@@ -7,7 +7,7 @@ const EmptyCardScreen = () => {
     <SafeAreaView style={styles.container}>
       <View style={styles.card}>
         <LottieView
-          source={require("../assets/jsonIcons/empty.json")}
+          source={require("../../../assets/jsonIcons/empty.json")}
           autoPlay
           loop
           style={styles.animation}

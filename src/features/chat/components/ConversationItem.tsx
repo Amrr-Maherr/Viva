@@ -17,7 +17,7 @@ interface ConversationItemProps {
 
 export default function ConversationItem({ item, onPress }: ConversationItemProps) {
   const ColorScheme = useColorScheme();
-  const logoSource = ColorScheme === 'dark' ? require('../assets/images/LightLogo.png') : require('../assets/images/BlackLogo.png');
+  const logoSource = ColorScheme === 'dark' ? require('../../../../assets/images/LightLogo.png') : require('../../../../assets/images/BlackLogo.png');
   return (
     <TouchableOpacity style={styles.conversationItem} onPress={onPress}>
       <Image source={logoSource} style={styles.avatar} />

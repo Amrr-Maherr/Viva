@@ -96,7 +96,7 @@ export default function EnhancedProfileImagePicker({
             ) : (
               <View style={styles.placeholderContainer}>
                 <LottieView
-                  source={require('../assets/jsonIcons/Profile_Avatar.json')}
+                  source={require('../../../../assets/jsonIcons/Profile_Avatar.json')}
                   autoPlay
                   loop
                   style={styles.lottieAvatar}

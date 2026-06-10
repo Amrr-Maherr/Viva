@@ -119,7 +119,7 @@ export default function HomeScreen() {
         onPress={() => router.push('/chat')}
       >
         <LottieView
-          source={require('../../assets/jsonIcons/AI_logo.json')}
+          source={require('../../../../assets/jsonIcons/AI_logo.json')}
           autoPlay
           loop
           style={styles.aiLogo}
