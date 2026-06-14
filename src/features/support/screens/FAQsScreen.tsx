@@ -54,11 +54,6 @@ export default function FAQsScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Frequently Asked Questions</Text>
-        <Text style={styles.subtitle}>Find answers to common questions</Text>
-      </View>
-
       <ScrollView style={styles.faqList}>
         {faqs.map((faq) => (
           <View key={faq.id} style={styles.faqItem}>
@@ -99,24 +94,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  header: {
-    padding: 20,
-    backgroundColor: '#f8f8f8',
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#1A1A1A',
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: '#666',
-  },
   faqList: {
     flex: 1,
     paddingHorizontal: 20,
+    paddingTop: 16,
   },
   faqItem: {
     backgroundColor: '#fff',

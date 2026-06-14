@@ -79,11 +79,6 @@ export default function ContactScreen() {
 
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Contact Us</Text>
-        <Text style={styles.subtitle}>We're here to help</Text>
-      </View>
-
       <View style={styles.quickContacts}>
         {quickContacts.map((contact) => (
           <TouchableOpacity
@@ -162,23 +157,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  header: {
-    padding: 20,
-    backgroundColor: '#f8f8f8',
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#1A1A1A',
-    marginBottom: 4,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: '#666',
-  },
   quickContacts: {
     padding: 20,
+    paddingTop: 16,
   },
   quickContactCard: {
     flexDirection: 'row',

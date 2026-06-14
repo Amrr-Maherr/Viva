@@ -105,11 +105,6 @@ export default function HelpCenterScreen() {
 
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Help Center</Text>
-        <Text style={styles.subtitle}>How can we help you today?</Text>
-      </View>
-
       <View style={styles.searchSection}>
         <TouchableOpacity style={styles.searchBar} onPress={() => Alert.alert('Search Help')}>
           <Ionicons name="search" size={20} color="#666" />
@@ -182,23 +177,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  header: {
-    padding: 20,
-    backgroundColor: '#f8f8f8',
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#1A1A1A',
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: '#666',
-  },
   searchSection: {
     padding: 20,
+    paddingTop: 16,
   },
   searchBar: {
     flexDirection: 'row',

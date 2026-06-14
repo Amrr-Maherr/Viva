@@ -70,13 +70,11 @@ export default function NotificationsScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Notifications</Text>
+      <View style={styles.markAllContainer}>
         <TouchableOpacity onPress={() => Alert.alert('Mark all as read')}>
           <Text style={styles.markAllRead}>Mark all read</Text>
         </TouchableOpacity>
       </View>
-
       <ScrollView style={styles.notificationsList}>
         {notifications.map((notification) => (
           <TouchableOpacity
@@ -119,19 +117,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 20,
-    backgroundColor: '#f8f8f8',
-    borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#1A1A1A',
+  markAllContainer: {
+    alignItems: 'flex-end',
+    padding: 16,
+    backgroundColor: '#fff',
   },
   markAllRead: {
     fontSize: 16,

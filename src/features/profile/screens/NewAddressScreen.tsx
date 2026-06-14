@@ -55,10 +55,6 @@ export default function NewAddressScreen() {
 
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Add New Address</Text>
-      </View>
-
       <View style={styles.form}>
         <View style={styles.typeSelector}>
           <Text style={styles.sectionLabel}>Address Type</Text>
@@ -105,18 +101,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  header: {
-    padding: 20,
-    backgroundColor: '#f8f8f8',
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#1A1A1A',
-  },
   form: {
     padding: 20,
+    paddingTop: 16,
   },
   typeSelector: {
     marginBottom: 20,

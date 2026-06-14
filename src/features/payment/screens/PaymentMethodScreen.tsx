@@ -63,8 +63,7 @@ export default function PaymentMethodScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Payment Methods</Text>
+      <View style={styles.addButtonContainer}>
         <TouchableOpacity style={styles.addButton} onPress={() => router.push('/new-card')}>
           <Ionicons name="add" size={20} color="#fff" />
           <Text style={styles.addButtonText}>Add New</Text>
@@ -150,17 +149,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 20,
-    backgroundColor: '#f8f8f8',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#1A1A1A',
+  addButtonContainer: {
+    alignItems: 'flex-end',
+    padding: 16,
+    backgroundColor: '#fff',
   },
   addButton: {
     flexDirection: 'row',

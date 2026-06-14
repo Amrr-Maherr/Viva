@@ -80,10 +80,6 @@ export default function NewCardScreen() {
 
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Add New Card</Text>
-      </View>
-
       <View style={styles.cardPreview}>
         <View style={styles.card}>
           <View style={styles.cardHeader}>
@@ -138,17 +134,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  header: {
-    padding: 20,
-    backgroundColor: '#f8f8f8',
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#1A1A1A',
-  },
   cardPreview: {
+    paddingTop: 16,
     alignItems: 'center',
     padding: 20,
   },

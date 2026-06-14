@@ -118,9 +118,6 @@ export default function EditProfileScreen() {
           contentContainerStyle={styles.scrollContainer}
           keyboardShouldPersistTaps="never"
         >
-          <Text style={styles.title}>Edit Profile</Text>
-          <Text style={styles.subtitle}>Update your personal information.</Text>
-
           <View style={styles.imageSection}>
             <Text style={styles.sectionTitle}>Profile Picture</Text>
             <ProfileImagePicker 
@@ -247,19 +244,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 25,
     backgroundColor: "#fff",
   },
-  title: {
-    fontSize: 32,
-    fontWeight: "semibold",
-    textAlign: "center",
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: "#808080",
-    textAlign: "center",
-    marginBottom: 24,
-  },
   imageSection: {
+    marginTop: 16,
     alignItems: 'center',
     marginBottom: 30,
     paddingVertical: 20,
