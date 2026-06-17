@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import useFetchSearchProducts from '@src/features/products/hooks/useSearchProducts';
 import ProductsList from '@src/features/products/components/ProductsList';
-import Loader from '@src/shared/components/Loader';
+import { ProductCardSkeleton } from '@src/components/skeletons';
 import ErrorView from '@src/shared/components/ErrorView';
 import EmptyState from '@src/shared/components/EmptyState';
 
@@ -101,7 +101,15 @@ export default function SearchScreen() {
           </>
         ) : (
           <>
-            {isLoading && <Loader />}
+            {isLoading && (
+              <View style={{ paddingHorizontal: 20, paddingTop: 10 }}>
+                <View style={{ flexDirection: 'row', gap: 12 }}>
+                  {Array.from({ length: 3 }, (_, i) => (
+                    <ProductCardSkeleton key={i} />
+                  ))}
+                </View>
+              </View>
+            )}
             {isError && <ErrorView onRefetch={refetch} />}
             {!isLoading && !isError && searchResults?.data && searchResults.data.length > 0 && (
               <View style={styles.resultsContainer}>

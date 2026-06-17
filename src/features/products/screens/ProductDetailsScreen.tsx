@@ -1,7 +1,7 @@
 import { addToCart } from '@src/features/cart/api/cartApi';
 import { addToWishlist, removeFromWishlist } from '@src/features/wishlist/api/wishlistApi';
 import ErrorView from '@src/shared/components/ErrorView';
-import Loader from '@src/shared/components/Loader';
+import { DetailsPageSkeleton } from '@src/components/skeletons';
 import ProductImageGallery from '@src/features/products/components/ProductImageGallery';
 import Colors from '@src/shared/constants/colors';
 import useFetchBrands from '@src/features/brands/hooks/useBrands';
@@ -416,9 +416,9 @@ export default function ProductDetailsScreen() {
         });
     }, [navigation, product]);
 
-    if (isLoading) {
-        return <Loader />;
-    }
+  if (isLoading) {
+    return <DetailsPageSkeleton />;
+  }
 
     if (isError) {
         return <ErrorView onRefetch={refetch} />;

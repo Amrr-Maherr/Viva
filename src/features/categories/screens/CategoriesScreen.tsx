@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, FlatList, TouchableOpacity, Image, StyleSheet, Dimensions } from 'react-native';
 import { useRouter } from 'expo-router';
 import useFetchCategories from '@src/features/categories/hooks/useCategories';
-import Loader from '@src/shared/components/Loader';
+import { CategoryCardSkeleton } from '@src/components/skeletons';
 import ErrorView from '@src/shared/components/ErrorView';
 
 const { width } = Dimensions.get('window');
@@ -13,7 +13,15 @@ export default function CategoriesScreen() {
     const router = useRouter();
 
     if (isLoading) {
-        return <Loader />;
+        return (
+            <View style={styles.container}>
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', paddingTop: 10 }}>
+                    {Array.from({ length: 6 }, (_, i) => (
+                        <CategoryCardSkeleton key={i} />
+                    ))}
+                </View>
+            </View>
+        );
     }
 
     if (isError) {

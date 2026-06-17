@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import useFetchOrders from '@src/features/orders/hooks/useOrders';
-import Loader from '@src/shared/components/Loader';
+import { OrderCardSkeleton } from '@src/components/skeletons';
 import ErrorView from '@src/shared/components/ErrorView';
 import EmptyCardScreen from '@src/shared/components/EmptyCart';
 
@@ -13,7 +13,15 @@ export default function MyOrdersScreen() {
     console.log('Error:', isError);
 
     if (isLoading) {
-        return <Loader />;
+        return (
+            <View style={styles.container}>
+                <View style={styles.list}>
+                    {Array.from({ length: 3 }, (_, i) => (
+                        <OrderCardSkeleton key={i} />
+                    ))}
+                </View>
+            </View>
+        );
     }
 
     if (isError) {

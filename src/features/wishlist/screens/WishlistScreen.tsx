@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import useFetchWishlist from '@src/features/wishlist/hooks/useWishlist';
 import { useRemoveFromWishlistMutation } from '@src/features/wishlist/api/wishlistApi';
 import { useAddToCartMutation } from '@src/features/cart/api/cartApi';
-import Loader from '@src/shared/components/Loader';
+import { WishlistSkeleton } from '@src/components/skeletons';
 import ErrorView from '@src/shared/components/ErrorView';
 import EmptyCardScreen from '@src/shared/components/EmptyCart';
 import { showToast } from '@src/shared/utils/toast';
@@ -22,7 +22,7 @@ export default function FavoritesScreen() {
   }, [refetch]);
 
   if (isLoading) {
-    return <Loader />;
+    return <WishlistSkeleton />;
   }
 
   if (isError) {

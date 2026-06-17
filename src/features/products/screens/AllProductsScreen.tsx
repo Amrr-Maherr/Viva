@@ -1,7 +1,7 @@
 import fetchProducts from "@src/features/products/api/productApi";
 import EmptyState from "@src/shared/components/EmptyState";
 import ErrorView from "@src/shared/components/ErrorView";
-import Loader from "@src/shared/components/Loader";
+import { ProductCardSkeleton } from "@src/components/skeletons";
 import ProductCard from "@src/features/products/components/ProductCard";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import React, { useCallback, useState } from "react";
@@ -67,7 +67,17 @@ const AllProductsScreen = () => {
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   if (isLoading && !isRefetching) {
-    return <Loader />;
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', paddingHorizontal: 16, paddingTop: 10, gap: 16 }}>
+          {Array.from({ length: 6 }, (_, i) => (
+            <View key={i} style={{ width: '47%' }}>
+              <ProductCardSkeleton />
+            </View>
+          ))}
+        </View>
+      </SafeAreaView>
+    );
   }
 
   if (isError) {

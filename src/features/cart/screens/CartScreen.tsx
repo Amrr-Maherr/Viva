@@ -3,7 +3,7 @@ import { StyleSheet, ScrollView, TouchableOpacity, Text, View, Image, FlatList, 
 import { Ionicons } from '@expo/vector-icons';
 import useFetchCart from '@src/features/cart/hooks/useCart';
 import { useRemoveFromCartMutation } from '@src/features/cart/api/cartApi';
-import Loader from '@src/shared/components/Loader';
+import { CartSkeleton } from '@src/components/skeletons';
 import ErrorView from '@src/shared/components/ErrorView';
 import { showToast } from '@src/shared/utils/toast';
 import { router } from 'expo-router';
@@ -21,7 +21,7 @@ export default function CartScreen() {
   }, [refetch]);
 
   if (isLoading) {
-    return <Loader />;
+    return <CartSkeleton />;
   }
 
   if (isError) {

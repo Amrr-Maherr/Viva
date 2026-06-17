@@ -3,7 +3,7 @@ import { StyleSheet, ScrollView, TouchableOpacity, Alert, Text, View } from 'rea
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import useFetchCart from '@src/features/cart/hooks/useCart';
-import Loader from '@src/shared/components/Loader';
+import { CheckoutSkeleton } from '@src/components/skeletons';
 import ErrorView from '@src/shared/components/ErrorView';
 import { showToast } from '@src/shared/utils/toast';
 
@@ -24,7 +24,7 @@ export default function CheckoutScreen() {
   ];
 
   if (isLoading) {
-    return <Loader />;
+    return <CheckoutSkeleton />;
   }
 
   if (isError) {

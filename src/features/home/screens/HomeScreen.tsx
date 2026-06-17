@@ -4,7 +4,7 @@ import EmptyState from "@src/shared/components/EmptyState";
 import ErrorView from "@src/shared/components/ErrorView";
 import FeaturedProducts from "@src/features/products/components/FeaturedProducts";
 import HeroSection from "@src/features/home/components/HeroSection";
-import Loader from "@src/shared/components/Loader";
+import HomeScreenSkeleton from "@src/components/skeletons/HomeScreenSkeleton";
 import ProductsList from "@src/features/products/components/ProductsList";
 import SectionTitle from "@src/shared/components/SectionTitle";
 import useFetchProducts from "@src/features/products/hooks/useProducts";
@@ -41,7 +41,7 @@ export default function HomeScreen() {
   };
 
   if (isLoading) {
-    return <Loader />;
+    return <HomeScreenSkeleton />;
   }
 
   if (isError) {
