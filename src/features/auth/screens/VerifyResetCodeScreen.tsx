@@ -10,13 +10,14 @@ import {
   ScrollView,
   ActivityIndicator
 } from "react-native";
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useForm, Controller } from "react-hook-form";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { showToast } from '@src/shared/utils/toast';
 import { useVerifyOtp } from '../hooks/useVerifyOtp';
 
 export default function VerifyResetCodeScreen() {
+  const { email } = useLocalSearchParams();
   const { mutateAsync: verifyCode, isPending } = useVerifyOtp();
   const {
     control,
@@ -32,7 +33,7 @@ export default function VerifyResetCodeScreen() {
     try {
       await verifyCode(data);
       showToast('success', "Please set your new password.");
-      (router.push as any)({ pathname: '/reset-password', params: { resetCode: data.resetCode } });
+      (router.push as any)({ pathname: '/reset-password', params: { resetCode: data.resetCode, email } });
     } catch (error: any) {
       showToast('error', error.response?.data?.message || "The code is incorrect or expired");
     }

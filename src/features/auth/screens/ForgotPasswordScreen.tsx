@@ -32,7 +32,7 @@ export default function ForgotPasswordScreen() {
     try {
       await sendResetLink(data);
       showToast('success', "Please check your email for password reset instructions.");
-      (router.push as any)('/verify-reset-code');
+      (router.push as any)({ pathname: '/verify-reset-code', params: { email: data.email } });
     } catch (error: any) {
       showToast('error', error.response?.data?.message || "Something went wrong");
     }

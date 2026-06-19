@@ -17,7 +17,7 @@ import { showToast } from '@src/shared/utils/toast';
 import { useResetPassword } from '../hooks/useResetPassword';
 
 export default function ResetPasswordScreen() {
-  const { resetCode } = useLocalSearchParams();
+  const { resetCode, email } = useLocalSearchParams<{ resetCode: string; email: string }>();
   const { mutateAsync: resetPwd, isPending } = useResetPassword();
 
   const {
@@ -38,7 +38,7 @@ export default function ResetPasswordScreen() {
     }
 
     try {
-      await resetPwd({ email: "routeegyptnodejs@gmail.com", newPassword: data.newPassword });
+      await resetPwd({ email: email || "routeegyptnodejs@gmail.com", newPassword: data.newPassword });
       showToast('success', "Your password has been reset successfully. Please login with your new password.");
       router.replace('/login');
     } catch (error: any) {
