@@ -8,4 +8,3 @@ export { default as MessageInput } from './components/MessageInput';
 export { default as MessageItem } from './components/MessageItem';
 export { default as WelcomeView } from './components/WelcomeView';
 export { default as TypingIndicator } from './components/TypingIndicator';
-export { GeminiResponse } from './types/chatTypes';

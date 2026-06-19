@@ -87,9 +87,8 @@ User Question: ${userMessage}`;
       setIsAiLoading(false);
       if ('error' in data) {
         setChatMessages(prev => [...prev, { text: data.error, sender: 'ai', timestamp: new Date() }]);
-      } else if (data.candidates && data.candidates[0]?.content?.parts?.[0]?.text) {
-        const aiResponse = data.candidates[0].content.parts[0].text;
-        setChatMessages(prev => [...prev, { text: aiResponse, sender: 'ai', timestamp: new Date() }]);
+      } else if (data.content) {
+        setChatMessages(prev => [...prev, { text: data.content, sender: 'ai', timestamp: new Date() }]);
       } else {
         console.warn('Unexpected response format:', data);
         setChatMessages(prev => [...prev, { text: 'Sorry, I could not process that request.', sender: 'ai', timestamp: new Date() }]);

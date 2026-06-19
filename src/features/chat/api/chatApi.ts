@@ -1,68 +1,101 @@
-
 import axios from "axios";
-import { GeminiResponse } from '@src/features/chat/types/chatTypes';
-import Constants from 'expo-constants';
 
-const API_KEY = Constants.expoConfig?.extra?.expoPublicGeminiApiKey || process.env.EXPO_PUBLIC_GEMINI_API_KEY;
+const GROQ_API_KEY = process.env.EXPO_PUBLIC_GROQ_API_KEY;
+const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
+const MODEL = 'llama-3.1-8b-instant';
 
-const FetchChat = async (chatMessage: string): Promise<GeminiResponse | { error: string } | null> => {
-    if (!API_KEY) {
-        console.error('Gemini API key is not set. Please set EXPO_PUBLIC_GEMINI_API_KEY in your environment variables or EAS secrets.');
-        return { error: 'API key not configured. Please contact the administrator.' };
+const SYSTEM_PROMPT = `
+You are Viva, a helpful AI assistant for the Viva e-commerce app. Your role is to help users with product-related questions, purchase guidance, and shopping decisions.
+
+Guidelines:
+- Explain products clearly and concisely
+- Help users decide whether to buy a product based on their needs, budget, and use case
+- Provide purchase guidance when asked
+- Compare products using structured bullet points when requested
+- Keep responses under 5–7 lines unless the user explicitly asks for details
+- Be polite, professional, and helpful
+- Answer in the same language the user wrote in
+- Do not invent product specifications; if information is missing, clearly say so
+- Maintain a neutral, shopping-focused tone (not casual conversation)
+`;
+
+interface GroqResponse {
+    id: string;
+    object: string;
+    created: number;
+    model: string;
+    choices: {
+        index: number;
+        message: {
+            role: string;
+            content: string;
+        };
+        finish_reason: string;
+    }[];
+    usage: {
+        prompt_tokens: number;
+        completion_tokens: number;
+        total_tokens: number;
+    };
+}
+
+interface GroqError {
+    error: string;
+}
+
+const FetchChat = async (chatMessage: string): Promise<{ content: string } | GroqError | null> => {
+    if (!GROQ_API_KEY) {
+        console.error('Groq API key is not set. Please set EXPO_PUBLIC_GROQ_API_KEY in your environment variables.');
+        return { error: 'AI service not configured. Please contact the administrator.' };
     }
 
     try {
-        const requestBody = {
-            "contents": [{
-                "role": "user",
-                "parts": [
-                    {
-                        "text": "You are Viva, a highly intelligent and friendly AI assistant for the Viva e-commerce app. You know everything about the app and the shopping experience: products, categories, prices, discounts, promotions, offers, payment methods, shipping options, delivery times, return policies, order tracking, and customer support.\n\nYour role is to help users browse products, compare items, check availability, suggest best deals, provide shopping tips, recommend related or similar products, and answer questions about the app, payments, or delivery. Always provide accurate and up-to-date information.\n\nSpeak clearly and simply in English or Arabic. Be polite, professional, concise, and friendly. Make the user feel guided and supported throughout their shopping experience.\n\nUser message: " + chatMessage
-                    }
-                ]
-            }]
-        };
-
-        const response = await axios.post(
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`,
-            requestBody,
+        const response = await axios.post<GroqResponse>(
+            GROQ_API_URL,
+            {
+                model: MODEL,
+                messages: [
+                    { role: 'system', content: SYSTEM_PROMPT },
+                    { role: 'user', content: chatMessage }
+                ],
+                max_tokens: 1024,
+                temperature: 0.7,
+            },
             {
                 headers: {
+                    'Authorization': `Bearer ${GROQ_API_KEY}`,
                     'Content-Type': 'application/json',
                 },
-                timeout: 30000, // 30 second timeout
+                timeout: 30000,
             }
         );
 
-        console.log('Server response:', response.data);
-        return response.data;
+        const content = response.data.choices?.[0]?.message?.content;
+        if (!content) {
+            return { error: 'Empty response from AI service.' };
+        }
+
+        return { content };
     } catch (error: any) {
         console.error('Error fetching chat:', error);
 
-        // More detailed error logging
         if (error.response) {
-            console.error('Response error:', error.response.status, error.response.data);
-            if (error.response.status === 429) {
+            const status = error.response.status;
+            if (status === 429) {
                 return { error: 'Rate limit exceeded. Please try again later.' };
-            } else if (error.response.status === 400) {
+            } else if (status === 400) {
                 return { error: 'Bad request. Please check your input.' };
-            } else if (error.response.status === 401) {
-                return { error: 'Unauthorized. Please check your API key.' };
-            } else if (error.response.status === 403) {
-                return { error: 'Access forbidden. Please check your API key permissions. Make sure your Google Gemini API key is properly configured and has the necessary permissions.' };
-            } else if (error.response.status >= 500) {
-                return { error: 'Server error. Please try again later.' };
+            } else if (status === 401 || status === 403) {
+                return { error: 'Authentication error. Please check API configuration.' };
+            } else if (status >= 500) {
+                return { error: 'AI service error. Please try again later.' };
             }
         } else if (error.request) {
-            console.error('Request error:', error.request);
             return { error: 'Network error. Please check your connection.' };
-        } else {
-            console.error('General error:', error.message);
         }
 
         return { error: 'Failed to fetch response. Please try again.' };
     }
-}
+};
 
-export default FetchChat
-
+export default FetchChat;
