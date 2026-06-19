@@ -1,4 +1,3 @@
-import { useNotifications } from "@src/features/notifications/hooks/useNotifications";
 import { AppProvider } from "@src/provider";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
@@ -22,8 +21,6 @@ Notifications.setNotificationHandler({
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  useNotifications(); // Initialize notifications using the custom hook
-
   const [loaded, error] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });

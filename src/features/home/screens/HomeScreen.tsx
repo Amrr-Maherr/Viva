@@ -103,7 +103,7 @@ export default function HomeScreen() {
             renderItem={({ item }) => (
               <TouchableOpacity
                 style={styles.brandCard}
-                onPress={() => router.push({ pathname: '/', params: { brand: item._id } })}
+                onPress={() => router.push({ pathname: '/brand/[id]', params: { id: item._id } })}
                 activeOpacity={0.7}
               >
                 <Image source={{ uri: item.image }} style={styles.brandImage} resizeMode="contain" />
@@ -142,7 +142,7 @@ export default function HomeScreen() {
             renderItem={({ item }) => (
               <TouchableOpacity
                 style={styles.categoryCard}
-                onPress={() => router.push({ pathname: '/', params: { category: item._id } })}
+                onPress={() => router.push({ pathname: '/category/[id]', params: { id: item._id } })}
                 activeOpacity={0.7}
               >
                 <Image source={{ uri: item.image }} style={styles.categoryImage} resizeMode="contain" />

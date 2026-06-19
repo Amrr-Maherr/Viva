@@ -31,7 +31,7 @@ export default function BrandsScreen() {
     const renderItem = ({ item }: { item: any }) => (
         <TouchableOpacity
             style={styles.brandCard}
-            onPress={() => router.push({ pathname: '/', params: { brand: item._id } })}
+            onPress={() => router.push({ pathname: '/brand/[id]', params: { id: item._id } })}
         >
             <Image source={{ uri: item.image }} style={styles.brandImage} />
             <Text style={styles.brandName}>{item.name}</Text>
