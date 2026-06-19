@@ -26,19 +26,20 @@ export default function ResetPasswordScreen() {
     formState: { errors },
   } = useForm({
     defaultValues: {
+      email: email || "",
       newPassword: "",
       confirmPassword: "",
     },
   });
 
-  const onSubmit = async (data: { newPassword: string; confirmPassword: string }) => {
+  const onSubmit = async (data: { email: string; newPassword: string; confirmPassword: string }) => {
     if (data.newPassword !== data.confirmPassword) {
       showToast('error', "Passwords do not match");
       return;
     }
 
     try {
-      await resetPwd({ email: email || "routeegyptnodejs@gmail.com", newPassword: data.newPassword });
+      await resetPwd({ email: data.email, newPassword: data.newPassword });
       showToast('success', "Your password has been reset successfully. Please login with your new password.");
       router.replace('/login');
     } catch (error: any) {
@@ -57,7 +58,39 @@ export default function ResetPasswordScreen() {
           keyboardShouldPersistTaps="never"
         >
           <Text style={styles.title}>Reset Password</Text>
-          <Text style={styles.subtitle}>Enter your new password.</Text>
+          <Text style={styles.subtitle}>Enter the email associated with your account and your new password.</Text>
+
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Email</Text>
+            <Controller
+              control={control}
+              rules={{
+                required: true,
+                pattern: {
+                  value: /^\S+@\S+$/i,
+                  message: "Invalid email address",
+                },
+              }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  style={styles.input}
+                  placeholder="Enter your email"
+                  placeholderTextColor="#999"
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                />
+              )}
+              name="email"
+            />
+            {errors.email && (
+              <Text style={styles.errorText}>
+                Please enter valid email address
+              </Text>
+            )}
+          </View>
 
           <View style={styles.inputContainer}>
             <Text style={styles.label}>New Password</Text>
