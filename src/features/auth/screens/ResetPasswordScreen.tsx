@@ -10,14 +10,13 @@ import {
   ScrollView,
   ActivityIndicator
 } from "react-native";
-import { router, useLocalSearchParams } from 'expo-router';
+import { router } from 'expo-router';
 import { useForm, Controller } from "react-hook-form";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { showToast } from '@src/shared/utils/toast';
 import { useResetPassword } from '../hooks/useResetPassword';
 
 export default function ResetPasswordScreen() {
-  const { resetCode, email } = useLocalSearchParams<{ resetCode: string; email: string }>();
   const { mutateAsync: resetPwd, isPending } = useResetPassword();
 
   const {
@@ -26,18 +25,12 @@ export default function ResetPasswordScreen() {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      email: email || "",
+      email: "",
       newPassword: "",
-      confirmPassword: "",
     },
   });
 
-  const onSubmit = async (data: { email: string; newPassword: string; confirmPassword: string }) => {
-    if (data.newPassword !== data.confirmPassword) {
-      showToast('error', "Passwords do not match");
-      return;
-    }
-
+  const onSubmit = async (data: { email: string; newPassword: string }) => {
     try {
       await resetPwd({ email: data.email, newPassword: data.newPassword });
       showToast('success', "Your password has been reset successfully. Please login with your new password.");
@@ -120,31 +113,6 @@ export default function ResetPasswordScreen() {
               <Text style={styles.errorText}>
                 {errors.newPassword.message || "Please enter new password"}
               </Text>
-            )}
-          </View>
-
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Confirm Password</Text>
-            <Controller
-              control={control}
-              rules={{
-                required: true,
-              }}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
-                  style={styles.input}
-                  placeholder="Confirm new password"
-                  placeholderTextColor="#999"
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                  secureTextEntry
-                />
-              )}
-              name="confirmPassword"
-            />
-            {errors.confirmPassword && (
-              <Text style={styles.errorText}>Please confirm your password</Text>
             )}
           </View>
 
