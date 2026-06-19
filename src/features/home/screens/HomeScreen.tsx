@@ -8,9 +8,11 @@ import HomeScreenSkeleton from "@src/components/skeletons/HomeScreenSkeleton";
 import ProductsList from "@src/features/products/components/ProductsList";
 import SectionTitle from "@src/shared/components/SectionTitle";
 import useFetchProducts from "@src/features/products/hooks/useProducts";
+import useFetchBrands from "@src/features/brands/hooks/useBrands";
+import useFetchCategories from "@src/features/categories/hooks/useCategories";
 import { useLocalSearchParams } from "expo-router";
 import React, { useCallback, useState } from "react";
-import { RefreshControl, ScrollView, StyleSheet, Text, View, TouchableOpacity, Animated } from "react-native";
+import { RefreshControl, ScrollView, StyleSheet, Text, View, TouchableOpacity, Image, FlatList } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import LottieView from 'lottie-react-native';
@@ -29,6 +31,12 @@ export default function HomeScreen() {
     hasNextPage,
     isFetchingNextPage,
   } = useFetchProducts(selectedCategoryId);
+
+  const { data: brandsData } = useFetchBrands();
+  const { data: categoriesData } = useFetchCategories();
+
+  const brands = brandsData?.data || [];
+  const categories = categoriesData?.data || [];
 
   const onRefresh = useCallback(async () => {
     await refetch();
@@ -53,7 +61,6 @@ export default function HomeScreen() {
   if (allProducts.length === 0 && !isLoading && !isFetchingNextPage) {
     return (
       <View style={{ flex: 1, backgroundColor: "#fff", paddingHorizontal: 20 }}>
-        {/* <SearchInput /> */}
         <CategoryButtons onCategorySelect={setSelectedCategoryId} />
         <EmptyState
           title="No products found"
@@ -82,6 +89,34 @@ export default function HomeScreen() {
             isLoadingMore={isFetchingNextPage}
           />
         </View>
+
+        {/* Brands Section */}
+        <View style={styles.sectionWrapper}>
+          <View style={styles.sectionHeader}>
+            <SectionTitle title="Shop by Brand" />
+            <TouchableOpacity onPress={() => router.push('/brands')}>
+              <Text style={styles.seeAllText}>See All Brands</Text>
+            </TouchableOpacity>
+          </View>
+          <FlatList
+            data={brands}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={styles.brandCard}
+                onPress={() => router.push({ pathname: '/', params: { brand: item._id } })}
+                activeOpacity={0.7}
+              >
+                <Image source={{ uri: item.image }} style={styles.brandImage} resizeMode="contain" />
+                <Text style={styles.brandName} numberOfLines={1}>{item.name}</Text>
+              </TouchableOpacity>
+            )}
+            keyExtractor={(item) => item._id}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.horizontalList}
+          />
+        </View>
+
         <BannerAd
           source={{uri: "https://ik.imagekit.io/pieg1rcfk/Viva%20Assests/Gemini_Generated_Image_77eo7777eo7777eo.png"}}
         />
@@ -93,6 +128,34 @@ export default function HomeScreen() {
             isLoadingMore={isFetchingNextPage}
           />
         </View>
+
+        {/* Categories Section */}
+        <View style={styles.sectionWrapper}>
+          <View style={styles.sectionHeader}>
+            <SectionTitle title="Shop by Category" />
+            <TouchableOpacity onPress={() => router.push('/categories')}>
+              <Text style={styles.seeAllText}>See All Categories</Text>
+            </TouchableOpacity>
+          </View>
+          <FlatList
+            data={categories}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={styles.categoryCard}
+                onPress={() => router.push({ pathname: '/', params: { category: item._id } })}
+                activeOpacity={0.7}
+              >
+                <Image source={{ uri: item.image }} style={styles.categoryImage} resizeMode="contain" />
+                <Text style={styles.categoryName} numberOfLines={1}>{item.name}</Text>
+              </TouchableOpacity>
+            )}
+            keyExtractor={(item) => item._id}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.horizontalList}
+          />
+        </View>
+
         <BannerAd
           source={{uri: "https://ik.imagekit.io/pieg1rcfk/Viva%20Assests/Gemini_Generated_Image_ulbru1ulbru1ulbr.png"}}
         />
@@ -110,10 +173,8 @@ export default function HomeScreen() {
             isLoadingMore={isFetchingNextPage}
           />
         </View>
-        {/* </View> */}
       </ScrollView>
 
-      {/* Floating AI Chat Button */}
       <TouchableOpacity
         style={styles.fab}
         onPress={() => router.push('/chat')}
@@ -160,6 +221,64 @@ const styles = StyleSheet.create({
     color: '#007AFF',
     fontWeight: '500',
   },
+  sectionWrapper: {
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+  },
+  horizontalList: {
+    gap: 12,
+  },
+  brandCard: {
+    width: 120,
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 12,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#f0f0f0',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  brandImage: {
+    width: 80,
+    height: 60,
+    marginBottom: 8,
+  },
+  brandName: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#1A1A1A',
+    textAlign: 'center',
+  },
+  categoryCard: {
+    width: 130,
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 12,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#f0f0f0',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  categoryImage: {
+    width: 80,
+    height: 60,
+    marginBottom: 8,
+    borderRadius: 8,
+  },
+  categoryName: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#1A1A1A',
+    textAlign: 'center',
+  },
   fab: {
     position: 'absolute',
     width: 60,
@@ -168,13 +287,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     right: 20,
     bottom: 20,
-    // backgroundColor: '#667eea',
     borderRadius: 30,
-    // elevation: 8,
-    // shadowColor: '#000',
-    // shadowOffset: { width: 0, height: 2 },
-    // shadowOpacity: 0.3,
-    // shadowRadius: 4,
     zIndex: 999,
   },
   aiLogo: {
