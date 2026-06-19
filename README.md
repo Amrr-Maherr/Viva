@@ -1,454 +1,227 @@
-# Viva - AI-Powered E-commerce Mobile App
+# Viva — AI-Powered E-Commerce Mobile App
 
-A modern, cross-platform e-commerce mobile application built with React Native and Expo, featuring an intelligent AI assistant powered by Google Gemini for enhanced shopping experiences.
-
-## 🚀 Project Overview
-
-Viva is a comprehensive e-commerce solution that combines traditional shopping functionality with cutting-edge AI assistance. The app provides users with a seamless shopping experience, from product discovery to checkout, while offering personalized recommendations and instant support through an integrated AI chatbot.
-
-**Key Problem Solved:** Bridging the gap between online shopping convenience and personalized customer service by providing instant, intelligent assistance for product discovery, comparisons, and shopping decisions.
-
-## ✨ Features
-
-### 🛍️ Core E-commerce Features
-- **Product Catalog**: Browse extensive product collections with infinite scroll pagination
-- **Advanced Search**: Real-time product search with query optimization and filters
-- **Category Navigation**: Organized product browsing by categories and subcategories
-- **Product Details**: Comprehensive product information with image galleries and specifications
-- **Shopping Cart**: Persistent cart management with quantity updates and checkout flow
-- **Wishlist/Favorites**: Save products for later with easy management
-- **Brand Discovery**: Explore products by brand with dedicated brand pages
-
-### 🤖 AI Assistant Integration
-- **Google Gemini AI**: Intelligent chatbot for shopping assistance and product recommendations
-- **Contextual Help**: Product-specific AI assistance with detailed information and comparisons
-- **Shopping Guidance**: AI-powered suggestions for product selection and styling tips
-- **Real-time Chat**: Instant responses with typing indicators and message history
-- **Multi-language Support**: AI responses in English and Arabic
-
-### 🔐 Authentication & User Management
-- **User Registration**: Email/password signup with form validation
-- **Secure Login**: JWT-based authentication with persistent sessions
-- **Password Recovery**: Complete forgot password flow with email verification
-- **Profile Management**: Edit personal information, addresses, and preferences
-- **Session Persistence**: Automatic login on app restart
-
-### 📱 Navigation & UI/UX
-- **File-based Routing**: Expo Router with automatic route generation
-- **Tab Navigation**: Bottom tab bar for main app sections (Home, Search, Cart, Favorites, Profile)
-- **Stack Navigation**: Modal and push navigation for detailed views
-- **Onboarding Flow**: First-time user experience with animated introduction
-- **Splash Screen**: Branded loading experience with animations
-
-### 🗺️ Location & Maps
-- **Interactive Maps**: Google Maps integration with hybrid view support
-- **Location Tracking**: Real-time user location detection with permissions handling
-- **Address Management**: Multiple shipping addresses with map-based selection
-- **Geolocation Services**: Location-based features and store locators
-
-### 🔔 Notifications System
-- **Push Notifications**: Expo Notifications integration with permission handling
-- **Interactive Notifications**: Tap-to-navigate functionality with deep linking
-- **Notification Management**: User preferences and notification history
-- **AI Assistant Promotions**: Periodic notifications promoting AI chat features
-
-### 🎨 UI Components & Animations
-- **Lottie Animations**: Complex animations for loading states and micro-interactions
-- **Custom Components**: Reusable UI components with consistent design system
-- **Dark/Light Theme**: Automatic theme detection and switching
-- **Responsive Design**: Optimized layouts for different screen sizes
-- **Video Integration**: Hero sections with background video content
-
-### 💳 Checkout & Payments
-- **Multi-step Checkout**: Address selection, payment method, and order review
-- **Payment Methods**: Credit card and PayPal integration (UI ready)
-- **Order Management**: Order history and tracking capabilities
-- **Address Book**: Multiple shipping addresses with easy selection
-
-### 📊 Data Management
-- **React Query**: Advanced server state management with caching and background updates
-- **Offline Support**: Cached data availability when network is unavailable
-- **Optimistic Updates**: Immediate UI feedback for better user experience
-- **Error Handling**: Comprehensive error management with user-friendly messages
-
-## 🛠️ Tech Stack
-
-### Frontend Framework
-- **React Native** (0.81.5) - Cross-platform mobile development
-- **Expo** (~54.0.30) - Development platform and build tooling
-- **TypeScript** (~5.9.2) - Type safety and enhanced developer experience
-
-### Navigation & Routing
-- **Expo Router** (~6.0.21) - File-based routing system
-- **React Navigation** (^7.1.8) - Navigation library integration
-
-### State Management
-- **TanStack React Query** (^5.90.16) - Server state management and caching
-- **AsyncStorage** (^2.2.0) - Local storage for user data and app state
-- **React Context** - Global state management for authentication
-
-### UI & Styling
-- **React Native Reanimated** (~4.1.1) - Advanced animations and gestures
-- **Lottie React Native** (~7.3.1) - Complex animations and micro-interactions
-- **Expo Vector Icons** (^15.0.3) - Comprehensive icon library
-- **React Native Safe Area Context** (~5.6.0) - Safe area handling
-
-### Data Fetching & API
-- **Axios** (^1.13.2) - HTTP client for API requests
-- **RouteEgypt E-commerce API** - Backend service for product data
-- **Google Gemini API** - AI chatbot integration
-
-### Form Management
-- **React Hook Form** (^7.69.0) - Form state management and validation
-
-### Maps & Location
-- **React Native Maps** (1.20.1) - Google Maps integration
-- **Expo Location** (~19.0.8) - Location services and permissions
-
-### Media & Content
-- **Expo Video** (~3.0.15) - Video playback and streaming
-- **Expo AV** (~16.0.8) - Audio/video media handling
-- **React Native Pager View** (6.9.1) - Swipeable page views
-
-### Notifications & Communication
-- **Expo Notifications** (~0.32.16) - Push notifications and local notifications
-- **React Native Toast Message** (^2.3.3) - User feedback and alerts
-
-### Development & Build
-- **EAS Build** - Expo Application Services for building and deployment
-- **Metro** - JavaScript bundler for React Native
-- **Expo Dev Client** (~6.0.20) - Custom development builds
-
-## 📁 Project Structure
-
-```
-├── api/                    # API service layer
-│   ├── auth.ts            # Authentication endpoints (login, signup, password reset)
-│   ├── cart.ts            # Cart management (add, remove, get cart items)
-│   ├── fetchProducts.ts   # Product fetching with pagination and filters
-│   ├── FetchChat.ts       # Google Gemini AI integration
-│   ├── wishlist.ts        # Wishlist/favorites management
-│   ├── fetchBrands.ts     # Brand data fetching
-│   ├── fetchCategories.ts # Category and subcategory data
-│   ├── fetchOrders.ts     # Order history and tracking
-│   └── users.ts           # User profile management
-├── app/                   # File-based routing (Expo Router)
-│   ├── (tabs)/           # Tab navigation screens
-│   │   ├── index.tsx     # Home screen with featured products
-│   │   ├── search.tsx    # Product search with filters
-│   │   ├── cart.tsx      # Shopping cart management
-│   │   ├── favorites.tsx # Wishlist/favorites
-│   │   └── profile.tsx   # User profile and settings
-│   ├── product/[id].tsx  # Dynamic product details screen
-│   ├── chat.tsx          # AI assistant interface
-│   ├── login.tsx         # User authentication
-│   ├── register.tsx      # User registration
-│   ├── onboarding.tsx    # First-time user experience
-│   ├── checkout.tsx      # Multi-step checkout process
-│   ├── map.tsx           # Interactive map with location services
-│   └── _layout.tsx       # Root navigation layout
-├── components/            # Reusable UI components
-│   ├── ProductCard.tsx   # Product display component
-│   ├── ChatList.tsx      # Chat message list
-│   ├── MessageInput.tsx  # Chat input component
-│   ├── HeroSection.tsx   # Video hero section
-│   ├── ProductsList.tsx  # Product grid/list display
-│   ├── CategoryButtons.tsx # Category navigation
-│   ├── SearchInput.tsx   # Search functionality
-│   ├── Loader.tsx        # Loading states
-│   └── ErrorView.tsx     # Error handling UI
-├── queries/              # React Query hooks
-│   ├── useFetchProducts.ts # Product data with infinite scroll
-│   ├── useFetchCart.ts   # Cart state management
-│   ├── useFetchWishlist.ts # Wishlist data
-│   └── useFetchSearchProducts.ts # Search functionality
-├── hooks/                # Custom React hooks
-│   ├── useLocation.ts    # Location services and permissions
-│   ├── useNotifications.ts # Notification handling
-│   └── useFetchChat.ts   # AI chat integration
-├── types/                # TypeScript type definitions
-│   ├── product.ts        # Product data types
-│   ├── Products.ts       # Product response types
-│   ├── Categories.ts     # Category data types
-│   └── RequsetType.ts    # API request/response types
-├── utils/                # Utility functions
-│   ├── toast.ts          # Toast notification helpers
-│   └── clearStorage.ts   # Storage management utilities
-├── constants/            # App constants and configuration
-│   └── Colors.ts         # Theme colors and styling
-├── provider/             # React Context providers
-│   └── Provider.tsx      # QueryClient provider setup
-└── assets/               # Static assets
-    ├── images/           # App icons, logos, and images
-    ├── fonts/            # Custom fonts
-    └── jsonIcons/        # Lottie animation files
-```
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- **Node.js** (v16 or higher)
-- **npm** or **yarn**
-- **Expo CLI** (`npm install -g @expo/cli`)
-- **Android Studio** (for Android development)
-- **Xcode** (for iOS development, macOS only)
-
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd viva-ecommerce-app
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   # or
-   yarn install
-   ```
-
-3. **Set up environment variables**
-   ```bash
-   cp .env.example .env
-   ```
-   
-   Edit `.env` file and add your Google Gemini API key:
-   ```bash
-   EXPO_PUBLIC_GEMINI_API_KEY=your_gemini_api_key_here
-   ```
-
-4. **Start the development server**
-   ```bash
-   npm start
-   # or
-   expo start
-   ```
-
-### Running on Devices
-
-#### Android
-```bash
-npm run android
-# or
-expo run:android
-```
-
-#### iOS (macOS only)
-```bash
-npm run ios
-# or
-expo run:ios
-```
-
-#### Web
-```bash
-npm run web
-# or
-expo start --web
-```
-
-## 🔧 Configuration
-
-### Environment Variables
-
-Create a `.env` file in the root directory:
-
-```bash
-# Google Gemini API Key for AI Chat Assistant
-EXPO_PUBLIC_GEMINI_API_KEY=your_gemini_api_key_here
-```
-
-### EAS Build Configuration
-
-The app uses Expo Application Services (EAS) for building and deployment. Configuration is managed in `eas.json`:
-
-- **Development**: Internal distribution with development API keys
-- **Preview**: Internal testing with preview API keys  
-- **Production**: App store distribution with production API keys
-
-### API Configuration
-
-The app connects to the RouteEgypt E-commerce API:
-- **Base URL**: `https://ecommerce.routemisr.com/api/v1/`
-- **Authentication**: Bearer token-based
-- **Endpoints**: Products, categories, cart, wishlist, orders, authentication
-
-## 📱 App Flow
-
-### User Journey
-
-1. **App Launch**: Splash screen with brand animation
-2. **Route Determination**: Check authentication and onboarding status
-3. **Onboarding**: First-time user introduction (if needed)
-4. **Authentication**: Login or registration flow
-5. **Main App**: Tab-based navigation with core features
-6. **Shopping Flow**: Browse → Search → Product Details → Cart → Checkout
-7. **AI Assistance**: Contextual help throughout the shopping journey
-
-### Data Flow
-
-1. **API Layer**: Axios-based HTTP client handles all backend communication
-2. **React Query**: Manages server state, caching, and background updates
-3. **Local Storage**: AsyncStorage persists user tokens and app preferences
-4. **Component State**: Local React state for UI interactions
-5. **Global State**: Minimal global state through React Context
-
-### Navigation Structure
-
-```
-Root Stack Navigator
-├── Splash Screen
-├── Onboarding Flow
-├── Authentication Stack
-│   ├── Login
-│   └── Register
-└── Main App (Tab Navigator)
-    ├── Home Tab
-    ├── Search Tab
-    ├── Cart Tab
-    ├── Favorites Tab
-    └── Profile Tab
-```
-
-## 🎨 Design System
-
-### Color Palette
-- **Primary**: #1A1A1A (Dark)
-- **Secondary**: #667eea (Blue)
-- **Success**: #34c759 (Green)
-- **Warning**: #ff9500 (Orange)
-- **Error**: #ff3b30 (Red)
-- **Background**: #f5f5f5 (Light Gray)
-
-### Typography
-- **Primary Font**: System default (San Francisco on iOS, Roboto on Android)
-- **Custom Font**: SpaceMono for special elements
-
-### Component Guidelines
-- **Consistent Spacing**: 8px grid system
-- **Border Radius**: 8-12px for cards, 20-25px for buttons
-- **Shadows**: Subtle elevation with consistent shadow properties
-- **Animations**: Smooth transitions with React Native Reanimated
-
-## 🔐 Security & Privacy
-
-### Authentication Security
-- **JWT Tokens**: Secure token-based authentication
-- **Token Storage**: Encrypted storage using AsyncStorage
-- **Session Management**: Automatic token refresh and logout
-
-### API Security
-- **HTTPS Only**: All API communications over secure connections
-- **Input Validation**: Client-side and server-side validation
-- **Error Handling**: Secure error messages without sensitive data exposure
-
-### Privacy Considerations
-- **Location Permissions**: Explicit user consent for location access
-- **Notification Permissions**: Optional notification preferences
-- **Data Minimization**: Only collect necessary user information
-
-## 🧪 Testing
-
-### Available Test Scripts
-```bash
-# Run tests
-npm test
-
-# Run tests in watch mode
-npm run test:watch
-
-# Generate coverage report
-npm run test:coverage
-```
-
-### Testing Strategy
-- **Unit Tests**: Component and utility function testing
-- **Integration Tests**: API integration and data flow testing
-- **E2E Tests**: Complete user journey testing (planned)
-
-## 📦 Build & Deployment
-
-### Development Build
-```bash
-eas build --profile development --platform android
-eas build --profile development --platform ios
-```
-
-### Production Build
-```bash
-eas build --profile production --platform android
-eas build --profile production --platform ios
-```
-
-### App Store Submission
-```bash
-eas submit --platform android
-eas submit --platform ios
-```
-
-## 🐛 Known Issues & Limitations
-
-### Current Limitations
-- **Offline Functionality**: Limited offline support, requires network for most operations
-- **Payment Processing**: Payment methods UI implemented but actual payment processing not integrated
-- **Push Notifications**: Notification system configured but push service not fully implemented
-- **Image Optimization**: Product images loaded directly without CDN optimization
-
-### Performance Considerations
-- **Large Catalogs**: May require additional optimization for extensive product collections
-- **Memory Usage**: Image caching could be improved for better memory management
-- **Network Efficiency**: API calls could be optimized with better caching strategies
-
-### Platform-Specific Issues
-- **Android**: Some animations may perform differently than iOS
-- **iOS**: Keyboard handling requires additional testing on various device sizes
-- **Web**: Limited web support, primarily designed for mobile platforms
-
-## 🤝 Contributing
-
-### Development Setup
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Follow the existing code style and conventions
-4. Add tests for new functionality
-5. Commit changes (`git commit -m 'Add amazing feature'`)
-6. Push to branch (`git push origin feature/amazing-feature`)
-7. Open a Pull Request
-
-### Code Style Guidelines
-- **TypeScript**: Use strict typing throughout the application
-- **ESLint**: Follow the configured linting rules
-- **Prettier**: Use consistent code formatting
-- **Component Structure**: Follow React functional component patterns
-- **File Naming**: Use PascalCase for components, camelCase for utilities
-
-### API Integration Guidelines
-- **Error Handling**: Implement comprehensive error handling for all API calls
-- **Loading States**: Provide loading indicators for all async operations
-- **Caching Strategy**: Use React Query for efficient data caching
-- **Type Safety**: Define TypeScript interfaces for all API responses
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 📞 Support
-
-For support and questions:
-- **Email**: support@vivaapp.com
-- **Documentation**: [API Documentation](https://ecommerce.routemisr.com/docs)
-- **Issues**: [GitHub Issues](https://github.com/your-repo/issues)
-
-## 🙏 Acknowledgments
-
-- **RouteEgypt**: E-commerce API provider
-- **Google Gemini**: AI assistant integration
-- **Expo Team**: Development platform and tools
-- **React Native Community**: Open source components and libraries
-- **Design Inspiration**: Modern e-commerce design patterns
+Viva is a cross-platform e-commerce mobile application built with React Native and Expo. It combines a full shopping experience — product catalog, cart, wishlist, checkout, and order management — with an AI assistant powered by Groq (Llama 3.1 8B Instant) to help users discover products, compare options, and make purchase decisions.
 
 ---
 
-**Built with ❤️ using React Native and Expo**
+## Features
+
+### Shopping
+- **Product Catalog** — browse products with pagination, category and brand filtering
+- **Search** — real-time product search with query parameters
+- **Product Details** — image gallery, specifications, pricing, reviews, and ratings
+- **Categories** — organized browsing with subcategory drill-down
+- **Brands** — dedicated brand pages with product listings
+- **Shopping Cart** — add/remove items, quantity updates, persistent state
+- **Wishlist** — save and manage favorite products
+- **Checkout** — address selection, payment method selection, order summary
+
+### Authentication & User Management
+- **Registration & Login** — email/password with JWT token persistence via AsyncStorage
+- **Password Flow** — forgot password, verify reset code, reset password
+- **Profile Management** — edit name, email, phone; change password
+- **Profile Image** — upload with phone library or camera
+- **Address Management** — add, view, and manage shipping addresses with map-based selection
+
+### AI Assistant
+- **Groq-Powered Chat** — Llama 3.1 8B Instant model for shopping assistance
+- **Contextual Help** — product-aware responses with purchase guidance and comparisons
+- **Conversation UI** — message bubbles, typing indicators, copy/share actions
+
+### Orders & Reviews
+- **Order History** — view past orders
+- **Order Success** — post-checkout confirmation screen
+- **Product Reviews** — read and submit reviews with ratings
+
+### Navigation & UI
+- **Expo Router** — file-based routing with tab and stack navigation
+- **Bottom Tabs** — Home, Search, Cart, Favorites, Profile
+- **Stack Screens** — product details, checkout, chat, settings, and more
+- **Splash Screen** — branded loading with font preloading
+- **Onboarding Flow** — first-time user introduction
+- **Skeleton Loading** — 38 skeleton components for loading states
+- **Light/Dark Theme** — automatic color scheme detection
+- **Lottie Animations** — micro-interactions and empty states
+
+### Maps & Location
+- **Google Maps Integration** — interactive map with hybrid view
+- **Location Services** — permission-based current location detection
+- **Map-Based Addresses** — address selection and management on map
+
+### Notifications (Partial)
+- **Expo Notifications** — notification handler configured at root level
+- **Notifications Screen** — mock notification list with type-based icons and read/unread state
+
+---
+
+## Tech Stack
+
+| Category       | Technologies |
+|----------------|-------------|
+| Framework      | React Native 0.81.5, Expo ~54.0.30, TypeScript ~5.9.2 |
+| Navigation     | Expo Router ~6.0.21, React Navigation ^7.1.8 |
+| State Mgmt     | TanStack React Query ^5.90.16, AsyncStorage ^2.2.0 |
+| HTTP Client    | Axios ^1.13.2 |
+| AI Integration | Groq API (Llama 3.1 8B Instant) |
+| Animations     | React Native Reanimated ~4.1.1, Lottie ~7.3.1 |
+| Maps           | React Native Maps 1.20.1, Expo Location ~19.0.8 |
+| Forms          | React Hook Form ^7.69.0 |
+| Icons          | Expo Vector Icons ^15.0.3 |
+| Notifications  | Expo Notifications ~0.32.16 |
+| Media          | Expo AV ~16.0.8, Expo Video ~3.0.15 |
+| Build          | EAS Build, Expo Dev Client ~6.0.20 |
+| Other          | react-native-toast-message, react-native-pager-view, expo-image-picker, expo-sharing, expo-web-browser |
+
+**Backend API:** RouteEgypt E-Commerce API (`https://ecommerce.routemisr.com/api/v1/`)
+
+---
+
+## Architecture
+
+```
+app/                    # Expo Router file-based routing
+├── _layout.tsx         # Root stack + notification handler + Toast
+├── (tabs)/             # Bottom tab navigator (Home, Search, Cart, Favorites, Profile)
+├── product/[id].tsx    # Product details (dynamic route)
+├── brand/[id].tsx      # Brand detail (dynamic route)
+├── category/[id].tsx   # Category detail (dynamic route)
+├── chat.tsx            # AI Assistant screen
+├── checkout.tsx        # Multi-step checkout
+├── splash.tsx          # Splash screen
+├── onboarding.tsx      # First-time user flow
+├── login.tsx           # Login
+├── register.tsx        # Registration
+└── + screens for       # notifications, map, orders, addresses,
+    settings, support   # payment methods, and more
+
+src/
+├── features/           # Feature-based modules (16 total)
+│   ├── auth/           # Authentication (api, hooks, screens, types)
+│   ├── brands/         # Brand browsing
+│   ├── cart/           # Cart management (api, hooks, screens)
+│   ├── categories/     # Category/subcategory navigation
+│   ├── chat/           # AI chat (Groq integration)
+│   ├── checkout/       # Checkout flow
+│   ├── home/           # Home screen (hero, banners)
+│   ├── misc/           # Modal screen
+│   ├── notifications/  # Notifications screen (mock data)
+│   ├── onboarding/     # Splash + onboarding flow
+│   ├── orders/         # Order history + success screen
+│   ├── payment/        # Payment method UI screens
+│   ├── products/       # Products, search, details, components
+│   ├── profile/        # User profile, addresses, settings, map
+│   ├── reviews/        # Product reviews (api, hooks, types)
+│   ├── support/        # FAQ, Help Center, Contact
+│   └── wishlist/       # Wishlist management
+├── shared/             # Shared code
+│   ├── components/     # Loader, ErrorView, SearchInput, Themed, etc.
+│   ├── constants/      # Colors (light/dark)
+│   ├── hooks/          # useColorScheme, useLocation, useClientOnlyValue
+│   ├── types/          # Shared type definitions
+│   └── utils/          # Toast, AsyncStorage utilities
+├── components/
+│   └── skeletons/      # 38 skeleton loading components
+└── provider/           # AppProvider (QueryClient provider)
+```
+
+**Data Flow:**
+1. **API Layer** — Axios calls to RouteEgypt REST API or Groq API
+2. **React Query** — server state caching, background refetching, optimistic updates
+3. **AsyncStorage** — JWT token and user data persistence
+4. **React Context** — minimal global state via AppProvider
+5. **Expo Router** — file-based routing drives screen composition
+
+---
+
+## Getting Started
+
+### Prerequisites
+- Node.js v16+
+- npm or yarn
+- Expo CLI (`npm install -g @expo/cli`)
+- Android Studio (Android) or Xcode (iOS, macOS only)
+
+### Installation
+
+```bash
+git clone <repository-url>
+cd viva-ecommerce-app
+npm install
+cp .env.example .env
+```
+
+Edit `.env` and add your Groq API key:
+```
+EXPO_PUBLIC_GROQ_API_KEY=your_groq_api_key_here
+```
+
+Get a key at [console.groq.com/keys](https://console.groq.com/keys).
+
+### Start Development
+
+```bash
+npm start          # or: expo start
+npm run android    # Android emulator/device
+npm run ios        # iOS simulator (macOS only)
+npm run web        # Web browser
+```
+
+### Build & Deploy
+
+```bash
+eas build --profile development --platform android
+eas build --profile production --platform android
+eas submit --platform android
+```
+
+---
+
+## Project Configuration
+
+| Key File | Purpose |
+|----------|---------|
+| `.env` | `EXPO_PUBLIC_GROQ_API_KEY` for AI chat |
+| `app.config.js` / `app.json` | Expo configuration, plugins, splash, EAS project ID |
+| `tsconfig.json` | TypeScript config with `@src/*` path alias |
+| `eas.json` | EAS Build profiles (development, preview, production) |
+
+---
+
+## Roadmap
+
+### Push Notifications
+- Register device push tokens via Expo Notifications
+- Build notification delivery service for order updates, promotions, and alerts
+- Implement deep linking from notifications to specific product or order screens
+
+### Local Notifications
+- Add local reminder scheduling (e.g., abandoned cart, price drop alerts)
+- In-app notification prompts for better user engagement
+
+### Guest Login (Firebase)
+- Allow anonymous browsing with Firebase Authentication
+- Persistent guest cart and wishlist
+- Upgrade guest accounts to full accounts on registration
+
+### Payment Integration
+- Replace mock payment UI with real payment gateway (Stripe, PayPal SDK)
+- Support multiple payment methods (cards, wallets, COD)
+
+### Order Tracking
+- Real-time order status updates
+- Shipment tracking with carrier integration
+
+### Offline Support
+- Expand offline capabilities beyond React Query cache
+- Queue write operations for offline mutation replay
+
+### Testing
+- Add unit tests (components, hooks, utilities)
+- Add integration tests (API flows, auth, cart lifecycle)
+- Add E2E tests for critical user journeys
+
+---
+
+## License
+
+MIT
