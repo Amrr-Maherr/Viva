@@ -1,28 +1,19 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
-import { VideoView, useVideoPlayer } from 'expo-video';
+import { View, Text, TouchableOpacity, Image, StyleSheet, Dimensions } from 'react-native';
 import { router } from 'expo-router';
 
 const { width } = Dimensions.get('window');
 
 const HeroSection = () => {
-  const player = useVideoPlayer('https://ik.imagekit.io/pieg1rcfk/Viva%20Assests/9510023-uhd_4096_2160_25fps.mp4', (player) => {
-    player.loop = true;
-    player.muted = true;
-    player.play();
-  });
-
   return (
     <View style={styles.container}>
-      <VideoView
-        style={styles.video}
-        player={player}
-        allowsFullscreen={false}
-        contentFit="cover"
-        // isUserInteractionEnabled={false}
+      <Image
+        source={{ uri: 'https://ik.imagekit.io/pieg1rcfk/Viva%20Assests/9510023-uhd_4096_2160_25fps.mp4' }}
+        style={styles.image}
+        resizeMode="cover"
       />
       <View style={styles.overlay}>
-        {/* <View style={styles.content}>
+        <View style={styles.content}>
           <Text style={styles.title}>Discover Amazing Products</Text>
           <Text style={styles.subtitle}>Shop the latest trends and find everything you need</Text>
           <TouchableOpacity
@@ -31,7 +22,7 @@ const HeroSection = () => {
           >
             <Text style={styles.buttonText}>Start Shopping</Text>
           </TouchableOpacity>
-        </View> */}
+        </View>
       </View>
     </View>
   );
@@ -42,7 +33,7 @@ const styles = StyleSheet.create({
     height: 250,
     position: 'relative',
   },
-  video: {
+  image: {
     width: '100%',
     height: '100%',
   },
