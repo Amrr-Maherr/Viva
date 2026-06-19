@@ -1,47 +1,54 @@
-import React, { useState } from 'react';
+import { Ionicons } from "@expo/vector-icons";
+import { login } from "@src/features/auth/api/authApi";
+import { showToast } from "@src/shared/utils/toast";
+import { router } from "expo-router";
+import React, { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import {
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  Text,
-  View,
+  ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  ActivityIndicator
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import { router } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
-import { useForm, Controller } from "react-hook-form";
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { login } from '@src/features/auth/api/authApi';
-import { showToast } from '@src/shared/utils/toast';
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function LoginScreen() {
+  const [loading, setLoading] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const {
     control,
     handleSubmit,
-    formState: { errors, isLoading },
+    formState: { errors },
   } = useForm({
     defaultValues: {
       email: "",
-      password: ""
+      password: "",
     },
   });
 
   const onSubmit = async (data: any) => {
     try {
+      setLoading(true);
+
       const result = await login(data.email, data.password);
-      showToast('success', `Welcome back! Login successful.`);
-      console.log('Login result:', result);
-      // Navigate to home or wherever
-      router.replace('/(tabs)');
+
+      showToast("success", "Welcome back! Login successful.");
+      router.replace("/(tabs)");
     } catch (error: any) {
-      showToast('error', error.response?.data?.message || "Something went wrong");
-      console.log(error);
+      showToast(
+        "error",
+        error.response?.data?.message || "Something went wrong",
+      );
+    } finally {
+      setLoading(false);
     }
   };
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -140,11 +147,11 @@ export default function LoginScreen() {
 
           <TouchableOpacity
             style={styles.button}
-            disabled={isLoading}
+            disabled={loading}
             onPress={handleSubmit(onSubmit)}
           >
-            {isLoading ? (
-              <ActivityIndicator size={30} color={"#fff"}/>
+            {loading ? (
+              <ActivityIndicator size={30} color={"#fff"} />
             ) : (
               <Text style={styles.buttonText}>Login</Text>
             )}
@@ -281,7 +288,7 @@ const styles = StyleSheet.create({
     color: "#666",
   },
   forgotPassword: {
-    textAlign:"left",
+    textAlign: "left",
     marginBottom: 10,
   },
   forgotPasswordText: {
@@ -289,7 +296,7 @@ const styles = StyleSheet.create({
     color: "#1A1A1A",
   },
   errorText: {
-    color: 'red',
+    color: "red",
     fontSize: 14,
     marginTop: 4,
   },
