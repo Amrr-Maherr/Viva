@@ -34,6 +34,21 @@ export const getCart = async () => {
     }
 };
 
+export const createCashOrder = async (cartId: string, shippingAddress: { details: string; phone: string; city: string; postalCode: string }) => {
+    try {
+        const token = await AsyncStorage.getItem('token');
+        const response = await axios.post(`https://ecommerce.routemisr.com/api/v2/orders/${cartId}`, {
+            shippingAddress
+        }, {
+            headers: { token }
+        });
+        return response?.data;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+};
+
 export const removeFromCart = async (productId: string) => {
     try {
         const token = await AsyncStorage.getItem('token');
@@ -65,6 +80,18 @@ export const useRemoveFromCartMutation = () => {
         mutationFn: removeFromCart,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['cart'] });
+        },
+    });
+};
+
+export const useCreateCashOrderMutation = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: ({ cartId, shippingAddress }: { cartId: string; shippingAddress: { details: string; phone: string; city: string; postalCode: string } }) =>
+            createCashOrder(cartId, shippingAddress),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['cart'] });
+            queryClient.invalidateQueries({ queryKey: ['orders'] });
         },
     });
 };

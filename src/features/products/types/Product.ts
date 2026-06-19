@@ -1,3 +1,16 @@
+export type Review = {
+    _id: string;
+    review: string;
+    rating: number;
+    product: string;
+    user: {
+        _id: string;
+        name: string;
+    };
+    createdAt: string;
+    updatedAt: string;
+}
+
 export type Product = {
     sold: number;
     images: string[];
@@ -29,6 +42,7 @@ export type Product = {
         image: string;
     };
     ratingsAverage: number;
+    reviews?: Review[];
     createdAt: string;
     updatedAt: string;
     id: string;
