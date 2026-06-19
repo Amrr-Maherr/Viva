@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   StyleSheet,
   TextInput,
@@ -13,11 +13,11 @@ import {
 import { router } from 'expo-router';
 import { useForm, Controller } from "react-hook-form";
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { forgotPassword } from '@src/features/auth/api/authApi';
 import { showToast } from '@src/shared/utils/toast';
+import { useForgotPassword } from '../hooks/useForgotPassword';
 
 export default function ForgotPasswordScreen() {
-  const [loading, setLoading] = useState(false);
+  const { mutateAsync: sendResetLink, isPending } = useForgotPassword();
   const {
     control,
     handleSubmit,
@@ -28,19 +28,13 @@ export default function ForgotPasswordScreen() {
     },
   });
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: { email: string }) => {
     try {
-      setLoading(true);
-      const result = await forgotPassword(data.email);
+      await sendResetLink(data);
       showToast('success', "Please check your email for password reset instructions.");
-      console.log('Forgot password result:', result);
-      // Navigate to verify code
       (router.push as any)('/verify-reset-code');
     } catch (error: any) {
       showToast('error', error.response?.data?.message || "Something went wrong");
-      console.log(error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -91,10 +85,10 @@ export default function ForgotPasswordScreen() {
 
           <TouchableOpacity
             style={styles.button}
-            disabled={loading}
+            disabled={isPending}
             onPress={handleSubmit(onSubmit)}
           >
-            {loading ? (
+            {isPending ? (
               <ActivityIndicator size={30} color={"#fff"}/>
             ) : (
               <Text style={styles.buttonText}>Send Reset Link</Text>

@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { StyleSheet, ScrollView, TouchableOpacity, TextInput, Alert, Text, View, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import { changeMyPassword } from '@src/features/auth/api/userApi';
 import { showToast } from '@src/shared/utils/toast';
+import { useChangePassword } from '@src/features/auth/hooks/useChangePassword';
 
 export default function ChangePasswordScreen() {
-  const [loading, setLoading] = useState(false);
+  const { mutateAsync: changePwd, isPending } = useChangePassword();
   const [formData, setFormData] = useState({
     currentPassword: '',
     newPassword: '',
@@ -44,14 +44,11 @@ export default function ChangePasswordScreen() {
     }
 
     try {
-      setLoading(true);
-      const result = await changeMyPassword(formData.currentPassword, formData.newPassword, formData.confirmPassword);
+      await changePwd(formData);
       showToast('success', 'Your password has been changed successfully!');
       router.back();
     } catch (error: any) {
       showToast('error', error.response?.data?.message || 'Failed to change password');
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -96,8 +93,8 @@ export default function ChangePasswordScreen() {
         {renderPasswordInput('New Password', 'newPassword', 'Enter new password')}
         {renderPasswordInput('Confirm New Password', 'confirmPassword', 'Confirm new password')}
 
-        <TouchableOpacity style={styles.changeButton} disabled={loading} onPress={handleChangePassword}>
-          {loading ? (
+        <TouchableOpacity style={styles.changeButton} disabled={isPending} onPress={handleChangePassword}>
+          {isPending ? (
             <ActivityIndicator size={30} color={"#fff"} />
           ) : (
             <Text style={styles.changeButtonText}>Change Password</Text>

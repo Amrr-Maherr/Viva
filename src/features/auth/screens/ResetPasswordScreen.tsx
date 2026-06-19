@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   StyleSheet,
   TextInput,
@@ -13,12 +13,12 @@ import {
 import { router, useLocalSearchParams } from 'expo-router';
 import { useForm, Controller } from "react-hook-form";
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { resetPassword } from '@src/features/auth/api/authApi';
 import { showToast } from '@src/shared/utils/toast';
+import { useResetPassword } from '../hooks/useResetPassword';
 
 export default function ResetPasswordScreen() {
   const { resetCode } = useLocalSearchParams();
-  const [loading, setLoading] = useState(false);
+  const { mutateAsync: resetPwd, isPending } = useResetPassword();
 
   const {
     control,
@@ -31,24 +31,18 @@ export default function ResetPasswordScreen() {
     },
   });
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: { newPassword: string; confirmPassword: string }) => {
     if (data.newPassword !== data.confirmPassword) {
       showToast('error', "Passwords do not match");
       return;
     }
 
     try {
-      setLoading(true);
-      const result = await resetPassword("routeegyptnodejs@gmail.com", data.newPassword);
+      await resetPwd({ email: "routeegyptnodejs@gmail.com", newPassword: data.newPassword });
       showToast('success', "Your password has been reset successfully. Please login with your new password.");
-      console.log('Reset password result:', result);
-      // Navigate to login
       router.replace('/login');
     } catch (error: any) {
       showToast('error', error.response?.data?.message || "Something went wrong");
-      console.log(error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -123,10 +117,10 @@ export default function ResetPasswordScreen() {
 
           <TouchableOpacity
             style={styles.button}
-            disabled={loading}
+            disabled={isPending}
             onPress={handleSubmit(onSubmit)}
           >
-            {loading ? (
+            {isPending ? (
               <ActivityIndicator size={30} color={"#fff"}/>
             ) : (
               <Text style={styles.buttonText}>Reset Password</Text>

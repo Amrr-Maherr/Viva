@@ -14,11 +14,12 @@ import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useForm, Controller } from "react-hook-form";
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { signup } from '@src/features/auth/api/authApi';
 import { showToast } from '@src/shared/utils/toast';
+import { useRegister } from '../hooks/useRegister';
+
 export default function RegisterScreen() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const { mutateAsync: registerUser, isPending } = useRegister();
    const {
      control,
      handleSubmit,
@@ -34,17 +35,11 @@ export default function RegisterScreen() {
    });
    const onSubmit = async (data: any) => {
      try {
-       setLoading(true);
-       const result = await signup(data.name, data.email, data.password, data.rePassword, data.phone);
+       await registerUser(data);
        showToast('success', `Welcome ${data.name}! Registration successful.`);
-       console.log('Signup result:', result);
-       // Navigate to login
        router.push('/login');
      } catch (error: any) {
        showToast('error', error.response?.data?.message || "Something went wrong");
-       console.log(error);
-     } finally {
-       setLoading(false);
      }
    };
   return (
@@ -210,10 +205,10 @@ export default function RegisterScreen() {
 
           <TouchableOpacity
             style={styles.button}
-            disabled={loading}
+            disabled={isPending}
             onPress={handleSubmit(onSubmit)}
           >
-            {loading ? (
+            {isPending ? (
               <ActivityIndicator size={30} color={"#fff"}/>
             ) : (
               <Text style={styles.buttonText}>Register</Text>

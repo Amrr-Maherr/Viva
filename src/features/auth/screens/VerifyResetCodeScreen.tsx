@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   StyleSheet,
   TextInput,
@@ -13,11 +13,11 @@ import {
 import { router } from 'expo-router';
 import { useForm, Controller } from "react-hook-form";
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { verifyResetCode } from '@src/features/auth/api/authApi';
 import { showToast } from '@src/shared/utils/toast';
+import { useVerifyOtp } from '../hooks/useVerifyOtp';
 
 export default function VerifyResetCodeScreen() {
-  const [loading, setLoading] = useState(false);
+  const { mutateAsync: verifyCode, isPending } = useVerifyOtp();
   const {
     control,
     handleSubmit,
@@ -28,19 +28,13 @@ export default function VerifyResetCodeScreen() {
     },
   });
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: { resetCode: string }) => {
     try {
-      setLoading(true);
-      const result = await verifyResetCode(data.resetCode);
+      await verifyCode(data);
       showToast('success', "Please set your new password.");
-      console.log('Verify reset code result:', result);
-      // Navigate to reset password
       (router.push as any)({ pathname: '/reset-password', params: { resetCode: data.resetCode } });
     } catch (error: any) {
       showToast('error', error.response?.data?.message || "The code is incorrect or expired");
-      console.log(error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -91,10 +85,10 @@ export default function VerifyResetCodeScreen() {
 
           <TouchableOpacity
             style={styles.button}
-            disabled={loading}
+            disabled={isPending}
             onPress={handleSubmit(onSubmit)}
           >
-            {loading ? (
+            {isPending ? (
               <ActivityIndicator size={30} color={"#fff"}/>
             ) : (
               <Text style={styles.buttonText}>Verify Code</Text>

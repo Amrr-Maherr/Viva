@@ -1,4 +1,3 @@
-import { updateMe } from '@src/features/auth/api/userApi';
 import { showToast } from '@src/shared/utils/toast';
 import ProfileImagePicker from '@src/features/profile/components/ProfileImagePicker';
 import { router } from 'expo-router';
@@ -17,10 +16,11 @@ import {
     View,
 } from "react-native";
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useUpdateProfile } from '@src/features/auth/hooks/useUpdateProfile';
 
 export default function EditProfileScreen() {
   const [currentProfileImage, setCurrentProfileImage] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const { mutateAsync: updateProfile, isPending } = useUpdateProfile();
   
   const {
     control,
@@ -98,18 +98,13 @@ export default function EditProfileScreen() {
     }
   };
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: { name: string; email: string; phone: string }) => {
     try {
-      setLoading(true);
-      const result = await updateMe(data.name, data.email, data.phone);
+      await updateProfile(data);
       showToast('success', "Your profile has been updated successfully.");
-      console.log('Update profile result:', result);
       router.back();
     } catch (error: any) {
       showToast('error', error.response?.data?.message || "Something went wrong");
-      console.log(error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -217,10 +212,10 @@ export default function EditProfileScreen() {
 
           <TouchableOpacity
             style={styles.button}
-            disabled={loading}
+            disabled={isPending}
             onPress={handleSubmit(onSubmit)}
           >
-            {loading ? (
+            {isPending ? (
               <ActivityIndicator size={30} color={"#fff"}/>
             ) : (
               <Text style={styles.buttonText}>Update Profile</Text>

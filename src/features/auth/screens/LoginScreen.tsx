@@ -1,5 +1,4 @@
 import { Ionicons } from "@expo/vector-icons";
-import { login } from "@src/features/auth/api/authApi";
 import { showToast } from "@src/shared/utils/toast";
 import { router } from "expo-router";
 import React, { useState } from "react";
@@ -17,10 +16,11 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useLogin } from "../hooks/useLogin";
 
 export default function LoginScreen() {
-  const [loading, setLoading] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const { mutateAsync: loginUser, isPending } = useLogin();
   const {
     control,
     handleSubmit,
@@ -32,12 +32,9 @@ export default function LoginScreen() {
     },
   });
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: { email: string; password: string }) => {
     try {
-      setLoading(true);
-
-      const result = await login(data.email, data.password);
-
+      await loginUser(data);
       showToast("success", "Welcome back! Login successful.");
       router.replace("/(tabs)");
     } catch (error: any) {
@@ -45,9 +42,12 @@ export default function LoginScreen() {
         "error",
         error.response?.data?.message || "Something went wrong",
       );
-    } finally {
-      setLoading(false);
     }
+  };
+
+  const handleGuestAccess = async () => {
+    await AsyncStorage.setItem("guestMode", "true");
+    router.replace("/(tabs)");
   };
 
   return (
@@ -148,10 +148,10 @@ export default function LoginScreen() {
 
           <TouchableOpacity
             style={styles.button}
-            disabled={loading}
+            disabled={isPending}
             onPress={handleSubmit(onSubmit)}
           >
-            {loading ? (
+            {isPending ? (
               <ActivityIndicator size={30} color={"#fff"} />
             ) : (
               <Text style={styles.buttonText}>Login</Text>
@@ -177,11 +177,8 @@ export default function LoginScreen() {
 
           <TouchableOpacity
             style={styles.guestButton}
-            disabled={loading}
-            onPress={async () => {
-              await AsyncStorage.setItem("guestMode", "true");
-              router.replace("/(tabs)");
-            }}
+            disabled={isPending}
+            onPress={handleGuestAccess}
           >
             <Text style={styles.guestButtonText}>Continue as Guest</Text>
           </TouchableOpacity>
