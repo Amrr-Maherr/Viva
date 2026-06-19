@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   StyleSheet,
   TextInput,
@@ -17,10 +17,11 @@ import { verifyResetCode } from '@src/features/auth/api/authApi';
 import { showToast } from '@src/shared/utils/toast';
 
 export default function VerifyResetCodeScreen() {
+  const [loading, setLoading] = useState(false);
   const {
     control,
     handleSubmit,
-    formState: { errors, isLoading },
+    formState: { errors },
   } = useForm({
     defaultValues: {
       resetCode: "",
@@ -29,6 +30,7 @@ export default function VerifyResetCodeScreen() {
 
   const onSubmit = async (data: any) => {
     try {
+      setLoading(true);
       const result = await verifyResetCode(data.resetCode);
       showToast('success', "Please set your new password.");
       console.log('Verify reset code result:', result);
@@ -37,6 +39,8 @@ export default function VerifyResetCodeScreen() {
     } catch (error: any) {
       showToast('error', error.response?.data?.message || "The code is incorrect or expired");
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -87,10 +91,10 @@ export default function VerifyResetCodeScreen() {
 
           <TouchableOpacity
             style={styles.button}
-            disabled={isLoading}
+            disabled={loading}
             onPress={handleSubmit(onSubmit)}
           >
-            {isLoading ? (
+            {loading ? (
               <ActivityIndicator size={30} color={"#fff"}/>
             ) : (
               <Text style={styles.buttonText}>Verify Code</Text>
@@ -149,7 +153,6 @@ const styles = StyleSheet.create({
     borderColor: "#ccc",
     borderRadius: 10,
     padding: 12,
-    fontSize: 16,
     backgroundColor: "#fff",
     textAlign: "center",
     fontSize: 24,

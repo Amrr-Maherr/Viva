@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Controller, useForm } from "react-hook-form";
 import {
+    ActivityIndicator,
     KeyboardAvoidingView,
     Platform,
     ScrollView,
@@ -19,12 +20,13 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function EditProfileScreen() {
   const [currentProfileImage, setCurrentProfileImage] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   
   const {
     control,
     handleSubmit,
     setValue,
-    formState: { errors, isLoading },
+    formState: { errors },
   } = useForm({
     defaultValues: {
       name: "",
@@ -98,6 +100,7 @@ export default function EditProfileScreen() {
 
   const onSubmit = async (data: any) => {
     try {
+      setLoading(true);
       const result = await updateMe(data.name, data.email, data.phone);
       showToast('success', "Your profile has been updated successfully.");
       console.log('Update profile result:', result);
@@ -105,6 +108,8 @@ export default function EditProfileScreen() {
     } catch (error: any) {
       showToast('error', error.response?.data?.message || "Something went wrong");
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -212,10 +217,14 @@ export default function EditProfileScreen() {
 
           <TouchableOpacity
             style={styles.button}
-            disabled={isLoading}
+            disabled={loading}
             onPress={handleSubmit(onSubmit)}
           >
-            <Text style={styles.buttonText}>Update Profile</Text>
+            {loading ? (
+              <ActivityIndicator size={30} color={"#fff"}/>
+            ) : (
+              <Text style={styles.buttonText}>Update Profile</Text>
+            )}
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => router.back()}>

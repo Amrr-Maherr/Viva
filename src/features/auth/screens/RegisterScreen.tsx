@@ -18,10 +18,11 @@ import { signup } from '@src/features/auth/api/authApi';
 import { showToast } from '@src/shared/utils/toast';
 export default function RegisterScreen() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
    const {
      control,
      handleSubmit,
-     formState: { errors,isLoading},
+     formState: { errors },
    } = useForm({
      defaultValues: {
        name: "",
@@ -33,6 +34,7 @@ export default function RegisterScreen() {
    });
    const onSubmit = async (data: any) => {
      try {
+       setLoading(true);
        const result = await signup(data.name, data.email, data.password, data.rePassword, data.phone);
        showToast('success', `Welcome ${data.name}! Registration successful.`);
        console.log('Signup result:', result);
@@ -41,6 +43,8 @@ export default function RegisterScreen() {
      } catch (error: any) {
        showToast('error', error.response?.data?.message || "Something went wrong");
        console.log(error);
+     } finally {
+       setLoading(false);
      }
    };
   return (
@@ -206,10 +210,10 @@ export default function RegisterScreen() {
 
           <TouchableOpacity
             style={styles.button}
-            disabled={isLoading}
+            disabled={loading}
             onPress={handleSubmit(onSubmit)}
           >
-            {isLoading ? (
+            {loading ? (
               <ActivityIndicator size={30} color={"#fff"}/>
             ) : (
               <Text style={styles.buttonText}>Register</Text>

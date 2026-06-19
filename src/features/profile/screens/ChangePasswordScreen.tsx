@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import { StyleSheet, ScrollView, TouchableOpacity, TextInput, Alert, Text, View } from 'react-native';
+import { StyleSheet, ScrollView, TouchableOpacity, TextInput, Alert, Text, View, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import { changeMyPassword } from '@src/features/auth/api/userApi';
+import { showToast } from '@src/shared/utils/toast';
 
 export default function ChangePasswordScreen() {
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     currentPassword: '',
     newPassword: '',
@@ -24,7 +27,7 @@ export default function ChangePasswordScreen() {
     setShowPasswords(prev => ({ ...prev, [field]: !prev[field as keyof typeof prev] }));
   };
 
-  const handleChangePassword = () => {
+  const handleChangePassword = async () => {
     if (!formData.currentPassword || !formData.newPassword || !formData.confirmPassword) {
       Alert.alert('Error', 'Please fill in all fields');
       return;
@@ -40,13 +43,16 @@ export default function ChangePasswordScreen() {
       return;
     }
 
-    Alert.alert(
-      'Password Changed',
-      'Your password has been changed successfully!',
-      [
-        { text: 'OK', onPress: () => router.back() },
-      ]
-    );
+    try {
+      setLoading(true);
+      const result = await changeMyPassword(formData.currentPassword, formData.newPassword, formData.confirmPassword);
+      showToast('success', 'Your password has been changed successfully!');
+      router.back();
+    } catch (error: any) {
+      showToast('error', error.response?.data?.message || 'Failed to change password');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const renderPasswordInput = (label: string, field: string, placeholder: string) => (
@@ -90,8 +96,12 @@ export default function ChangePasswordScreen() {
         {renderPasswordInput('New Password', 'newPassword', 'Enter new password')}
         {renderPasswordInput('Confirm New Password', 'confirmPassword', 'Confirm new password')}
 
-        <TouchableOpacity style={styles.changeButton} onPress={handleChangePassword}>
-          <Text style={styles.changeButtonText}>Change Password</Text>
+        <TouchableOpacity style={styles.changeButton} disabled={loading} onPress={handleChangePassword}>
+          {loading ? (
+            <ActivityIndicator size={30} color={"#fff"} />
+          ) : (
+            <Text style={styles.changeButtonText}>Change Password</Text>
+          )}
         </TouchableOpacity>
       </View>
     </ScrollView>

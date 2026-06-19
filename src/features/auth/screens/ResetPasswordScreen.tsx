@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   StyleSheet,
   TextInput,
@@ -18,11 +18,12 @@ import { showToast } from '@src/shared/utils/toast';
 
 export default function ResetPasswordScreen() {
   const { resetCode } = useLocalSearchParams();
+  const [loading, setLoading] = useState(false);
 
   const {
     control,
     handleSubmit,
-    formState: { errors, isLoading },
+    formState: { errors },
   } = useForm({
     defaultValues: {
       newPassword: "",
@@ -37,6 +38,7 @@ export default function ResetPasswordScreen() {
     }
 
     try {
+      setLoading(true);
       const result = await resetPassword("routeegyptnodejs@gmail.com", data.newPassword);
       showToast('success', "Your password has been reset successfully. Please login with your new password.");
       console.log('Reset password result:', result);
@@ -45,6 +47,8 @@ export default function ResetPasswordScreen() {
     } catch (error: any) {
       showToast('error', error.response?.data?.message || "Something went wrong");
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -119,10 +123,10 @@ export default function ResetPasswordScreen() {
 
           <TouchableOpacity
             style={styles.button}
-            disabled={isLoading}
+            disabled={loading}
             onPress={handleSubmit(onSubmit)}
           >
-            {isLoading ? (
+            {loading ? (
               <ActivityIndicator size={30} color={"#fff"}/>
             ) : (
               <Text style={styles.buttonText}>Reset Password</Text>

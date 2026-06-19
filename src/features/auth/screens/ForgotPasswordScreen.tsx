@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   StyleSheet,
   TextInput,
@@ -17,10 +17,11 @@ import { forgotPassword } from '@src/features/auth/api/authApi';
 import { showToast } from '@src/shared/utils/toast';
 
 export default function ForgotPasswordScreen() {
+  const [loading, setLoading] = useState(false);
   const {
     control,
     handleSubmit,
-    formState: { errors, isLoading },
+    formState: { errors },
   } = useForm({
     defaultValues: {
       email: "",
@@ -29,6 +30,7 @@ export default function ForgotPasswordScreen() {
 
   const onSubmit = async (data: any) => {
     try {
+      setLoading(true);
       const result = await forgotPassword(data.email);
       showToast('success', "Please check your email for password reset instructions.");
       console.log('Forgot password result:', result);
@@ -37,6 +39,8 @@ export default function ForgotPasswordScreen() {
     } catch (error: any) {
       showToast('error', error.response?.data?.message || "Something went wrong");
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -87,10 +91,10 @@ export default function ForgotPasswordScreen() {
 
           <TouchableOpacity
             style={styles.button}
-            disabled={isLoading}
+            disabled={loading}
             onPress={handleSubmit(onSubmit)}
           >
-            {isLoading ? (
+            {loading ? (
               <ActivityIndicator size={30} color={"#fff"}/>
             ) : (
               <Text style={styles.buttonText}>Send Reset Link</Text>

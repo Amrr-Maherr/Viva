@@ -3,6 +3,7 @@ import { login } from "@src/features/auth/api/authApi";
 import { showToast } from "@src/shared/utils/toast";
 import { router } from "expo-router";
 import React, { useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Controller, useForm } from "react-hook-form";
 import {
   ActivityIndicator,
@@ -155,6 +156,34 @@ export default function LoginScreen() {
             ) : (
               <Text style={styles.buttonText}>Login</Text>
             )}
+          </TouchableOpacity>
+
+          <View style={styles.dividerContainer}>
+            <View style={styles.dividerLine} />
+            <Text style={styles.dividerText}>Or continue with</Text>
+            <View style={styles.dividerLine} />
+          </View>
+
+          <View style={styles.socialContainer}>
+            <TouchableOpacity style={styles.googleButton}>
+              <Ionicons name="logo-google" size={22} color="#fff" />
+              <Text style={styles.socialButtonText}>Google</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.facebookButton}>
+              <Ionicons name="logo-facebook" size={22} color="#fff" />
+              <Text style={styles.socialButtonText}>Facebook</Text>
+            </TouchableOpacity>
+          </View>
+
+          <TouchableOpacity
+            style={styles.guestButton}
+            disabled={loading}
+            onPress={async () => {
+              await AsyncStorage.setItem("guestMode", "true");
+              router.replace("/(tabs)");
+            }}
+          >
+            <Text style={styles.guestButtonText}>Continue as Guest</Text>
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => router.push("/register")}>
@@ -327,5 +356,19 @@ const styles = StyleSheet.create({
   },
   linkBold: {
     fontWeight: "bold",
+  },
+  guestButton: {
+    backgroundColor: "transparent",
+    padding: 15,
+    borderRadius: 10,
+    alignItems: "center",
+    marginTop: 20,
+    borderWidth: 1,
+    borderColor: "#1A1A1A",
+  },
+  guestButtonText: {
+    color: "#1A1A1A",
+    fontSize: 18,
+    fontWeight: "600",
   },
 });
