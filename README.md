@@ -8,26 +8,42 @@ Viva is a cross-platform e-commerce mobile application built with React Native a
 
 ### Shopping
 - **Product Catalog** — browse products with infinite-scroll pagination, category filtering, and horizontal product lists
+
   <img src="docs/screenshots/home.svg" alt="Viva home screen with featured product and new arrivals" width="240">
+
 - **Search** — two search modes: client-side filtering on the Search tab, and server-side debounced search on the All Products screen
+
   <img src="docs/screenshots/search.svg" alt="Viva search tab with popular and recent searches" width="240">
+
 - **Product Details** — image gallery, specs, pricing, brand/category chips, reviews with star ratings, and a sticky purchase bar with an "Ask AI" button (a `RelatedProducts` component is imported but not yet rendered)
+
   <img src="docs/screenshots/product-details.svg" alt="Viva product details with image gallery, price, rating, Ask AI and Add to Cart" width="240">
+
 - **Categories** — category grid browsing with detail pages showing category info and filtered product lists
+
   <img src="docs/screenshots/categories.svg" alt="Viva categories grid" width="240">
+
 - **Brands** — brand grid browsing with detail pages showing brand info and matching products
 - **Shopping Cart** — add/remove items via API, view totals, proceed to checkout (quantity +/- buttons are present in the UI but have no handlers)
+
   <img src="docs/screenshots/cart.svg" alt="Viva cart with quantity controls, total and Proceed to Checkout" width="240">
+
 - **Wishlist** — add/remove favorite products, move items to cart
+
   <img src="docs/screenshots/wishlist.svg" alt="Viva wishlist with add-to-cart and remove actions" width="240">
+
 - **Checkout** — order summary with subtotal/shipping/tax calculation, address and payment method selection (uses hardcoded mock data and simulated order placement)
 
 ### Authentication & User Management
 - **Registration & Login** — email/password with JWT token persistence via AsyncStorage
+
   <img src="docs/screenshots/login.svg" alt="Viva login screen" width="240">
+
 - **Password Flow** — forgot password, verify reset code, reset password
 - **Profile Management** — edit name, email, phone with form validation
+
   <img src="docs/screenshots/profile.svg" alt="Viva profile screen with account settings menu" width="240">
+
 - **Change Password** — dedicated change password flow
 - **Profile Image** — image picker via camera or library (stored locally only; server upload code exists but is commented out)
 
